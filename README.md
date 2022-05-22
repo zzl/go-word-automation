@@ -1,6 +1,6 @@
 # go-word-automation
 
-Automate microsoft word in golang.
+Automate Microsoft Word in golang.
 
 Code in this repo is generated with [GO-TlbImp](https://github.com/zzl/go-tlbimp). 
 
