@@ -16,6 +16,9 @@ type SynonymInfo struct {
 }
 
 func NewSynonymInfo(pDisp *win32.IDispatch, addRef bool, scoped bool) *SynonymInfo {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SynonymInfo{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSynonymInfo(pDisp *win32.IDispatch, addRef bool, scoped bool) *SynonymIn
 }
 
 func SynonymInfoFromVar(v ole.Variant) *SynonymInfo {
-	return NewSynonymInfo(v.PdispValVal(), false, false)
+	return NewSynonymInfo(v.IDispatch(), false, false)
 }
 
 func (this *SynonymInfo) IID() *syscall.GUID {
@@ -42,68 +45,68 @@ func (this *SynonymInfo) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SynonymInfo) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SynonymInfo) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SynonymInfo) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SynonymInfo) Word() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SynonymInfo) Found() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *SynonymInfo) MeaningCount() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *SynonymInfo) MeaningList() ole.Variant {
-	retVal := this.PropGet(0x00000004, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000004, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *SynonymInfo) PartOfSpeechList() ole.Variant {
-	retVal := this.PropGet(0x00000005, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000005, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *SynonymInfo) SynonymList(meaning *ole.Variant) ole.Variant {
-	retVal := this.PropGet(0x00000007, []interface{}{meaning})
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000007, []interface{}{meaning})
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *SynonymInfo) AntonymList() ole.Variant {
-	retVal := this.PropGet(0x00000008, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000008, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *SynonymInfo) RelatedExpressionList() ole.Variant {
-	retVal := this.PropGet(0x00000009, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000009, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *SynonymInfo) RelatedWordList() ole.Variant {
-	retVal := this.PropGet(0x0000000a, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 

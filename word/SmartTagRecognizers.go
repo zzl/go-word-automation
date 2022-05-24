@@ -17,6 +17,9 @@ type SmartTagRecognizers struct {
 }
 
 func NewSmartTagRecognizers(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTagRecognizers {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTagRecognizers{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSmartTagRecognizers(pDisp *win32.IDispatch, addRef bool, scoped bool) *S
 }
 
 func SmartTagRecognizersFromVar(v ole.Variant) *SmartTagRecognizers {
-	return NewSmartTagRecognizers(v.PdispValVal(), false, false)
+	return NewSmartTagRecognizers(v.IDispatch(), false, false)
 }
 
 func (this *SmartTagRecognizers) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *SmartTagRecognizers) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTagRecognizers) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,32 +72,32 @@ func (this *SmartTagRecognizers) ForEach(action func(item *SmartTagRecognizer) b
 }
 
 func (this *SmartTagRecognizers) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagRecognizers) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagRecognizers) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagRecognizers) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTagRecognizers) Item(index *ole.Variant) *SmartTagRecognizer {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewSmartTagRecognizer(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewSmartTagRecognizer(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagRecognizers) ReloadRecognizers()  {
-	retVal := this.Call(0x000003eb, nil)
+	retVal, _ := this.Call(0x000003eb, nil)
 	_= retVal
 }
 

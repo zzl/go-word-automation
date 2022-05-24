@@ -16,6 +16,9 @@ type HorizontalLineFormat struct {
 }
 
 func NewHorizontalLineFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *HorizontalLineFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HorizontalLineFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewHorizontalLineFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *
 }
 
 func HorizontalLineFormatFromVar(v ole.Variant) *HorizontalLineFormat {
-	return NewHorizontalLineFormat(v.PdispValVal(), false, false)
+	return NewHorizontalLineFormat(v.IDispatch(), false, false)
 }
 
 func (this *HorizontalLineFormat) IID() *syscall.GUID {
@@ -42,57 +45,53 @@ func (this *HorizontalLineFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HorizontalLineFormat) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HorizontalLineFormat) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HorizontalLineFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HorizontalLineFormat) PercentWidth() float32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.FltValVal()
 }
 
 func (this *HorizontalLineFormat) SetPercentWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *HorizontalLineFormat) NoShade() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *HorizontalLineFormat) SetNoShade(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *HorizontalLineFormat) Alignment() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *HorizontalLineFormat) SetAlignment(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *HorizontalLineFormat) WidthType() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *HorizontalLineFormat) SetWidthType(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 

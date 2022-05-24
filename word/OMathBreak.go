@@ -16,6 +16,9 @@ type OMathBreak struct {
 }
 
 func NewOMathBreak(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathBreak {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathBreak{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathBreak(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathBreak
 }
 
 func OMathBreakFromVar(v ole.Variant) *OMathBreak {
-	return NewOMathBreak(v.PdispValVal(), false, false)
+	return NewOMathBreak(v.IDispatch(), false, false)
 }
 
 func (this *OMathBreak) IID() *syscall.GUID {
@@ -42,37 +45,36 @@ func (this *OMathBreak) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathBreak) Application() *Application {
-	retVal := this.PropGet(0x00000065, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000065, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathBreak) Creator() int32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathBreak) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000067, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathBreak) Range() *Range {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathBreak) AlignAt() int32 {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathBreak) SetAlignAt(rhs int32)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *OMathBreak) Delete()  {
-	retVal := this.Call(0x0000006a, nil)
+	retVal, _ := this.Call(0x0000006a, nil)
 	_= retVal
 }
 

@@ -16,6 +16,9 @@ type XMLNode struct {
 }
 
 func NewXMLNode(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLNode {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLNode{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewXMLNode(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLNode {
 }
 
 func XMLNodeFromVar(v ole.Variant) *XMLNode {
-	return NewXMLNode(v.PdispValVal(), false, false)
+	return NewXMLNode(v.IDispatch(), false, false)
 }
 
 func (this *XMLNode) IID() *syscall.GUID {
@@ -42,187 +45,209 @@ func (this *XMLNode) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLNode) BaseName() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLNode) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNode) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLNode) Range() *Range {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) Text() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLNode) SetText(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *XMLNode) NamespaceURI() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
-func (this *XMLNode) XML(dataOnly bool) string {
-	retVal := this.PropGet(0x00000005, []interface{}{dataOnly})
+var XMLNode_XML_OptArgs= []string{
+	"DataOnly", 
+}
+
+func (this *XMLNode) XML(optArgs ...interface{}) string {
+	optArgs = ole.ProcessOptArgs(XMLNode_XML_OptArgs, optArgs)
+	retVal, _ := this.PropGet(0x00000005, nil, optArgs...)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLNode) NextSibling() *XMLNode {
-	retVal := this.PropGet(0x00000006, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000006, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) PreviousSibling() *XMLNode {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) ParentNode() *XMLNode {
-	retVal := this.PropGet(0x00000008, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000008, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) FirstChild() *XMLNode {
-	retVal := this.PropGet(0x00000009, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000009, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) LastChild() *XMLNode {
-	retVal := this.PropGet(0x0000000a, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) OwnerDocument() *Document {
-	retVal := this.PropGet(0x0000000b, nil)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000b, nil)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) NodeType() int32 {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNode) ChildNodes() *XMLNodes {
-	retVal := this.PropGet(0x0000000d, nil)
-	return NewXMLNodes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000d, nil)
+	return NewXMLNodes(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) Attributes() *XMLNodes {
-	retVal := this.PropGet(0x0000000f, nil)
-	return NewXMLNodes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000f, nil)
+	return NewXMLNodes(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) NodeValue() string {
-	retVal := this.PropGet(0x00000010, nil)
+	retVal, _ := this.PropGet(0x00000010, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLNode) SetNodeValue(rhs string)  {
-	retVal := this.PropPut(0x00000010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000010, []interface{}{rhs})
 }
 
 func (this *XMLNode) HasChildNodes() bool {
-	retVal := this.PropGet(0x00000011, nil)
+	retVal, _ := this.PropGet(0x00000011, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
-func (this *XMLNode) SelectSingleNode(xpath string, prefixMapping string, fastSearchSkippingTextNodes bool) *XMLNode {
-	retVal := this.Call(0x00000012, []interface{}{xpath, prefixMapping, fastSearchSkippingTextNodes})
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+var XMLNode_SelectSingleNode_OptArgs= []string{
+	"PrefixMapping", "FastSearchSkippingTextNodes", 
 }
 
-func (this *XMLNode) SelectNodes(xpath string, prefixMapping string, fastSearchSkippingTextNodes bool) *XMLNodes {
-	retVal := this.Call(0x00000013, []interface{}{xpath, prefixMapping, fastSearchSkippingTextNodes})
-	return NewXMLNodes(retVal.PdispValVal(), false, true)
+func (this *XMLNode) SelectSingleNode(xpath string, optArgs ...interface{}) *XMLNode {
+	optArgs = ole.ProcessOptArgs(XMLNode_SelectSingleNode_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000012, []interface{}{xpath}, optArgs...)
+	return NewXMLNode(retVal.IDispatch(), false, true)
+}
+
+var XMLNode_SelectNodes_OptArgs= []string{
+	"PrefixMapping", "FastSearchSkippingTextNodes", 
+}
+
+func (this *XMLNode) SelectNodes(xpath string, optArgs ...interface{}) *XMLNodes {
+	optArgs = ole.ProcessOptArgs(XMLNode_SelectNodes_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000013, []interface{}{xpath}, optArgs...)
+	return NewXMLNodes(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) ChildNodeSuggestions() *XMLChildNodeSuggestions {
-	retVal := this.PropGet(0x00000014, nil)
-	return NewXMLChildNodeSuggestions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000014, nil)
+	return NewXMLChildNodeSuggestions(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNode) Level() int32 {
-	retVal := this.PropGet(0x00000015, nil)
+	retVal, _ := this.PropGet(0x00000015, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNode) ValidationStatus() int32 {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNode) SmartTag() *SmartTag {
-	retVal := this.PropGet(0x00000017, nil)
-	return NewSmartTag(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000017, nil)
+	return NewSmartTag(retVal.IDispatch(), false, true)
 }
 
-func (this *XMLNode) ValidationErrorText(advanced bool) string {
-	retVal := this.PropGet(0x00000018, []interface{}{advanced})
+var XMLNode_ValidationErrorText_OptArgs= []string{
+	"Advanced", 
+}
+
+func (this *XMLNode) ValidationErrorText(optArgs ...interface{}) string {
+	optArgs = ole.ProcessOptArgs(XMLNode_ValidationErrorText_OptArgs, optArgs)
+	retVal, _ := this.PropGet(0x00000018, nil, optArgs...)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLNode) PlaceholderText() string {
-	retVal := this.PropGet(0x00000019, nil)
+	retVal, _ := this.PropGet(0x00000019, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLNode) SetPlaceholderText(rhs string)  {
-	retVal := this.PropPut(0x00000019, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000019, []interface{}{rhs})
 }
 
 func (this *XMLNode) Delete()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
 func (this *XMLNode) Copy()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *XMLNode) RemoveChild(childElement *XMLNode)  {
-	retVal := this.Call(0x00000066, []interface{}{childElement})
+	retVal, _ := this.Call(0x00000066, []interface{}{childElement})
 	_= retVal
 }
 
 func (this *XMLNode) Cut()  {
-	retVal := this.Call(0x00000067, nil)
+	retVal, _ := this.Call(0x00000067, nil)
 	_= retVal
 }
 
 func (this *XMLNode) Validate()  {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	_= retVal
 }
 
-func (this *XMLNode) SetValidationError(status int32, errorText *ole.Variant, clearedAutomatically bool)  {
-	retVal := this.Call(0x00000069, []interface{}{status, errorText, clearedAutomatically})
+var XMLNode_SetValidationError_OptArgs= []string{
+	"ErrorText", "ClearedAutomatically", 
+}
+
+func (this *XMLNode) SetValidationError(status int32, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(XMLNode_SetValidationError_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000069, []interface{}{status}, optArgs...)
 	_= retVal
 }
 
 func (this *XMLNode) WordOpenXML() string {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

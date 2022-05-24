@@ -17,6 +17,9 @@ type Comments struct {
 }
 
 func NewComments(pDisp *win32.IDispatch, addRef bool, scoped bool) *Comments {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Comments{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewComments(pDisp *win32.IDispatch, addRef bool, scoped bool) *Comments {
 }
 
 func CommentsFromVar(v ole.Variant) *Comments {
-	return NewComments(v.PdispValVal(), false, false)
+	return NewComments(v.IDispatch(), false, false)
 }
 
 func (this *Comments) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Comments) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Comments) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,38 +72,37 @@ func (this *Comments) ForEach(action func(item *Comment) bool) {
 }
 
 func (this *Comments) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Comments) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Comments) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Comments) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Comments) ShowBy() string {
-	retVal := this.PropGet(0x000003eb, nil)
+	retVal, _ := this.PropGet(0x000003eb, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Comments) SetShowBy(rhs string)  {
-	retVal := this.PropPut(0x000003eb, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003eb, []interface{}{rhs})
 }
 
 func (this *Comments) Item(index int32) *Comment {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewComment(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewComment(retVal.IDispatch(), false, true)
 }
 
 var Comments_Add_OptArgs= []string{
@@ -109,7 +111,7 @@ var Comments_Add_OptArgs= []string{
 
 func (this *Comments) Add(range_ *Range, optArgs ...interface{}) *Comment {
 	optArgs = ole.ProcessOptArgs(Comments_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000004, []interface{}{range_}, optArgs...)
-	return NewComment(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000004, []interface{}{range_}, optArgs...)
+	return NewComment(retVal.IDispatch(), false, true)
 }
 

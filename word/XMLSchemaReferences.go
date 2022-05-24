@@ -17,6 +17,9 @@ type XMLSchemaReferences struct {
 }
 
 func NewXMLSchemaReferences(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLSchemaReferences {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLSchemaReferences{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewXMLSchemaReferences(pDisp *win32.IDispatch, addRef bool, scoped bool) *X
 }
 
 func XMLSchemaReferencesFromVar(v ole.Variant) *XMLSchemaReferences {
-	return NewXMLSchemaReferences(v.PdispValVal(), false, false)
+	return NewXMLSchemaReferences(v.IDispatch(), false, false)
 }
 
 func (this *XMLSchemaReferences) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *XMLSchemaReferences) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLSchemaReferences) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,87 +72,87 @@ func (this *XMLSchemaReferences) ForEach(action func(item *XMLSchemaReference) b
 }
 
 func (this *XMLSchemaReferences) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLSchemaReferences) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLSchemaReferences) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLSchemaReferences) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLSchemaReferences) AutomaticValidation() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLSchemaReferences) SetAutomaticValidation(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *XMLSchemaReferences) AllowSaveAsXMLWithoutValidation() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLSchemaReferences) SetAllowSaveAsXMLWithoutValidation(rhs bool)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *XMLSchemaReferences) HideValidationErrors() bool {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLSchemaReferences) SetHideValidationErrors(rhs bool)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *XMLSchemaReferences) IgnoreMixedContent() bool {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLSchemaReferences) SetIgnoreMixedContent(rhs bool)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *XMLSchemaReferences) ShowPlaceholderText() bool {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLSchemaReferences) SetShowPlaceholderText(rhs bool)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *XMLSchemaReferences) Item(index *ole.Variant) *XMLSchemaReference {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewXMLSchemaReference(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewXMLSchemaReference(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLSchemaReferences) Validate()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
-func (this *XMLSchemaReferences) Add(namespaceURI *ole.Variant, alias *ole.Variant, fileName *ole.Variant, installForAllUsers bool) *XMLSchemaReference {
-	retVal := this.Call(0x00000065, []interface{}{namespaceURI, alias, fileName, installForAllUsers})
-	return NewXMLSchemaReference(retVal.PdispValVal(), false, true)
+var XMLSchemaReferences_Add_OptArgs= []string{
+	"NamespaceURI", "Alias", "FileName", "InstallForAllUsers", 
+}
+
+func (this *XMLSchemaReferences) Add(optArgs ...interface{}) *XMLSchemaReference {
+	optArgs = ole.ProcessOptArgs(XMLSchemaReferences_Add_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
+	return NewXMLSchemaReference(retVal.IDispatch(), false, true)
 }
 

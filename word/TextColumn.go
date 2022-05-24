@@ -16,6 +16,9 @@ type TextColumn struct {
 }
 
 func NewTextColumn(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextColumn {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TextColumn{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTextColumn(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextColumn
 }
 
 func TextColumnFromVar(v ole.Variant) *TextColumn {
-	return NewTextColumn(v.PdispValVal(), false, false)
+	return NewTextColumn(v.IDispatch(), false, false)
 }
 
 func (this *TextColumn) IID() *syscall.GUID {
@@ -42,37 +45,35 @@ func (this *TextColumn) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TextColumn) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TextColumn) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextColumn) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TextColumn) Width() float32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TextColumn) SetWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *TextColumn) SpaceAfter() float32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TextColumn) SetSpaceAfter(rhs float32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 

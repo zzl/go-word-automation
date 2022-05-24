@@ -16,6 +16,9 @@ type Border struct {
 }
 
 func NewBorder(pDisp *win32.IDispatch, addRef bool, scoped bool) *Border {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Border{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBorder(pDisp *win32.IDispatch, addRef bool, scoped bool) *Border {
 }
 
 func BorderFromVar(v ole.Variant) *Border {
-	return NewBorder(v.PdispValVal(), false, false)
+	return NewBorder(v.IDispatch(), false, false)
 }
 
 func (this *Border) IID() *syscall.GUID {
@@ -42,92 +45,85 @@ func (this *Border) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Border) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Border) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Border) Visible() bool {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Border) SetVisible(rhs bool)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *Border) ColorIndex() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) SetColorIndex(rhs int32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *Border) Inside() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Border) LineStyle() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) SetLineStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Border) LineWidth() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) SetLineWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *Border) ArtStyle() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) SetArtStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *Border) ArtWidth() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) SetArtWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *Border) Color() int32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.LValVal()
 }
 
 func (this *Border) SetColor(rhs int32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 

@@ -16,6 +16,9 @@ type EndnoteOptions struct {
 }
 
 func NewEndnoteOptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *EndnoteOptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &EndnoteOptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewEndnoteOptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Endnot
 }
 
 func EndnoteOptionsFromVar(v ole.Variant) *EndnoteOptions {
-	return NewEndnoteOptions(v.PdispValVal(), false, false)
+	return NewEndnoteOptions(v.IDispatch(), false, false)
 }
 
 func (this *EndnoteOptions) IID() *syscall.GUID {
@@ -42,57 +45,53 @@ func (this *EndnoteOptions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *EndnoteOptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *EndnoteOptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *EndnoteOptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *EndnoteOptions) Location() int32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.LValVal()
 }
 
 func (this *EndnoteOptions) SetLocation(rhs int32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *EndnoteOptions) NumberStyle() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *EndnoteOptions) SetNumberStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *EndnoteOptions) StartingNumber() int32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.LValVal()
 }
 
 func (this *EndnoteOptions) SetStartingNumber(rhs int32)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *EndnoteOptions) NumberingRule() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *EndnoteOptions) SetNumberingRule(rhs int32)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 

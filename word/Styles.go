@@ -17,6 +17,9 @@ type Styles struct {
 }
 
 func NewStyles(pDisp *win32.IDispatch, addRef bool, scoped bool) *Styles {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Styles{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewStyles(pDisp *win32.IDispatch, addRef bool, scoped bool) *Styles {
 }
 
 func StylesFromVar(v ole.Variant) *Styles {
-	return NewStyles(v.PdispValVal(), false, false)
+	return NewStyles(v.IDispatch(), false, false)
 }
 
 func (this *Styles) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Styles) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Styles) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Styles) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Styles) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Styles) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,13 +87,13 @@ func (this *Styles) ForEach(action func(item *Style) bool) {
 }
 
 func (this *Styles) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Styles) Item(index *ole.Variant) *Style {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewStyle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewStyle(retVal.IDispatch(), false, true)
 }
 
 var Styles_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var Styles_Add_OptArgs= []string{
 
 func (this *Styles) Add(name string, optArgs ...interface{}) *Style {
 	optArgs = ole.ProcessOptArgs(Styles_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{name}, optArgs...)
-	return NewStyle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{name}, optArgs...)
+	return NewStyle(retVal.IDispatch(), false, true)
 }
 

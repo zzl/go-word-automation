@@ -16,6 +16,9 @@ type BuildingBlock struct {
 }
 
 func NewBuildingBlock(pDisp *win32.IDispatch, addRef bool, scoped bool) *BuildingBlock {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &BuildingBlock{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBuildingBlock(pDisp *win32.IDispatch, addRef bool, scoped bool) *Buildin
 }
 
 func BuildingBlockFromVar(v ole.Variant) *BuildingBlock {
-	return NewBuildingBlock(v.PdispValVal(), false, false)
+	return NewBuildingBlock(v.IDispatch(), false, false)
 }
 
 func (this *BuildingBlock) IID() *syscall.GUID {
@@ -42,82 +45,78 @@ func (this *BuildingBlock) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *BuildingBlock) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *BuildingBlock) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlock) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *BuildingBlock) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlock) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *BuildingBlock) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *BuildingBlock) Type() *BuildingBlockType {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewBuildingBlockType(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewBuildingBlockType(retVal.IDispatch(), false, true)
 }
 
 func (this *BuildingBlock) Description() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *BuildingBlock) SetDescription(rhs string)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *BuildingBlock) ID() string {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *BuildingBlock) Category() *Category {
-	retVal := this.PropGet(0x00000006, nil)
-	return NewCategory(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000006, nil)
+	return NewCategory(retVal.IDispatch(), false, true)
 }
 
 func (this *BuildingBlock) Value() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *BuildingBlock) SetValue(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *BuildingBlock) InsertOptions() int32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlock) SetInsertOptions(rhs int32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *BuildingBlock) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
@@ -127,7 +126,7 @@ var BuildingBlock_Insert_OptArgs= []string{
 
 func (this *BuildingBlock) Insert(where *Range, optArgs ...interface{}) *Range {
 	optArgs = ole.ProcessOptArgs(BuildingBlock_Insert_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, []interface{}{where}, optArgs...)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{where}, optArgs...)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

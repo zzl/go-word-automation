@@ -16,6 +16,9 @@ type ListLevel struct {
 }
 
 func NewListLevel(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListLevel {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListLevel{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewListLevel(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListLevel {
 }
 
 func ListLevelFromVar(v ole.Variant) *ListLevel {
-	return NewListLevel(v.PdispValVal(), false, false)
+	return NewListLevel(v.IDispatch(), false, false)
 }
 
 func (this *ListLevel) IID() *syscall.GUID {
@@ -42,152 +45,140 @@ func (this *ListLevel) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListLevel) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) NumberFormat() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ListLevel) SetNumberFormat(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *ListLevel) TrailingCharacter() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) SetTrailingCharacter(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *ListLevel) NumberStyle() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) SetNumberStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *ListLevel) NumberPosition() float32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ListLevel) SetNumberPosition(rhs float32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *ListLevel) Alignment() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) SetAlignment(rhs int32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *ListLevel) TextPosition() float32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ListLevel) SetTextPosition(rhs float32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *ListLevel) TabPosition() float32 {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ListLevel) SetTabPosition(rhs float32)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *ListLevel) ResetOnHigherOld() bool {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ListLevel) SetResetOnHigherOld(rhs bool)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *ListLevel) StartAt() int32 {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) SetStartAt(rhs int32)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *ListLevel) LinkedStyle() string {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ListLevel) SetLinkedStyle(rhs string)  {
-	retVal := this.PropPut(0x0000000b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000b, []interface{}{rhs})
 }
 
 func (this *ListLevel) Font() *Font {
-	retVal := this.PropGet(0x0000000c, nil)
-	return NewFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000c, nil)
+	return NewFont(retVal.IDispatch(), false, true)
 }
 
 func (this *ListLevel) SetFont(rhs *Font)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *ListLevel) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListLevel) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListLevel) ResetOnHigher() int32 {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListLevel) SetResetOnHigher(rhs int32)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *ListLevel) PictureBullet() *InlineShape {
-	retVal := this.PropGet(0x0000000e, nil)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000e, nil)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 func (this *ListLevel) ApplyPictureBullet(fileName string) *InlineShape {
-	retVal := this.Call(0x00000000, []interface{}{fileName})
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{fileName})
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 

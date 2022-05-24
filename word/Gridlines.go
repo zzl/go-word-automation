@@ -16,6 +16,9 @@ type Gridlines struct {
 }
 
 func NewGridlines(pDisp *win32.IDispatch, addRef bool, scoped bool) *Gridlines {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Gridlines{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewGridlines(pDisp *win32.IDispatch, addRef bool, scoped bool) *Gridlines {
 }
 
 func GridlinesFromVar(v ole.Variant) *Gridlines {
-	return NewGridlines(v.PdispValVal(), false, false)
+	return NewGridlines(v.IDispatch(), false, false)
 }
 
 func (this *Gridlines) IID() *syscall.GUID {
@@ -42,44 +45,44 @@ func (this *Gridlines) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Gridlines) Name() string {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Gridlines) Select() ole.Variant {
-	retVal := this.Call(0x000000eb, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x000000eb, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Gridlines) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Gridlines) Border() *ChartBorder {
-	retVal := this.PropGet(0x00000080, nil)
-	return NewChartBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000080, nil)
+	return NewChartBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *Gridlines) Delete() ole.Variant {
-	retVal := this.Call(0x00000075, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x00000075, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Gridlines) Format() *ChartFormat {
-	retVal := this.PropGet(0x60020005, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020005, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *Gridlines) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Gridlines) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

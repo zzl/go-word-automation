@@ -16,6 +16,9 @@ type CustomProperty struct {
 }
 
 func NewCustomProperty(pDisp *win32.IDispatch, addRef bool, scoped bool) *CustomProperty {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CustomProperty{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCustomProperty(pDisp *win32.IDispatch, addRef bool, scoped bool) *Custom
 }
 
 func CustomPropertyFromVar(v ole.Variant) *CustomProperty {
-	return NewCustomProperty(v.PdispValVal(), false, false)
+	return NewCustomProperty(v.IDispatch(), false, false)
 }
 
 func (this *CustomProperty) IID() *syscall.GUID {
@@ -42,37 +45,36 @@ func (this *CustomProperty) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CustomProperty) Name() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *CustomProperty) Value() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *CustomProperty) SetValue(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *CustomProperty) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CustomProperty) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomProperty) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CustomProperty) Delete()  {
-	retVal := this.Call(0x0000000b, nil)
+	retVal, _ := this.Call(0x0000000b, nil)
 	_= retVal
 }
 

@@ -16,6 +16,9 @@ type MailMergeField struct {
 }
 
 func NewMailMergeField(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMergeField {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MailMergeField{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewMailMergeField(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMe
 }
 
 func MailMergeFieldFromVar(v ole.Variant) *MailMergeField {
-	return NewMailMergeField(v.PdispValVal(), false, false)
+	return NewMailMergeField(v.IDispatch(), false, false)
 }
 
 func (this *MailMergeField) IID() *syscall.GUID {
@@ -42,72 +45,70 @@ func (this *MailMergeField) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MailMergeField) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeField) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeField) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MailMergeField) Type() int32 {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeField) Locked() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *MailMergeField) SetLocked(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *MailMergeField) Code() *Range {
-	retVal := this.PropGet(0x00000005, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000005, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeField) SetCode(rhs *Range)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *MailMergeField) Next() *MailMergeField {
-	retVal := this.PropGet(0x00000008, nil)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000008, nil)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeField) Previous() *MailMergeField {
-	retVal := this.PropGet(0x00000009, nil)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000009, nil)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeField) Select()  {
-	retVal := this.Call(0x0000ffff, nil)
+	retVal, _ := this.Call(0x0000ffff, nil)
 	_= retVal
 }
 
 func (this *MailMergeField) Copy()  {
-	retVal := this.Call(0x00000069, nil)
+	retVal, _ := this.Call(0x00000069, nil)
 	_= retVal
 }
 
 func (this *MailMergeField) Cut()  {
-	retVal := this.Call(0x0000006a, nil)
+	retVal, _ := this.Call(0x0000006a, nil)
 	_= retVal
 }
 
 func (this *MailMergeField) Delete()  {
-	retVal := this.Call(0x0000006b, nil)
+	retVal, _ := this.Call(0x0000006b, nil)
 	_= retVal
 }
 

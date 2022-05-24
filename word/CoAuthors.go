@@ -17,6 +17,9 @@ type CoAuthors struct {
 }
 
 func NewCoAuthors(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthors {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CoAuthors{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCoAuthors(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthors {
 }
 
 func CoAuthorsFromVar(v ole.Variant) *CoAuthors {
-	return NewCoAuthors(v.PdispValVal(), false, false)
+	return NewCoAuthors(v.IDispatch(), false, false)
 }
 
 func (this *CoAuthors) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *CoAuthors) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CoAuthors) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthors) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthors) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CoAuthors) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthors) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,7 +92,7 @@ func (this *CoAuthors) ForEach(action func(item *CoAuthor) bool) {
 }
 
 func (this *CoAuthors) Item(index interface{}) *CoAuthor {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCoAuthor(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCoAuthor(retVal.IDispatch(), false, true)
 }
 

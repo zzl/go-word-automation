@@ -17,6 +17,9 @@ type OMathRecognizedFunctions struct {
 }
 
 func NewOMathRecognizedFunctions(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathRecognizedFunctions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathRecognizedFunctions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOMathRecognizedFunctions(pDisp *win32.IDispatch, addRef bool, scoped boo
 }
 
 func OMathRecognizedFunctionsFromVar(v ole.Variant) *OMathRecognizedFunctions {
-	return NewOMathRecognizedFunctions(v.PdispValVal(), false, false)
+	return NewOMathRecognizedFunctions(v.IDispatch(), false, false)
 }
 
 func (this *OMathRecognizedFunctions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *OMathRecognizedFunctions) GetIDispatch(addRef bool) *win32.IDispatch
 }
 
 func (this *OMathRecognizedFunctions) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathRecognizedFunctions) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathRecognizedFunctions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathRecognizedFunctions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *OMathRecognizedFunctions) ForEach(action func(item *OMathRecognizedF
 }
 
 func (this *OMathRecognizedFunctions) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathRecognizedFunctions) Item(index *ole.Variant) *OMathRecognizedFunction {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOMathRecognizedFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOMathRecognizedFunction(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathRecognizedFunctions) Add(name string) *OMathRecognizedFunction {
-	retVal := this.Call(0x000000c8, []interface{}{name})
-	return NewOMathRecognizedFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, []interface{}{name})
+	return NewOMathRecognizedFunction(retVal.IDispatch(), false, true)
 }
 

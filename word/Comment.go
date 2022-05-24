@@ -17,6 +17,9 @@ type Comment struct {
 }
 
 func NewComment(pDisp *win32.IDispatch, addRef bool, scoped bool) *Comment {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Comment{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewComment(pDisp *win32.IDispatch, addRef bool, scoped bool) *Comment {
 }
 
 func CommentFromVar(v ole.Variant) *Comment {
-	return NewComment(v.PdispValVal(), false, false)
+	return NewComment(v.IDispatch(), false, false)
 }
 
 func (this *Comment) IID() *syscall.GUID {
@@ -43,87 +46,84 @@ func (this *Comment) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Comment) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Comment) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Comment) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Comment) Range() *Range {
-	retVal := this.PropGet(0x000003eb, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003eb, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Comment) Reference() *Range {
-	retVal := this.PropGet(0x000003ec, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003ec, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Comment) Scope() *Range {
-	retVal := this.PropGet(0x000003ed, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003ed, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Comment) Index() int32 {
-	retVal := this.PropGet(0x000003ee, nil)
+	retVal, _ := this.PropGet(0x000003ee, nil)
 	return retVal.LValVal()
 }
 
 func (this *Comment) Author() string {
-	retVal := this.PropGet(0x000003ef, nil)
+	retVal, _ := this.PropGet(0x000003ef, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Comment) SetAuthor(rhs string)  {
-	retVal := this.PropPut(0x000003ef, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003ef, []interface{}{rhs})
 }
 
 func (this *Comment) Initial() string {
-	retVal := this.PropGet(0x000003f0, nil)
+	retVal, _ := this.PropGet(0x000003f0, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Comment) SetInitial(rhs string)  {
-	retVal := this.PropPut(0x000003f0, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003f0, []interface{}{rhs})
 }
 
 func (this *Comment) ShowTip() bool {
-	retVal := this.PropGet(0x000003f1, nil)
+	retVal, _ := this.PropGet(0x000003f1, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Comment) SetShowTip(rhs bool)  {
-	retVal := this.PropPut(0x000003f1, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003f1, []interface{}{rhs})
 }
 
 func (this *Comment) Delete()  {
-	retVal := this.Call(0x0000000a, nil)
+	retVal, _ := this.Call(0x0000000a, nil)
 	_= retVal
 }
 
 func (this *Comment) Edit()  {
-	retVal := this.Call(0x000003f3, nil)
+	retVal, _ := this.Call(0x000003f3, nil)
 	_= retVal
 }
 
 func (this *Comment) Date() time.Time {
-	retVal := this.PropGet(0x000003f2, nil)
+	retVal, _ := this.PropGet(0x000003f2, nil)
 	return ole.Date(retVal.DateVal()).ToGoTime()
 }
 
 func (this *Comment) IsInk() bool {
-	retVal := this.PropGet(0x000003f4, nil)
+	retVal, _ := this.PropGet(0x000003f4, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 

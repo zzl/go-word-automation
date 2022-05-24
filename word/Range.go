@@ -16,6 +16,9 @@ type Range struct {
 }
 
 func NewRange(pDisp *win32.IDispatch, addRef bool, scoped bool) *Range {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Range{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewRange(pDisp *win32.IDispatch, addRef bool, scoped bool) *Range {
 }
 
 func RangeFromVar(v ole.Variant) *Range {
-	return NewRange(v.PdispValVal(), false, false)
+	return NewRange(v.IDispatch(), false, false)
 }
 
 func (this *Range) IID() *syscall.GUID {
@@ -42,454 +45,431 @@ func (this *Range) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Range) Text() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Range) SetText(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *Range) FormattedText() *Range {
-	retVal := this.PropGet(0x00000002, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000002, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SetFormattedText(rhs *Range)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *Range) Start() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetStart(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Range) End() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetEnd(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *Range) Font() *Font {
-	retVal := this.PropGet(0x00000005, nil)
-	return NewFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000005, nil)
+	return NewFont(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SetFont(rhs *Font)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *Range) Duplicate() *Range {
-	retVal := this.PropGet(0x00000006, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000006, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) StoryType() int32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) Tables() *Tables {
-	retVal := this.PropGet(0x00000032, nil)
-	return NewTables(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000032, nil)
+	return NewTables(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Words() *Words {
-	retVal := this.PropGet(0x00000033, nil)
-	return NewWords(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000033, nil)
+	return NewWords(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Sentences() *Sentences {
-	retVal := this.PropGet(0x00000034, nil)
-	return NewSentences(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000034, nil)
+	return NewSentences(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Characters() *Characters {
-	retVal := this.PropGet(0x00000035, nil)
-	return NewCharacters(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000035, nil)
+	return NewCharacters(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Footnotes() *Footnotes {
-	retVal := this.PropGet(0x00000036, nil)
-	return NewFootnotes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000036, nil)
+	return NewFootnotes(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Endnotes() *Endnotes {
-	retVal := this.PropGet(0x00000037, nil)
-	return NewEndnotes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000037, nil)
+	return NewEndnotes(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Comments() *Comments {
-	retVal := this.PropGet(0x00000038, nil)
-	return NewComments(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000038, nil)
+	return NewComments(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Cells() *Cells {
-	retVal := this.PropGet(0x00000039, nil)
-	return NewCells(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000039, nil)
+	return NewCells(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Sections() *Sections {
-	retVal := this.PropGet(0x0000003a, nil)
-	return NewSections(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000003a, nil)
+	return NewSections(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Paragraphs() *Paragraphs {
-	retVal := this.PropGet(0x0000003b, nil)
-	return NewParagraphs(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000003b, nil)
+	return NewParagraphs(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Borders() *Borders {
-	retVal := this.PropGet(0x0000044c, nil)
-	return NewBorders(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044c, nil)
+	return NewBorders(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SetBorders(rhs *Borders)  {
-	retVal := this.PropPut(0x0000044c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044c, []interface{}{rhs})
 }
 
 func (this *Range) Shading() *Shading {
-	retVal := this.PropGet(0x0000003d, nil)
-	return NewShading(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000003d, nil)
+	return NewShading(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) TextRetrievalMode() *TextRetrievalMode {
-	retVal := this.PropGet(0x0000003e, nil)
-	return NewTextRetrievalMode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000003e, nil)
+	return NewTextRetrievalMode(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SetTextRetrievalMode(rhs *TextRetrievalMode)  {
-	retVal := this.PropPut(0x0000003e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000003e, []interface{}{rhs})
 }
 
 func (this *Range) Fields() *Fields {
-	retVal := this.PropGet(0x00000040, nil)
-	return NewFields(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000040, nil)
+	return NewFields(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) FormFields() *FormFields {
-	retVal := this.PropGet(0x00000041, nil)
-	return NewFormFields(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000041, nil)
+	return NewFormFields(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Frames() *Frames {
-	retVal := this.PropGet(0x00000042, nil)
-	return NewFrames(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000042, nil)
+	return NewFrames(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) ParagraphFormat() *ParagraphFormat {
-	retVal := this.PropGet(0x0000044e, nil)
-	return NewParagraphFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044e, nil)
+	return NewParagraphFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SetParagraphFormat(rhs *ParagraphFormat)  {
-	retVal := this.PropPut(0x0000044e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044e, []interface{}{rhs})
 }
 
 func (this *Range) ListFormat() *ListFormat {
-	retVal := this.PropGet(0x00000044, nil)
-	return NewListFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000044, nil)
+	return NewListFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Bookmarks() *Bookmarks {
-	retVal := this.PropGet(0x0000004b, nil)
-	return NewBookmarks(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000004b, nil)
+	return NewBookmarks(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Range) Bold() int32 {
-	retVal := this.PropGet(0x00000082, nil)
+	retVal, _ := this.PropGet(0x00000082, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetBold(rhs int32)  {
-	retVal := this.PropPut(0x00000082, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000082, []interface{}{rhs})
 }
 
 func (this *Range) Italic() int32 {
-	retVal := this.PropGet(0x00000083, nil)
+	retVal, _ := this.PropGet(0x00000083, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetItalic(rhs int32)  {
-	retVal := this.PropPut(0x00000083, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000083, []interface{}{rhs})
 }
 
 func (this *Range) Underline() int32 {
-	retVal := this.PropGet(0x0000008b, nil)
+	retVal, _ := this.PropGet(0x0000008b, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetUnderline(rhs int32)  {
-	retVal := this.PropPut(0x0000008b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000008b, []interface{}{rhs})
 }
 
 func (this *Range) EmphasisMark() int32 {
-	retVal := this.PropGet(0x0000008c, nil)
+	retVal, _ := this.PropGet(0x0000008c, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetEmphasisMark(rhs int32)  {
-	retVal := this.PropPut(0x0000008c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000008c, []interface{}{rhs})
 }
 
 func (this *Range) DisableCharacterSpaceGrid() bool {
-	retVal := this.PropGet(0x0000008d, nil)
+	retVal, _ := this.PropGet(0x0000008d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) SetDisableCharacterSpaceGrid(rhs bool)  {
-	retVal := this.PropPut(0x0000008d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000008d, []interface{}{rhs})
 }
 
 func (this *Range) Revisions() *Revisions {
-	retVal := this.PropGet(0x00000096, nil)
-	return NewRevisions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return NewRevisions(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Style() ole.Variant {
-	retVal := this.PropGet(0x00000097, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000097, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Range) SetStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000097, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000097, []interface{}{rhs})
 }
 
 func (this *Range) StoryLength() int32 {
-	retVal := this.PropGet(0x00000098, nil)
+	retVal, _ := this.PropGet(0x00000098, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) LanguageID() int32 {
-	retVal := this.PropGet(0x00000099, nil)
+	retVal, _ := this.PropGet(0x00000099, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetLanguageID(rhs int32)  {
-	retVal := this.PropPut(0x00000099, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000099, []interface{}{rhs})
 }
 
 func (this *Range) SynonymInfo() *SynonymInfo {
-	retVal := this.PropGet(0x0000009b, nil)
-	return NewSynonymInfo(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000009b, nil)
+	return NewSynonymInfo(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Hyperlinks() *Hyperlinks {
-	retVal := this.PropGet(0x0000009c, nil)
-	return NewHyperlinks(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000009c, nil)
+	return NewHyperlinks(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) ListParagraphs() *ListParagraphs {
-	retVal := this.PropGet(0x0000009d, nil)
-	return NewListParagraphs(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000009d, nil)
+	return NewListParagraphs(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Subdocuments() *Subdocuments {
-	retVal := this.PropGet(0x0000009f, nil)
-	return NewSubdocuments(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000009f, nil)
+	return NewSubdocuments(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) GrammarChecked() bool {
-	retVal := this.PropGet(0x00000104, nil)
+	retVal, _ := this.PropGet(0x00000104, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) SetGrammarChecked(rhs bool)  {
-	retVal := this.PropPut(0x00000104, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000104, []interface{}{rhs})
 }
 
 func (this *Range) SpellingChecked() bool {
-	retVal := this.PropGet(0x00000105, nil)
+	retVal, _ := this.PropGet(0x00000105, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) SetSpellingChecked(rhs bool)  {
-	retVal := this.PropPut(0x00000105, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000105, []interface{}{rhs})
 }
 
 func (this *Range) HighlightColorIndex() int32 {
-	retVal := this.PropGet(0x0000012d, nil)
+	retVal, _ := this.PropGet(0x0000012d, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetHighlightColorIndex(rhs int32)  {
-	retVal := this.PropPut(0x0000012d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000012d, []interface{}{rhs})
 }
 
 func (this *Range) Columns() *Columns {
-	retVal := this.PropGet(0x0000012e, nil)
-	return NewColumns(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000012e, nil)
+	return NewColumns(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Rows() *Rows {
-	retVal := this.PropGet(0x0000012f, nil)
-	return NewRows(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000012f, nil)
+	return NewRows(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) CanEdit() int32 {
-	retVal := this.PropGet(0x00000130, nil)
+	retVal, _ := this.PropGet(0x00000130, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) CanPaste() int32 {
-	retVal := this.PropGet(0x00000131, nil)
+	retVal, _ := this.PropGet(0x00000131, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) IsEndOfRowMark() bool {
-	retVal := this.PropGet(0x00000133, nil)
+	retVal, _ := this.PropGet(0x00000133, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) BookmarkID() int32 {
-	retVal := this.PropGet(0x00000134, nil)
+	retVal, _ := this.PropGet(0x00000134, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) PreviousBookmarkID() int32 {
-	retVal := this.PropGet(0x00000135, nil)
+	retVal, _ := this.PropGet(0x00000135, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) Find() *Find {
-	retVal := this.PropGet(0x00000106, nil)
-	return NewFind(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000106, nil)
+	return NewFind(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) PageSetup() *PageSetup {
-	retVal := this.PropGet(0x0000044d, nil)
-	return NewPageSetup(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044d, nil)
+	return NewPageSetup(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SetPageSetup(rhs *PageSetup)  {
-	retVal := this.PropPut(0x0000044d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044d, []interface{}{rhs})
 }
 
 func (this *Range) ShapeRange() *ShapeRange {
-	retVal := this.PropGet(0x00000137, nil)
-	return NewShapeRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000137, nil)
+	return NewShapeRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Case() int32 {
-	retVal := this.PropGet(0x00000138, nil)
+	retVal, _ := this.PropGet(0x00000138, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetCase(rhs int32)  {
-	retVal := this.PropPut(0x00000138, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000138, []interface{}{rhs})
 }
 
 func (this *Range) Information(type_ int32) ole.Variant {
-	retVal := this.PropGet(0x00000139, []interface{}{type_})
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000139, []interface{}{type_})
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Range) ReadabilityStatistics() *ReadabilityStatistics {
-	retVal := this.PropGet(0x0000013a, nil)
-	return NewReadabilityStatistics(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000013a, nil)
+	return NewReadabilityStatistics(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) GrammaticalErrors() *ProofreadingErrors {
-	retVal := this.PropGet(0x0000013b, nil)
-	return NewProofreadingErrors(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000013b, nil)
+	return NewProofreadingErrors(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SpellingErrors() *ProofreadingErrors {
-	retVal := this.PropGet(0x0000013c, nil)
-	return NewProofreadingErrors(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000013c, nil)
+	return NewProofreadingErrors(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Orientation() int32 {
-	retVal := this.PropGet(0x0000013d, nil)
+	retVal, _ := this.PropGet(0x0000013d, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetOrientation(rhs int32)  {
-	retVal := this.PropPut(0x0000013d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000013d, []interface{}{rhs})
 }
 
 func (this *Range) InlineShapes() *InlineShapes {
-	retVal := this.PropGet(0x0000013f, nil)
-	return NewInlineShapes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000013f, nil)
+	return NewInlineShapes(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) NextStoryRange() *Range {
-	retVal := this.PropGet(0x00000140, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000140, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) LanguageIDFarEast() int32 {
-	retVal := this.PropGet(0x00000141, nil)
+	retVal, _ := this.PropGet(0x00000141, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetLanguageIDFarEast(rhs int32)  {
-	retVal := this.PropPut(0x00000141, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000141, []interface{}{rhs})
 }
 
 func (this *Range) LanguageIDOther() int32 {
-	retVal := this.PropGet(0x00000142, nil)
+	retVal, _ := this.PropGet(0x00000142, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetLanguageIDOther(rhs int32)  {
-	retVal := this.PropPut(0x00000142, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000142, []interface{}{rhs})
 }
 
 func (this *Range) Select()  {
-	retVal := this.Call(0x0000ffff, nil)
+	retVal, _ := this.Call(0x0000ffff, nil)
 	_= retVal
 }
 
 func (this *Range) SetRange(start int32, end int32)  {
-	retVal := this.Call(0x00000064, []interface{}{start, end})
+	retVal, _ := this.Call(0x00000064, []interface{}{start, end})
 	_= retVal
 }
 
@@ -499,17 +479,17 @@ var Range_Collapse_OptArgs= []string{
 
 func (this *Range) Collapse(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_Collapse_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, nil, optArgs...)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) InsertBefore(text string)  {
-	retVal := this.Call(0x00000066, []interface{}{text})
+	retVal, _ := this.Call(0x00000066, []interface{}{text})
 	_= retVal
 }
 
 func (this *Range) InsertAfter(text string)  {
-	retVal := this.Call(0x00000068, []interface{}{text})
+	retVal, _ := this.Call(0x00000068, []interface{}{text})
 	_= retVal
 }
 
@@ -519,8 +499,8 @@ var Range_Next_OptArgs= []string{
 
 func (this *Range) Next(optArgs ...interface{}) *Range {
 	optArgs = ole.ProcessOptArgs(Range_Next_OptArgs, optArgs)
-	retVal := this.Call(0x00000069, nil, optArgs...)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000069, nil, optArgs...)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 var Range_Previous_OptArgs= []string{
@@ -529,8 +509,8 @@ var Range_Previous_OptArgs= []string{
 
 func (this *Range) Previous(optArgs ...interface{}) *Range {
 	optArgs = ole.ProcessOptArgs(Range_Previous_OptArgs, optArgs)
-	retVal := this.Call(0x0000006a, nil, optArgs...)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006a, nil, optArgs...)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 var Range_StartOf_OptArgs= []string{
@@ -539,7 +519,7 @@ var Range_StartOf_OptArgs= []string{
 
 func (this *Range) StartOf(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_StartOf_OptArgs, optArgs)
-	retVal := this.Call(0x0000006b, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006b, nil, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -549,7 +529,7 @@ var Range_EndOf_OptArgs= []string{
 
 func (this *Range) EndOf(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_EndOf_OptArgs, optArgs)
-	retVal := this.Call(0x0000006c, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006c, nil, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -559,7 +539,7 @@ var Range_Move_OptArgs= []string{
 
 func (this *Range) Move(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_Move_OptArgs, optArgs)
-	retVal := this.Call(0x0000006d, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006d, nil, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -569,7 +549,7 @@ var Range_MoveStart_OptArgs= []string{
 
 func (this *Range) MoveStart(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveStart_OptArgs, optArgs)
-	retVal := this.Call(0x0000006e, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006e, nil, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -579,7 +559,7 @@ var Range_MoveEnd_OptArgs= []string{
 
 func (this *Range) MoveEnd(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveEnd_OptArgs, optArgs)
-	retVal := this.Call(0x0000006f, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006f, nil, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -589,7 +569,7 @@ var Range_MoveWhile_OptArgs= []string{
 
 func (this *Range) MoveWhile(cset *ole.Variant, optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveWhile_OptArgs, optArgs)
-	retVal := this.Call(0x00000070, []interface{}{cset}, optArgs...)
+	retVal, _ := this.Call(0x00000070, []interface{}{cset}, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -599,7 +579,7 @@ var Range_MoveStartWhile_OptArgs= []string{
 
 func (this *Range) MoveStartWhile(cset *ole.Variant, optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveStartWhile_OptArgs, optArgs)
-	retVal := this.Call(0x00000071, []interface{}{cset}, optArgs...)
+	retVal, _ := this.Call(0x00000071, []interface{}{cset}, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -609,7 +589,7 @@ var Range_MoveEndWhile_OptArgs= []string{
 
 func (this *Range) MoveEndWhile(cset *ole.Variant, optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveEndWhile_OptArgs, optArgs)
-	retVal := this.Call(0x00000072, []interface{}{cset}, optArgs...)
+	retVal, _ := this.Call(0x00000072, []interface{}{cset}, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -619,7 +599,7 @@ var Range_MoveUntil_OptArgs= []string{
 
 func (this *Range) MoveUntil(cset *ole.Variant, optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveUntil_OptArgs, optArgs)
-	retVal := this.Call(0x00000073, []interface{}{cset}, optArgs...)
+	retVal, _ := this.Call(0x00000073, []interface{}{cset}, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -629,7 +609,7 @@ var Range_MoveStartUntil_OptArgs= []string{
 
 func (this *Range) MoveStartUntil(cset *ole.Variant, optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveStartUntil_OptArgs, optArgs)
-	retVal := this.Call(0x00000074, []interface{}{cset}, optArgs...)
+	retVal, _ := this.Call(0x00000074, []interface{}{cset}, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -639,22 +619,22 @@ var Range_MoveEndUntil_OptArgs= []string{
 
 func (this *Range) MoveEndUntil(cset *ole.Variant, optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_MoveEndUntil_OptArgs, optArgs)
-	retVal := this.Call(0x00000075, []interface{}{cset}, optArgs...)
+	retVal, _ := this.Call(0x00000075, []interface{}{cset}, optArgs...)
 	return retVal.LValVal()
 }
 
 func (this *Range) Cut()  {
-	retVal := this.Call(0x00000077, nil)
+	retVal, _ := this.Call(0x00000077, nil)
 	_= retVal
 }
 
 func (this *Range) Copy()  {
-	retVal := this.Call(0x00000078, nil)
+	retVal, _ := this.Call(0x00000078, nil)
 	_= retVal
 }
 
 func (this *Range) Paste()  {
-	retVal := this.Call(0x00000079, nil)
+	retVal, _ := this.Call(0x00000079, nil)
 	_= retVal
 }
 
@@ -664,7 +644,7 @@ var Range_InsertBreak_OptArgs= []string{
 
 func (this *Range) InsertBreak(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertBreak_OptArgs, optArgs)
-	retVal := this.Call(0x0000007a, nil, optArgs...)
+	retVal, _ := this.Call(0x0000007a, nil, optArgs...)
 	_= retVal
 }
 
@@ -674,17 +654,17 @@ var Range_InsertFile_OptArgs= []string{
 
 func (this *Range) InsertFile(fileName string, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertFile_OptArgs, optArgs)
-	retVal := this.Call(0x0000007b, []interface{}{fileName}, optArgs...)
+	retVal, _ := this.Call(0x0000007b, []interface{}{fileName}, optArgs...)
 	_= retVal
 }
 
 func (this *Range) InStory(range_ *Range) bool {
-	retVal := this.Call(0x0000007d, []interface{}{range_})
+	retVal, _ := this.Call(0x0000007d, []interface{}{range_})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) InRange(range_ *Range) bool {
-	retVal := this.Call(0x0000007e, []interface{}{range_})
+	retVal, _ := this.Call(0x0000007e, []interface{}{range_})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
@@ -694,12 +674,12 @@ var Range_Delete_OptArgs= []string{
 
 func (this *Range) Delete(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_Delete_OptArgs, optArgs)
-	retVal := this.Call(0x0000007f, nil, optArgs...)
+	retVal, _ := this.Call(0x0000007f, nil, optArgs...)
 	return retVal.LValVal()
 }
 
 func (this *Range) WholeStory()  {
-	retVal := this.Call(0x00000080, nil)
+	retVal, _ := this.Call(0x00000080, nil)
 	_= retVal
 }
 
@@ -709,17 +689,17 @@ var Range_Expand_OptArgs= []string{
 
 func (this *Range) Expand(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Range_Expand_OptArgs, optArgs)
-	retVal := this.Call(0x00000081, nil, optArgs...)
+	retVal, _ := this.Call(0x00000081, nil, optArgs...)
 	return retVal.LValVal()
 }
 
 func (this *Range) InsertParagraph()  {
-	retVal := this.Call(0x000000a0, nil)
+	retVal, _ := this.Call(0x000000a0, nil)
 	_= retVal
 }
 
 func (this *Range) InsertParagraphAfter()  {
-	retVal := this.Call(0x000000a1, nil)
+	retVal, _ := this.Call(0x000000a1, nil)
 	_= retVal
 }
 
@@ -732,8 +712,8 @@ var Range_ConvertToTableOld_OptArgs= []string{
 
 func (this *Range) ConvertToTableOld(optArgs ...interface{}) *Table {
 	optArgs = ole.ProcessOptArgs(Range_ConvertToTableOld_OptArgs, optArgs)
-	retVal := this.Call(0x000000a2, nil, optArgs...)
-	return NewTable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000a2, nil, optArgs...)
+	return NewTable(retVal.IDispatch(), false, true)
 }
 
 var Range_InsertDateTimeOld_OptArgs= []string{
@@ -742,7 +722,7 @@ var Range_InsertDateTimeOld_OptArgs= []string{
 
 func (this *Range) InsertDateTimeOld(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertDateTimeOld_OptArgs, optArgs)
-	retVal := this.Call(0x000000a3, nil, optArgs...)
+	retVal, _ := this.Call(0x000000a3, nil, optArgs...)
 	_= retVal
 }
 
@@ -752,7 +732,7 @@ var Range_InsertSymbol_OptArgs= []string{
 
 func (this *Range) InsertSymbol(characterNumber int32, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertSymbol_OptArgs, optArgs)
-	retVal := this.Call(0x000000a4, []interface{}{characterNumber}, optArgs...)
+	retVal, _ := this.Call(0x000000a4, []interface{}{characterNumber}, optArgs...)
 	_= retVal
 }
 
@@ -762,7 +742,7 @@ var Range_InsertCrossReference_2002_OptArgs= []string{
 
 func (this *Range) InsertCrossReference_2002(referenceType *ole.Variant, referenceKind int32, referenceItem *ole.Variant, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertCrossReference_2002_OptArgs, optArgs)
-	retVal := this.Call(0x000000a5, []interface{}{referenceType, referenceKind, referenceItem}, optArgs...)
+	retVal, _ := this.Call(0x000000a5, []interface{}{referenceType, referenceKind, referenceItem}, optArgs...)
 	_= retVal
 }
 
@@ -772,12 +752,12 @@ var Range_InsertCaptionXP_OptArgs= []string{
 
 func (this *Range) InsertCaptionXP(label *ole.Variant, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertCaptionXP_OptArgs, optArgs)
-	retVal := this.Call(0x000000a6, []interface{}{label}, optArgs...)
+	retVal, _ := this.Call(0x000000a6, []interface{}{label}, optArgs...)
 	_= retVal
 }
 
 func (this *Range) CopyAsPicture()  {
-	retVal := this.Call(0x000000a7, nil)
+	retVal, _ := this.Call(0x000000a7, nil)
 	_= retVal
 }
 
@@ -790,27 +770,27 @@ var Range_SortOld_OptArgs= []string{
 
 func (this *Range) SortOld(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_SortOld_OptArgs, optArgs)
-	retVal := this.Call(0x000000a8, nil, optArgs...)
+	retVal, _ := this.Call(0x000000a8, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) SortAscending()  {
-	retVal := this.Call(0x000000a9, nil)
+	retVal, _ := this.Call(0x000000a9, nil)
 	_= retVal
 }
 
 func (this *Range) SortDescending()  {
-	retVal := this.Call(0x000000aa, nil)
+	retVal, _ := this.Call(0x000000aa, nil)
 	_= retVal
 }
 
 func (this *Range) IsEqual(range_ *Range) bool {
-	retVal := this.Call(0x000000ab, []interface{}{range_})
+	retVal, _ := this.Call(0x000000ab, []interface{}{range_})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) Calculate() float32 {
-	retVal := this.Call(0x000000ac, nil)
+	retVal, _ := this.Call(0x000000ac, nil)
 	return retVal.FltValVal()
 }
 
@@ -820,18 +800,18 @@ var Range_GoTo_OptArgs= []string{
 
 func (this *Range) GoTo(optArgs ...interface{}) *Range {
 	optArgs = ole.ProcessOptArgs(Range_GoTo_OptArgs, optArgs)
-	retVal := this.Call(0x000000ad, nil, optArgs...)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000ad, nil, optArgs...)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) GoToNext(what int32) *Range {
-	retVal := this.Call(0x000000ae, []interface{}{what})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000ae, []interface{}{what})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) GoToPrevious(what int32) *Range {
-	retVal := this.Call(0x000000af, []interface{}{what})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000af, []interface{}{what})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 var Range_PasteSpecial_OptArgs= []string{
@@ -841,27 +821,27 @@ var Range_PasteSpecial_OptArgs= []string{
 
 func (this *Range) PasteSpecial(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_PasteSpecial_OptArgs, optArgs)
-	retVal := this.Call(0x000000b0, nil, optArgs...)
+	retVal, _ := this.Call(0x000000b0, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) LookupNameProperties()  {
-	retVal := this.Call(0x000000b1, nil)
+	retVal, _ := this.Call(0x000000b1, nil)
 	_= retVal
 }
 
 func (this *Range) ComputeStatistics(statistic int32) int32 {
-	retVal := this.Call(0x000000b2, []interface{}{statistic})
+	retVal, _ := this.Call(0x000000b2, []interface{}{statistic})
 	return retVal.LValVal()
 }
 
 func (this *Range) Relocate(direction int32)  {
-	retVal := this.Call(0x000000b3, []interface{}{direction})
+	retVal, _ := this.Call(0x000000b3, []interface{}{direction})
 	_= retVal
 }
 
 func (this *Range) CheckSynonyms()  {
-	retVal := this.Call(0x000000b4, nil)
+	retVal, _ := this.Call(0x000000b4, nil)
 	_= retVal
 }
 
@@ -871,7 +851,7 @@ var Range_SubscribeTo_OptArgs= []string{
 
 func (this *Range) SubscribeTo(edition string, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_SubscribeTo_OptArgs, optArgs)
-	retVal := this.Call(0x000000b5, []interface{}{edition}, optArgs...)
+	retVal, _ := this.Call(0x000000b5, []interface{}{edition}, optArgs...)
 	_= retVal
 }
 
@@ -881,12 +861,12 @@ var Range_CreatePublisher_OptArgs= []string{
 
 func (this *Range) CreatePublisher(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_CreatePublisher_OptArgs, optArgs)
-	retVal := this.Call(0x000000b6, nil, optArgs...)
+	retVal, _ := this.Call(0x000000b6, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) InsertAutoText()  {
-	retVal := this.Call(0x000000b7, nil)
+	retVal, _ := this.Call(0x000000b7, nil)
 	_= retVal
 }
 
@@ -899,17 +879,17 @@ var Range_InsertDatabase_OptArgs= []string{
 
 func (this *Range) InsertDatabase(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertDatabase_OptArgs, optArgs)
-	retVal := this.Call(0x000000c2, nil, optArgs...)
+	retVal, _ := this.Call(0x000000c2, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) AutoFormat()  {
-	retVal := this.Call(0x000000c3, nil)
+	retVal, _ := this.Call(0x000000c3, nil)
 	_= retVal
 }
 
 func (this *Range) CheckGrammar()  {
-	retVal := this.Call(0x000000cc, nil)
+	retVal, _ := this.Call(0x000000cc, nil)
 	_= retVal
 }
 
@@ -921,7 +901,7 @@ var Range_CheckSpelling_OptArgs= []string{
 
 func (this *Range) CheckSpelling(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_CheckSpelling_OptArgs, optArgs)
-	retVal := this.Call(0x000000cd, nil, optArgs...)
+	retVal, _ := this.Call(0x000000cd, nil, optArgs...)
 	_= retVal
 }
 
@@ -933,22 +913,22 @@ var Range_GetSpellingSuggestions_OptArgs= []string{
 
 func (this *Range) GetSpellingSuggestions(optArgs ...interface{}) *SpellingSuggestions {
 	optArgs = ole.ProcessOptArgs(Range_GetSpellingSuggestions_OptArgs, optArgs)
-	retVal := this.Call(0x000000d1, nil, optArgs...)
-	return NewSpellingSuggestions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000d1, nil, optArgs...)
+	return NewSpellingSuggestions(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) InsertParagraphBefore()  {
-	retVal := this.Call(0x000000d4, nil)
+	retVal, _ := this.Call(0x000000d4, nil)
 	_= retVal
 }
 
 func (this *Range) NextSubdocument()  {
-	retVal := this.Call(0x000000db, nil)
+	retVal, _ := this.Call(0x000000db, nil)
 	_= retVal
 }
 
 func (this *Range) PreviousSubdocument()  {
-	retVal := this.Call(0x000000dc, nil)
+	retVal, _ := this.Call(0x000000dc, nil)
 	_= retVal
 }
 
@@ -958,12 +938,12 @@ var Range_ConvertHangulAndHanja_OptArgs= []string{
 
 func (this *Range) ConvertHangulAndHanja(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_ConvertHangulAndHanja_OptArgs, optArgs)
-	retVal := this.Call(0x000000dd, nil, optArgs...)
+	retVal, _ := this.Call(0x000000dd, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) PasteAsNestedTable()  {
-	retVal := this.Call(0x000000de, nil)
+	retVal, _ := this.Call(0x000000de, nil)
 	_= retVal
 }
 
@@ -973,12 +953,17 @@ var Range_ModifyEnclosure_OptArgs= []string{
 
 func (this *Range) ModifyEnclosure(style *ole.Variant, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_ModifyEnclosure_OptArgs, optArgs)
-	retVal := this.Call(0x000000df, []interface{}{style}, optArgs...)
+	retVal, _ := this.Call(0x000000df, []interface{}{style}, optArgs...)
 	_= retVal
 }
 
-func (this *Range) PhoneticGuide(text string, alignment int32, raise int32, fontSize int32, fontName string)  {
-	retVal := this.Call(0x000000e0, []interface{}{text, alignment, raise, fontSize, fontName})
+var Range_PhoneticGuide_OptArgs= []string{
+	"Alignment", "Raise", "FontSize", "FontName", 
+}
+
+func (this *Range) PhoneticGuide(text string, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(Range_PhoneticGuide_OptArgs, optArgs)
+	retVal, _ := this.Call(0x000000e0, []interface{}{text}, optArgs...)
 	_= retVal
 }
 
@@ -988,7 +973,7 @@ var Range_InsertDateTime_OptArgs= []string{
 
 func (this *Range) InsertDateTime(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertDateTime_OptArgs, optArgs)
-	retVal := this.Call(0x000001bc, nil, optArgs...)
+	retVal, _ := this.Call(0x000001bc, nil, optArgs...)
 	_= retVal
 }
 
@@ -1002,12 +987,12 @@ var Range_Sort_OptArgs= []string{
 
 func (this *Range) Sort(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_Sort_OptArgs, optArgs)
-	retVal := this.Call(0x000001e4, nil, optArgs...)
+	retVal, _ := this.Call(0x000001e4, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) DetectLanguage()  {
-	retVal := this.Call(0x000000cb, nil)
+	retVal, _ := this.Call(0x000000cb, nil)
 	_= retVal
 }
 
@@ -1020,208 +1005,206 @@ var Range_ConvertToTable_OptArgs= []string{
 
 func (this *Range) ConvertToTable(optArgs ...interface{}) *Table {
 	optArgs = ole.ProcessOptArgs(Range_ConvertToTable_OptArgs, optArgs)
-	retVal := this.Call(0x000001f2, nil, optArgs...)
-	return NewTable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000001f2, nil, optArgs...)
+	return NewTable(retVal.IDispatch(), false, true)
 }
 
-func (this *Range) TCSCConverter(wdTCSCConverterDirection int32, commonTerms bool, useVariants bool)  {
-	retVal := this.Call(0x000001f3, []interface{}{wdTCSCConverterDirection, commonTerms, useVariants})
+var Range_TCSCConverter_OptArgs= []string{
+	"WdTCSCConverterDirection", "CommonTerms", "UseVariants", 
+}
+
+func (this *Range) TCSCConverter(optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(Range_TCSCConverter_OptArgs, optArgs)
+	retVal, _ := this.Call(0x000001f3, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Range) LanguageDetected() bool {
-	retVal := this.PropGet(0x00000107, nil)
+	retVal, _ := this.PropGet(0x00000107, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) SetLanguageDetected(rhs bool)  {
-	retVal := this.PropPut(0x00000107, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000107, []interface{}{rhs})
 }
 
 func (this *Range) FitTextWidth() float32 {
-	retVal := this.PropGet(0x00000108, nil)
+	retVal, _ := this.PropGet(0x00000108, nil)
 	return retVal.FltValVal()
 }
 
 func (this *Range) SetFitTextWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000108, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000108, []interface{}{rhs})
 }
 
 func (this *Range) HorizontalInVertical() int32 {
-	retVal := this.PropGet(0x00000109, nil)
+	retVal, _ := this.PropGet(0x00000109, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetHorizontalInVertical(rhs int32)  {
-	retVal := this.PropPut(0x00000109, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000109, []interface{}{rhs})
 }
 
 func (this *Range) TwoLinesInOne() int32 {
-	retVal := this.PropGet(0x0000010a, nil)
+	retVal, _ := this.PropGet(0x0000010a, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetTwoLinesInOne(rhs int32)  {
-	retVal := this.PropPut(0x0000010a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000010a, []interface{}{rhs})
 }
 
 func (this *Range) CombineCharacters() bool {
-	retVal := this.PropGet(0x0000010b, nil)
+	retVal, _ := this.PropGet(0x0000010b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) SetCombineCharacters(rhs bool)  {
-	retVal := this.PropPut(0x0000010b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000010b, []interface{}{rhs})
 }
 
 func (this *Range) NoProofing() int32 {
-	retVal := this.PropGet(0x00000143, nil)
+	retVal, _ := this.PropGet(0x00000143, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetNoProofing(rhs int32)  {
-	retVal := this.PropPut(0x00000143, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000143, []interface{}{rhs})
 }
 
 func (this *Range) TopLevelTables() *Tables {
-	retVal := this.PropGet(0x00000144, nil)
-	return NewTables(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000144, nil)
+	return NewTables(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Scripts() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000145, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000145, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Range) CharacterWidth() int32 {
-	retVal := this.PropGet(0x00000146, nil)
+	retVal, _ := this.PropGet(0x00000146, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetCharacterWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000146, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000146, []interface{}{rhs})
 }
 
 func (this *Range) Kana() int32 {
-	retVal := this.PropGet(0x00000147, nil)
+	retVal, _ := this.PropGet(0x00000147, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetKana(rhs int32)  {
-	retVal := this.PropPut(0x00000147, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000147, []interface{}{rhs})
 }
 
 func (this *Range) BoldBi() int32 {
-	retVal := this.PropGet(0x00000190, nil)
+	retVal, _ := this.PropGet(0x00000190, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetBoldBi(rhs int32)  {
-	retVal := this.PropPut(0x00000190, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000190, []interface{}{rhs})
 }
 
 func (this *Range) ItalicBi() int32 {
-	retVal := this.PropGet(0x00000191, nil)
+	retVal, _ := this.PropGet(0x00000191, nil)
 	return retVal.LValVal()
 }
 
 func (this *Range) SetItalicBi(rhs int32)  {
-	retVal := this.PropPut(0x00000191, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000191, []interface{}{rhs})
 }
 
 func (this *Range) ID() string {
-	retVal := this.PropGet(0x00000195, nil)
+	retVal, _ := this.PropGet(0x00000195, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Range) SetID(rhs string)  {
-	retVal := this.PropPut(0x00000195, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000195, []interface{}{rhs})
 }
 
 func (this *Range) HTMLDivisions() *HTMLDivisions {
-	retVal := this.PropGet(0x00000196, nil)
-	return NewHTMLDivisions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000196, nil)
+	return NewHTMLDivisions(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) SmartTags() *SmartTags {
-	retVal := this.PropGet(0x00000197, nil)
-	return NewSmartTags(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000197, nil)
+	return NewSmartTags(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) ShowAll() bool {
-	retVal := this.PropGet(0x00000198, nil)
+	retVal, _ := this.PropGet(0x00000198, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Range) SetShowAll(rhs bool)  {
-	retVal := this.PropPut(0x00000198, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000198, []interface{}{rhs})
 }
 
 func (this *Range) Document() *Document {
-	retVal := this.PropGet(0x00000199, nil)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000199, nil)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) FootnoteOptions() *FootnoteOptions {
-	retVal := this.PropGet(0x0000019a, nil)
-	return NewFootnoteOptions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000019a, nil)
+	return NewFootnoteOptions(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) EndnoteOptions() *EndnoteOptions {
-	retVal := this.PropGet(0x0000019b, nil)
-	return NewEndnoteOptions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000019b, nil)
+	return NewEndnoteOptions(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) PasteAndFormat(type_ int32)  {
-	retVal := this.Call(0x0000019c, []interface{}{type_})
+	retVal, _ := this.Call(0x0000019c, []interface{}{type_})
 	_= retVal
 }
 
 func (this *Range) PasteExcelTable(linkedToExcel bool, wordFormatting bool, rtf bool)  {
-	retVal := this.Call(0x0000019d, []interface{}{linkedToExcel, wordFormatting, rtf})
+	retVal, _ := this.Call(0x0000019d, []interface{}{linkedToExcel, wordFormatting, rtf})
 	_= retVal
 }
 
 func (this *Range) PasteAppendTable()  {
-	retVal := this.Call(0x0000019e, nil)
+	retVal, _ := this.Call(0x0000019e, nil)
 	_= retVal
 }
 
 func (this *Range) XMLNodes() *XMLNodes {
-	retVal := this.PropGet(0x00000154, nil)
-	return NewXMLNodes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000154, nil)
+	return NewXMLNodes(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) XMLParentNode() *XMLNode {
-	retVal := this.PropGet(0x00000155, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000155, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Editors() *Editors {
-	retVal := this.PropGet(0x00000157, nil)
-	return NewEditors(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000157, nil)
+	return NewEditors(retVal.IDispatch(), false, true)
 }
 
-func (this *Range) XML(dataOnly bool) string {
-	retVal := this.PropGet(0x00000158, []interface{}{dataOnly})
+var Range_XML_OptArgs= []string{
+	"DataOnly", 
+}
+
+func (this *Range) XML(optArgs ...interface{}) string {
+	optArgs = ole.ProcessOptArgs(Range_XML_OptArgs, optArgs)
+	retVal, _ := this.PropGet(0x00000158, nil, optArgs...)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Range) EnhMetaFileBits() ole.Variant {
-	retVal := this.PropGet(0x00000159, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000159, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
@@ -1231,8 +1214,8 @@ var Range_GoToEditableRange_OptArgs= []string{
 
 func (this *Range) GoToEditableRange(optArgs ...interface{}) *Range {
 	optArgs = ole.ProcessOptArgs(Range_GoToEditableRange_OptArgs, optArgs)
-	retVal := this.Call(0x0000019f, nil, optArgs...)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000019f, nil, optArgs...)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 var Range_InsertXML_OptArgs= []string{
@@ -1241,7 +1224,7 @@ var Range_InsertXML_OptArgs= []string{
 
 func (this *Range) InsertXML(xml string, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertXML_OptArgs, optArgs)
-	retVal := this.Call(0x000001a0, []interface{}{xml}, optArgs...)
+	retVal, _ := this.Call(0x000001a0, []interface{}{xml}, optArgs...)
 	_= retVal
 }
 
@@ -1251,7 +1234,7 @@ var Range_InsertCaption_OptArgs= []string{
 
 func (this *Range) InsertCaption(label *ole.Variant, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertCaption_OptArgs, optArgs)
-	retVal := this.Call(0x000001a1, []interface{}{label}, optArgs...)
+	retVal, _ := this.Call(0x000001a1, []interface{}{label}, optArgs...)
 	_= retVal
 }
 
@@ -1261,96 +1244,108 @@ var Range_InsertCrossReference_OptArgs= []string{
 
 func (this *Range) InsertCrossReference(referenceType *ole.Variant, referenceKind int32, referenceItem *ole.Variant, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_InsertCrossReference_OptArgs, optArgs)
-	retVal := this.Call(0x000001a2, []interface{}{referenceType, referenceKind, referenceItem}, optArgs...)
+	retVal, _ := this.Call(0x000001a2, []interface{}{referenceType, referenceKind, referenceItem}, optArgs...)
 	_= retVal
 }
 
 func (this *Range) OMaths() *OMaths {
-	retVal := this.PropGet(0x0000015a, nil)
-	return NewOMaths(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000015a, nil)
+	return NewOMaths(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) CharacterStyle() ole.Variant {
-	retVal := this.PropGet(0x000001a4, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x000001a4, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Range) ParagraphStyle() ole.Variant {
-	retVal := this.PropGet(0x000001a5, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x000001a5, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Range) ListStyle() ole.Variant {
-	retVal := this.PropGet(0x000001a6, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x000001a6, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Range) TableStyle() ole.Variant {
-	retVal := this.PropGet(0x000001a7, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x000001a7, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Range) ContentControls() *ContentControls {
-	retVal := this.PropGet(0x000001a8, nil)
-	return NewContentControls(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000001a8, nil)
+	return NewContentControls(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) ExportFragment(fileName string, format int32)  {
-	retVal := this.Call(0x000001a9, []interface{}{fileName, format})
+	retVal, _ := this.Call(0x000001a9, []interface{}{fileName, format})
 	_= retVal
 }
 
 func (this *Range) WordOpenXML() string {
-	retVal := this.PropGet(0x000001aa, nil)
+	retVal, _ := this.PropGet(0x000001aa, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Range) SetListLevel(level int16)  {
-	retVal := this.Call(0x000001ab, []interface{}{level})
+	retVal, _ := this.Call(0x000001ab, []interface{}{level})
 	_= retVal
 }
 
-func (this *Range) InsertAlignmentTab(alignment int32, relativeTo int32)  {
-	retVal := this.Call(0x000001f4, []interface{}{alignment, relativeTo})
+var Range_InsertAlignmentTab_OptArgs= []string{
+	"RelativeTo", 
+}
+
+func (this *Range) InsertAlignmentTab(alignment int32, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(Range_InsertAlignmentTab_OptArgs, optArgs)
+	retVal, _ := this.Call(0x000001f4, []interface{}{alignment}, optArgs...)
 	_= retVal
 }
 
 func (this *Range) ParentContentControl() *ContentControl {
-	retVal := this.PropGet(0x000001f5, nil)
-	return NewContentControl(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000001f5, nil)
+	return NewContentControl(retVal.IDispatch(), false, true)
 }
 
-func (this *Range) ImportFragment(fileName string, matchDestination bool)  {
-	retVal := this.Call(0x000001f6, []interface{}{fileName, matchDestination})
+var Range_ImportFragment_OptArgs= []string{
+	"MatchDestination", 
+}
+
+func (this *Range) ImportFragment(fileName string, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(Range_ImportFragment_OptArgs, optArgs)
+	retVal, _ := this.Call(0x000001f6, []interface{}{fileName}, optArgs...)
 	_= retVal
 }
 
 var Range_ExportAsFixedFormat_OptArgs= []string{
-	"FixedFormatExtClassPtr", 
+	"OpenAfterExport", "OptimizeFor", "ExportCurrentPage", "Item", 
+	"IncludeDocProps", "KeepIRM", "CreateBookmarks", "DocStructureTags", 
+	"BitmapMissingFonts", "UseISO19005_1", "FixedFormatExtClassPtr", 
 }
 
-func (this *Range) ExportAsFixedFormat(outputFileName string, exportFormat int32, openAfterExport bool, optimizeFor int32, exportCurrentPage bool, item int32, includeDocProps bool, keepIRM bool, createBookmarks int32, docStructureTags bool, bitmapMissingFonts bool, useISO19005_1 bool, optArgs ...interface{})  {
+func (this *Range) ExportAsFixedFormat(outputFileName string, exportFormat int32, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Range_ExportAsFixedFormat_OptArgs, optArgs)
-	retVal := this.Call(0x000001f7, []interface{}{outputFileName, exportFormat, openAfterExport, optimizeFor, exportCurrentPage, item, includeDocProps, keepIRM, createBookmarks, docStructureTags, bitmapMissingFonts, useISO19005_1}, optArgs...)
+	retVal, _ := this.Call(0x000001f7, []interface{}{outputFileName, exportFormat}, optArgs...)
 	_= retVal
 }
 
 func (this *Range) Locks() *CoAuthLocks {
-	retVal := this.PropGet(0x000001f8, nil)
-	return NewCoAuthLocks(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000001f8, nil)
+	return NewCoAuthLocks(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Updates() *CoAuthUpdates {
-	retVal := this.PropGet(0x000001f9, nil)
-	return NewCoAuthUpdates(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000001f9, nil)
+	return NewCoAuthUpdates(retVal.IDispatch(), false, true)
 }
 
 func (this *Range) Conflicts() *Conflicts {
-	retVal := this.PropGet(0x000001fa, nil)
-	return NewConflicts(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000001fa, nil)
+	return NewConflicts(retVal.IDispatch(), false, true)
 }
 

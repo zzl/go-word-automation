@@ -16,6 +16,9 @@ type PageNumber struct {
 }
 
 func NewPageNumber(pDisp *win32.IDispatch, addRef bool, scoped bool) *PageNumber {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &PageNumber{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewPageNumber(pDisp *win32.IDispatch, addRef bool, scoped bool) *PageNumber
 }
 
 func PageNumberFromVar(v ole.Variant) *PageNumber {
-	return NewPageNumber(v.PdispValVal(), false, false)
+	return NewPageNumber(v.IDispatch(), false, false)
 }
 
 func (this *PageNumber) IID() *syscall.GUID {
@@ -42,52 +45,51 @@ func (this *PageNumber) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *PageNumber) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *PageNumber) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumber) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *PageNumber) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumber) Alignment() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumber) SetAlignment(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *PageNumber) Select()  {
-	retVal := this.Call(0x0000ffff, nil)
+	retVal, _ := this.Call(0x0000ffff, nil)
 	_= retVal
 }
 
 func (this *PageNumber) Copy()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *PageNumber) Cut()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 
 func (this *PageNumber) Delete()  {
-	retVal := this.Call(0x00000067, nil)
+	retVal, _ := this.Call(0x00000067, nil)
 	_= retVal
 }
 

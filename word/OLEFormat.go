@@ -16,6 +16,9 @@ type OLEFormat struct {
 }
 
 func NewOLEFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *OLEFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OLEFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOLEFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *OLEFormat {
 }
 
 func OLEFormatFromVar(v ole.Variant) *OLEFormat {
-	return NewOLEFormat(v.PdispValVal(), false, false)
+	return NewOLEFormat(v.IDispatch(), false, false)
 }
 
 func (this *OLEFormat) IID() *syscall.GUID {
@@ -42,102 +45,97 @@ func (this *OLEFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OLEFormat) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OLEFormat) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *OLEFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OLEFormat) ClassType() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEFormat) SetClassType(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *OLEFormat) DisplayAsIcon() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OLEFormat) SetDisplayAsIcon(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *OLEFormat) IconName() string {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEFormat) SetIconName(rhs string)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *OLEFormat) IconPath() string {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEFormat) IconIndex() int32 {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.LValVal()
 }
 
 func (this *OLEFormat) SetIconIndex(rhs int32)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *OLEFormat) IconLabel() string {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEFormat) SetIconLabel(rhs string)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *OLEFormat) Label() string {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEFormat) Object() *ole.DispatchClass {
-	retVal := this.PropGet(0x0000000e, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x0000000e, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OLEFormat) ProgID() string {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEFormat) Activate()  {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	_= retVal
 }
 
 func (this *OLEFormat) Edit()  {
-	retVal := this.Call(0x0000006a, nil)
+	retVal, _ := this.Call(0x0000006a, nil)
 	_= retVal
 }
 
 func (this *OLEFormat) Open()  {
-	retVal := this.Call(0x0000006b, nil)
+	retVal, _ := this.Call(0x0000006b, nil)
 	_= retVal
 }
 
@@ -147,7 +145,7 @@ var OLEFormat_DoVerb_OptArgs= []string{
 
 func (this *OLEFormat) DoVerb(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(OLEFormat_DoVerb_OptArgs, optArgs)
-	retVal := this.Call(0x0000006d, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006d, nil, optArgs...)
 	_= retVal
 }
 
@@ -157,22 +155,21 @@ var OLEFormat_ConvertTo_OptArgs= []string{
 
 func (this *OLEFormat) ConvertTo(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(OLEFormat_ConvertTo_OptArgs, optArgs)
-	retVal := this.Call(0x0000006e, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006e, nil, optArgs...)
 	_= retVal
 }
 
 func (this *OLEFormat) ActivateAs(classType string)  {
-	retVal := this.Call(0x0000006f, []interface{}{classType})
+	retVal, _ := this.Call(0x0000006f, []interface{}{classType})
 	_= retVal
 }
 
 func (this *OLEFormat) PreserveFormattingOnUpdate() bool {
-	retVal := this.PropGet(0x00000070, nil)
+	retVal, _ := this.PropGet(0x00000070, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OLEFormat) SetPreserveFormattingOnUpdate(rhs bool)  {
-	retVal := this.PropPut(0x00000070, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000070, []interface{}{rhs})
 }
 

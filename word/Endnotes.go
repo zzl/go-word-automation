@@ -17,6 +17,9 @@ type Endnotes struct {
 }
 
 func NewEndnotes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Endnotes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Endnotes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewEndnotes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Endnotes {
 }
 
 func EndnotesFromVar(v ole.Variant) *Endnotes {
-	return NewEndnotes(v.PdispValVal(), false, false)
+	return NewEndnotes(v.IDispatch(), false, false)
 }
 
 func (this *Endnotes) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Endnotes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Endnotes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,83 +72,79 @@ func (this *Endnotes) ForEach(action func(item *Endnote) bool) {
 }
 
 func (this *Endnotes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Endnotes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Endnotes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Endnotes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Endnotes) Location() int32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.LValVal()
 }
 
 func (this *Endnotes) SetLocation(rhs int32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *Endnotes) NumberStyle() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *Endnotes) SetNumberStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *Endnotes) StartingNumber() int32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.LValVal()
 }
 
 func (this *Endnotes) SetStartingNumber(rhs int32)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *Endnotes) NumberingRule() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *Endnotes) SetNumberingRule(rhs int32)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *Endnotes) Separator() *Range {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Endnotes) ContinuationSeparator() *Range {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Endnotes) ContinuationNotice() *Range {
-	retVal := this.PropGet(0x0000006a, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000006a, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Endnotes) Item(index int32) *Endnote {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewEndnote(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewEndnote(retVal.IDispatch(), false, true)
 }
 
 var Endnotes_Add_OptArgs= []string{
@@ -154,32 +153,32 @@ var Endnotes_Add_OptArgs= []string{
 
 func (this *Endnotes) Add(range_ *Range, optArgs ...interface{}) *Endnote {
 	optArgs = ole.ProcessOptArgs(Endnotes_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000004, []interface{}{range_}, optArgs...)
-	return NewEndnote(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000004, []interface{}{range_}, optArgs...)
+	return NewEndnote(retVal.IDispatch(), false, true)
 }
 
 func (this *Endnotes) Convert()  {
-	retVal := this.Call(0x00000005, nil)
+	retVal, _ := this.Call(0x00000005, nil)
 	_= retVal
 }
 
 func (this *Endnotes) SwapWithFootnotes()  {
-	retVal := this.Call(0x00000006, nil)
+	retVal, _ := this.Call(0x00000006, nil)
 	_= retVal
 }
 
 func (this *Endnotes) ResetSeparator()  {
-	retVal := this.Call(0x00000007, nil)
+	retVal, _ := this.Call(0x00000007, nil)
 	_= retVal
 }
 
 func (this *Endnotes) ResetContinuationSeparator()  {
-	retVal := this.Call(0x00000008, nil)
+	retVal, _ := this.Call(0x00000008, nil)
 	_= retVal
 }
 
 func (this *Endnotes) ResetContinuationNotice()  {
-	retVal := this.Call(0x00000009, nil)
+	retVal, _ := this.Call(0x00000009, nil)
 	_= retVal
 }
 

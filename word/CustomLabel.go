@@ -16,6 +16,9 @@ type CustomLabel struct {
 }
 
 func NewCustomLabel(pDisp *win32.IDispatch, addRef bool, scoped bool) *CustomLabel {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CustomLabel{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCustomLabel(pDisp *win32.IDispatch, addRef bool, scoped bool) *CustomLab
 }
 
 func CustomLabelFromVar(v ole.Variant) *CustomLabel {
-	return NewCustomLabel(v.PdispValVal(), false, false)
+	return NewCustomLabel(v.IDispatch(), false, false)
 }
 
 func (this *CustomLabel) IID() *syscall.GUID {
@@ -42,137 +45,127 @@ func (this *CustomLabel) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CustomLabel) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CustomLabel) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabel) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CustomLabel) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabel) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *CustomLabel) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *CustomLabel) TopMargin() float32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.FltValVal()
 }
 
 func (this *CustomLabel) SetTopMargin(rhs float32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *CustomLabel) SideMargin() float32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.FltValVal()
 }
 
 func (this *CustomLabel) SetSideMargin(rhs float32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *CustomLabel) Height() float32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.FltValVal()
 }
 
 func (this *CustomLabel) SetHeight(rhs float32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *CustomLabel) Width() float32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.FltValVal()
 }
 
 func (this *CustomLabel) SetWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *CustomLabel) VerticalPitch() float32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.FltValVal()
 }
 
 func (this *CustomLabel) SetVerticalPitch(rhs float32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *CustomLabel) HorizontalPitch() float32 {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.FltValVal()
 }
 
 func (this *CustomLabel) SetHorizontalPitch(rhs float32)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *CustomLabel) NumberAcross() int32 {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabel) SetNumberAcross(rhs int32)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *CustomLabel) NumberDown() int32 {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabel) SetNumberDown(rhs int32)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *CustomLabel) DotMatrix() bool {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *CustomLabel) PageSize() int32 {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabel) SetPageSize(rhs int32)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *CustomLabel) Valid() bool {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *CustomLabel) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

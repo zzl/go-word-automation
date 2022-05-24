@@ -16,6 +16,9 @@ type UpBars struct {
 }
 
 func NewUpBars(pDisp *win32.IDispatch, addRef bool, scoped bool) *UpBars {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &UpBars{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewUpBars(pDisp *win32.IDispatch, addRef bool, scoped bool) *UpBars {
 }
 
 func UpBarsFromVar(v ole.Variant) *UpBars {
-	return NewUpBars(v.PdispValVal(), false, false)
+	return NewUpBars(v.IDispatch(), false, false)
 }
 
 func (this *UpBars) IID() *syscall.GUID {
@@ -42,54 +45,54 @@ func (this *UpBars) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *UpBars) Name() string {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *UpBars) Select() ole.Variant {
-	retVal := this.Call(0x000000eb, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x000000eb, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *UpBars) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *UpBars) Border() *ChartBorder {
-	retVal := this.PropGet(0x00000080, nil)
-	return NewChartBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000080, nil)
+	return NewChartBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *UpBars) Delete() ole.Variant {
-	retVal := this.Call(0x00000075, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x00000075, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *UpBars) Interior() *Interior {
-	retVal := this.PropGet(0x00000081, nil)
-	return NewInterior(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000081, nil)
+	return NewInterior(retVal.IDispatch(), false, true)
 }
 
 func (this *UpBars) Fill() *ChartFillFormat {
-	retVal := this.PropGet(0x0000067f, nil)
-	return NewChartFillFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000067f, nil)
+	return NewChartFillFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *UpBars) Format() *ChartFormat {
-	retVal := this.PropGet(0x60020007, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020007, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *UpBars) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *UpBars) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

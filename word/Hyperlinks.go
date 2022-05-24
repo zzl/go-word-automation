@@ -17,6 +17,9 @@ type Hyperlinks struct {
 }
 
 func NewHyperlinks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Hyperlinks {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Hyperlinks{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewHyperlinks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Hyperlinks
 }
 
 func HyperlinksFromVar(v ole.Variant) *Hyperlinks {
-	return NewHyperlinks(v.PdispValVal(), false, false)
+	return NewHyperlinks(v.IDispatch(), false, false)
 }
 
 func (this *Hyperlinks) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *Hyperlinks) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Hyperlinks) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Hyperlinks) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Hyperlinks) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Hyperlinks) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Hyperlinks) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,27 +92,27 @@ func (this *Hyperlinks) ForEach(action func(item *Hyperlink) bool) {
 }
 
 func (this *Hyperlinks) Item(index *ole.Variant) *Hyperlink {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewHyperlink(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewHyperlink(retVal.IDispatch(), false, true)
 }
 
 var Hyperlinks_Add__OptArgs= []string{
 	"Address", "SubAddress", 
 }
 
-func (this *Hyperlinks) Add_(anchor *ole.DispatchClass, optArgs ...interface{}) *Hyperlink {
+func (this *Hyperlinks) Add_(anchor *win32.IUnknown, optArgs ...interface{}) *Hyperlink {
 	optArgs = ole.ProcessOptArgs(Hyperlinks_Add__OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{anchor}, optArgs...)
-	return NewHyperlink(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{anchor}, optArgs...)
+	return NewHyperlink(retVal.IDispatch(), false, true)
 }
 
 var Hyperlinks_Add_OptArgs= []string{
 	"Address", "SubAddress", "ScreenTip", "TextToDisplay", "Target", 
 }
 
-func (this *Hyperlinks) Add(anchor *ole.DispatchClass, optArgs ...interface{}) *Hyperlink {
+func (this *Hyperlinks) Add(anchor *win32.IUnknown, optArgs ...interface{}) *Hyperlink {
 	optArgs = ole.ProcessOptArgs(Hyperlinks_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{anchor}, optArgs...)
-	return NewHyperlink(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{anchor}, optArgs...)
+	return NewHyperlink(retVal.IDispatch(), false, true)
 }
 

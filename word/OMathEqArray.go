@@ -16,6 +16,9 @@ type OMathEqArray struct {
 }
 
 func NewOMathEqArray(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathEqArray {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathEqArray{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathEqArray(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathEqA
 }
 
 func OMathEqArrayFromVar(v ole.Variant) *OMathEqArray {
-	return NewOMathEqArray(v.PdispValVal(), false, false)
+	return NewOMathEqArray(v.IDispatch(), false, false)
 }
 
 func (this *OMathEqArray) IID() *syscall.GUID {
@@ -42,72 +45,67 @@ func (this *OMathEqArray) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathEqArray) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathEqArray) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathEqArray) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathEqArray) E() *OMathArgs {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMathArgs(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMathArgs(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathEqArray) MaxDist() bool {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathEqArray) SetMaxDist(rhs bool)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *OMathEqArray) ObjDist() bool {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathEqArray) SetObjDist(rhs bool)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *OMathEqArray) Align() int32 {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathEqArray) SetAlign(rhs int32)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *OMathEqArray) RowSpacingRule() int32 {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathEqArray) SetRowSpacingRule(rhs int32)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 
 func (this *OMathEqArray) RowSpacing() int32 {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathEqArray) SetRowSpacing(rhs int32)  {
-	retVal := this.PropPut(0x0000006c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006c, []interface{}{rhs})
 }
 

@@ -16,6 +16,9 @@ type CoAuthoring struct {
 }
 
 func NewCoAuthoring(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthoring {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CoAuthoring{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCoAuthoring(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthori
 }
 
 func CoAuthoringFromVar(v ole.Variant) *CoAuthoring {
-	return NewCoAuthoring(v.PdispValVal(), false, false)
+	return NewCoAuthoring(v.IDispatch(), false, false)
 }
 
 func (this *CoAuthoring) IID() *syscall.GUID {
@@ -42,57 +45,57 @@ func (this *CoAuthoring) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CoAuthoring) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthoring) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthoring) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CoAuthoring) Authors() *CoAuthors {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewCoAuthors(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewCoAuthors(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthoring) Me() *CoAuthor {
-	retVal := this.PropGet(0x00000002, nil)
-	return NewCoAuthor(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000002, nil)
+	return NewCoAuthor(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthoring) PendingUpdates() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *CoAuthoring) Locks() *CoAuthLocks {
-	retVal := this.PropGet(0x00000005, nil)
-	return NewCoAuthLocks(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000005, nil)
+	return NewCoAuthLocks(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthoring) Updates() *CoAuthUpdates {
-	retVal := this.PropGet(0x00000006, nil)
-	return NewCoAuthUpdates(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000006, nil)
+	return NewCoAuthUpdates(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthoring) Conflicts() *Conflicts {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewConflicts(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewConflicts(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthoring) CanShare() bool {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *CoAuthoring) CanMerge() bool {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 

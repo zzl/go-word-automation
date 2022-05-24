@@ -17,6 +17,9 @@ type AutoTextEntries struct {
 }
 
 func NewAutoTextEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoTextEntries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoTextEntries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewAutoTextEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoT
 }
 
 func AutoTextEntriesFromVar(v ole.Variant) *AutoTextEntries {
-	return NewAutoTextEntries(v.PdispValVal(), false, false)
+	return NewAutoTextEntries(v.IDispatch(), false, false)
 }
 
 func (this *AutoTextEntries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *AutoTextEntries) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoTextEntries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoTextEntries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoTextEntries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoTextEntries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,22 +87,22 @@ func (this *AutoTextEntries) ForEach(action func(item *AutoTextEntry) bool) {
 }
 
 func (this *AutoTextEntries) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoTextEntries) Item(index *ole.Variant) *AutoTextEntry {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewAutoTextEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewAutoTextEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoTextEntries) Add(name string, range_ *Range) *AutoTextEntry {
-	retVal := this.Call(0x00000065, []interface{}{name, range_})
-	return NewAutoTextEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name, range_})
+	return NewAutoTextEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoTextEntries) AppendToSpike(range_ *Range) *AutoTextEntry {
-	retVal := this.Call(0x00000066, []interface{}{range_})
-	return NewAutoTextEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{range_})
+	return NewAutoTextEntry(retVal.IDispatch(), false, true)
 }
 

@@ -17,6 +17,9 @@ type ContentControls struct {
 }
 
 func NewContentControls(pDisp *win32.IDispatch, addRef bool, scoped bool) *ContentControls {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ContentControls{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewContentControls(pDisp *win32.IDispatch, addRef bool, scoped bool) *Conte
 }
 
 func ContentControlsFromVar(v ole.Variant) *ContentControls {
-	return NewContentControls(v.PdispValVal(), false, false)
+	return NewContentControls(v.IDispatch(), false, false)
 }
 
 func (this *ContentControls) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *ContentControls) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ContentControls) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,37 +72,37 @@ func (this *ContentControls) ForEach(action func(item *ContentControl) bool) {
 }
 
 func (this *ContentControls) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControls) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControls) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ContentControls) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControls) Item(index *ole.Variant) *ContentControl {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewContentControl(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewContentControl(retVal.IDispatch(), false, true)
 }
 
 var ContentControls_Add_OptArgs= []string{
-	"Range", 
+	"Type", "Range", 
 }
 
-func (this *ContentControls) Add(type_ int32, optArgs ...interface{}) *ContentControl {
+func (this *ContentControls) Add(optArgs ...interface{}) *ContentControl {
 	optArgs = ole.ProcessOptArgs(ContentControls_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000001, []interface{}{type_}, optArgs...)
-	return NewContentControl(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000001, nil, optArgs...)
+	return NewContentControl(retVal.IDispatch(), false, true)
 }
 

@@ -16,6 +16,9 @@ type LinkFormat struct {
 }
 
 func NewLinkFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *LinkFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &LinkFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewLinkFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *LinkFormat
 }
 
 func LinkFormatFromVar(v ole.Variant) *LinkFormat {
-	return NewLinkFormat(v.PdispValVal(), false, false)
+	return NewLinkFormat(v.IDispatch(), false, false)
 }
 
 func (this *LinkFormat) IID() *syscall.GUID {
@@ -42,82 +45,78 @@ func (this *LinkFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *LinkFormat) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *LinkFormat) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *LinkFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *LinkFormat) AutoUpdate() bool {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *LinkFormat) SetAutoUpdate(rhs bool)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *LinkFormat) SourceName() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *LinkFormat) SourcePath() string {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *LinkFormat) Locked() bool {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *LinkFormat) SetLocked(rhs bool)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *LinkFormat) Type() int32 {
-	retVal := this.PropGet(0x00000010, nil)
+	retVal, _ := this.PropGet(0x00000010, nil)
 	return retVal.LValVal()
 }
 
 func (this *LinkFormat) SourceFullName() string {
-	retVal := this.PropGet(0x00000015, nil)
+	retVal, _ := this.PropGet(0x00000015, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *LinkFormat) SetSourceFullName(rhs string)  {
-	retVal := this.PropPut(0x00000015, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000015, []interface{}{rhs})
 }
 
 func (this *LinkFormat) SavePictureWithDocument() bool {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *LinkFormat) SetSavePictureWithDocument(rhs bool)  {
-	retVal := this.PropPut(0x00000016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000016, []interface{}{rhs})
 }
 
 func (this *LinkFormat) BreakLink()  {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	_= retVal
 }
 
 func (this *LinkFormat) Update()  {
-	retVal := this.Call(0x00000069, nil)
+	retVal, _ := this.Call(0x00000069, nil)
 	_= retVal
 }
 

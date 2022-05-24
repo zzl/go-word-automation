@@ -17,6 +17,9 @@ type Version struct {
 }
 
 func NewVersion(pDisp *win32.IDispatch, addRef bool, scoped bool) *Version {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Version{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewVersion(pDisp *win32.IDispatch, addRef bool, scoped bool) *Version {
 }
 
 func VersionFromVar(v ole.Variant) *Version {
-	return NewVersion(v.PdispValVal(), false, false)
+	return NewVersion(v.IDispatch(), false, false)
 }
 
 func (this *Version) IID() *syscall.GUID {
@@ -43,52 +46,52 @@ func (this *Version) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Version) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Version) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Version) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Version) SavedBy() string {
-	retVal := this.PropGet(0x000003eb, nil)
+	retVal, _ := this.PropGet(0x000003eb, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Version) Comment() string {
-	retVal := this.PropGet(0x000003ec, nil)
+	retVal, _ := this.PropGet(0x000003ec, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Version) Date() time.Time {
-	retVal := this.PropGet(0x000003ed, nil)
+	retVal, _ := this.PropGet(0x000003ed, nil)
 	return ole.Date(retVal.DateVal()).ToGoTime()
 }
 
 func (this *Version) Index() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Version) OpenOld()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *Version) Delete()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 
 func (this *Version) Open() *Document {
-	retVal := this.Call(0x00000067, nil)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000067, nil)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 

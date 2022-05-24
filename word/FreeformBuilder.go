@@ -16,6 +16,9 @@ type FreeformBuilder struct {
 }
 
 func NewFreeformBuilder(pDisp *win32.IDispatch, addRef bool, scoped bool) *FreeformBuilder {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FreeformBuilder{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewFreeformBuilder(pDisp *win32.IDispatch, addRef bool, scoped bool) *Freef
 }
 
 func FreeformBuilderFromVar(v ole.Variant) *FreeformBuilder {
-	return NewFreeformBuilder(v.PdispValVal(), false, false)
+	return NewFreeformBuilder(v.IDispatch(), false, false)
 }
 
 func (this *FreeformBuilder) IID() *syscall.GUID {
@@ -42,22 +45,27 @@ func (this *FreeformBuilder) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FreeformBuilder) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FreeformBuilder) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FreeformBuilder) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000001, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
-func (this *FreeformBuilder) AddNodes(segmentType int32, editingType int32, x1 float32, y1 float32, x2 float32, y2 float32, x3 float32, y3 float32)  {
-	retVal := this.Call(0x0000000a, []interface{}{segmentType, editingType, x1, y1, x2, y2, x3, y3})
+var FreeformBuilder_AddNodes_OptArgs= []string{
+	"X2", "Y2", "X3", "Y3", 
+}
+
+func (this *FreeformBuilder) AddNodes(segmentType int32, editingType int32, x1 float32, y1 float32, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(FreeformBuilder_AddNodes_OptArgs, optArgs)
+	retVal, _ := this.Call(0x0000000a, []interface{}{segmentType, editingType, x1, y1}, optArgs...)
 	_= retVal
 }
 
@@ -67,7 +75,7 @@ var FreeformBuilder_ConvertToShape_OptArgs= []string{
 
 func (this *FreeformBuilder) ConvertToShape(optArgs ...interface{}) *Shape {
 	optArgs = ole.ProcessOptArgs(FreeformBuilder_ConvertToShape_OptArgs, optArgs)
-	retVal := this.Call(0x0000000b, nil, optArgs...)
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000b, nil, optArgs...)
+	return NewShape(retVal.IDispatch(), false, true)
 }
 

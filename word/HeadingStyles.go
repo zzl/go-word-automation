@@ -17,6 +17,9 @@ type HeadingStyles struct {
 }
 
 func NewHeadingStyles(pDisp *win32.IDispatch, addRef bool, scoped bool) *HeadingStyles {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HeadingStyles{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewHeadingStyles(pDisp *win32.IDispatch, addRef bool, scoped bool) *Heading
 }
 
 func HeadingStylesFromVar(v ole.Variant) *HeadingStyles {
-	return NewHeadingStyles(v.PdispValVal(), false, false)
+	return NewHeadingStyles(v.IDispatch(), false, false)
 }
 
 func (this *HeadingStyles) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *HeadingStyles) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HeadingStyles) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HeadingStyles) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeadingStyles) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HeadingStyles) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *HeadingStyles) ForEach(action func(item *HeadingStyle) bool) {
 }
 
 func (this *HeadingStyles) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeadingStyles) Item(index int32) *HeadingStyle {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewHeadingStyle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewHeadingStyle(retVal.IDispatch(), false, true)
 }
 
 func (this *HeadingStyles) Add(style *ole.Variant, level int16) *HeadingStyle {
-	retVal := this.Call(0x00000064, []interface{}{style, level})
-	return NewHeadingStyle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{style, level})
+	return NewHeadingStyle(retVal.IDispatch(), false, true)
 }
 

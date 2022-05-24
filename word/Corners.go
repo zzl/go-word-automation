@@ -16,6 +16,9 @@ type Corners struct {
 }
 
 func NewCorners(pDisp *win32.IDispatch, addRef bool, scoped bool) *Corners {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Corners{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCorners(pDisp *win32.IDispatch, addRef bool, scoped bool) *Corners {
 }
 
 func CornersFromVar(v ole.Variant) *Corners {
-	return NewCorners(v.PdispValVal(), false, false)
+	return NewCorners(v.IDispatch(), false, false)
 }
 
 func (this *Corners) IID() *syscall.GUID {
@@ -42,28 +45,28 @@ func (this *Corners) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Corners) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Corners) Name() string {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Corners) Select() ole.Variant {
-	retVal := this.Call(0x000000eb, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x000000eb, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Corners) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Corners) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

@@ -16,6 +16,9 @@ type BuildingBlocks struct {
 }
 
 func NewBuildingBlocks(pDisp *win32.IDispatch, addRef bool, scoped bool) *BuildingBlocks {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &BuildingBlocks{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBuildingBlocks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Buildi
 }
 
 func BuildingBlocksFromVar(v ole.Variant) *BuildingBlocks {
-	return NewBuildingBlocks(v.PdispValVal(), false, false)
+	return NewBuildingBlocks(v.IDispatch(), false, false)
 }
 
 func (this *BuildingBlocks) IID() *syscall.GUID {
@@ -42,32 +45,37 @@ func (this *BuildingBlocks) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *BuildingBlocks) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *BuildingBlocks) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlocks) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *BuildingBlocks) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlocks) Item(index *ole.Variant) *BuildingBlock {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewBuildingBlock(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewBuildingBlock(retVal.IDispatch(), false, true)
 }
 
-func (this *BuildingBlocks) Add(name string, range_ *Range, description *ole.Variant, insertOptions int32) *BuildingBlock {
-	retVal := this.Call(0x00000065, []interface{}{name, range_, description, insertOptions})
-	return NewBuildingBlock(retVal.PdispValVal(), false, true)
+var BuildingBlocks_Add_OptArgs= []string{
+	"Description", "InsertOptions", 
+}
+
+func (this *BuildingBlocks) Add(name string, range_ *Range, optArgs ...interface{}) *BuildingBlock {
+	optArgs = ole.ProcessOptArgs(BuildingBlocks_Add_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000065, []interface{}{name, range_}, optArgs...)
+	return NewBuildingBlock(retVal.IDispatch(), false, true)
 }
 

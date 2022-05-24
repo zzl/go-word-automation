@@ -17,6 +17,9 @@ type Languages struct {
 }
 
 func NewLanguages(pDisp *win32.IDispatch, addRef bool, scoped bool) *Languages {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Languages{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewLanguages(pDisp *win32.IDispatch, addRef bool, scoped bool) *Languages {
 }
 
 func LanguagesFromVar(v ole.Variant) *Languages {
-	return NewLanguages(v.PdispValVal(), false, false)
+	return NewLanguages(v.IDispatch(), false, false)
 }
 
 func (this *Languages) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Languages) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Languages) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *Languages) ForEach(action func(item *Language) bool) {
 }
 
 func (this *Languages) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Languages) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Languages) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Languages) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Languages) Item(index *ole.Variant) *Language {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewLanguage(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewLanguage(retVal.IDispatch(), false, true)
 }
 

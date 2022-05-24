@@ -17,6 +17,9 @@ type MailMergeFields struct {
 }
 
 func NewMailMergeFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMergeFields {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MailMergeFields{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewMailMergeFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailM
 }
 
 func MailMergeFieldsFromVar(v ole.Variant) *MailMergeFields {
-	return NewMailMergeFields(v.PdispValVal(), false, false)
+	return NewMailMergeFields(v.IDispatch(), false, false)
 }
 
 func (this *MailMergeFields) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *MailMergeFields) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MailMergeFields) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeFields) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeFields) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MailMergeFields) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,18 +87,18 @@ func (this *MailMergeFields) ForEach(action func(item *MailMergeField) bool) {
 }
 
 func (this *MailMergeFields) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeFields) Item(index int32) *MailMergeField {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeFields) Add(range_ *Range, name string) *MailMergeField {
-	retVal := this.Call(0x00000065, []interface{}{range_, name})
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{range_, name})
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 var MailMergeFields_AddAsk_OptArgs= []string{
@@ -104,8 +107,8 @@ var MailMergeFields_AddAsk_OptArgs= []string{
 
 func (this *MailMergeFields) AddAsk(range_ *Range, name string, optArgs ...interface{}) *MailMergeField {
 	optArgs = ole.ProcessOptArgs(MailMergeFields_AddAsk_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, []interface{}{range_, name}, optArgs...)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{range_, name}, optArgs...)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 var MailMergeFields_AddFillIn_OptArgs= []string{
@@ -114,8 +117,8 @@ var MailMergeFields_AddFillIn_OptArgs= []string{
 
 func (this *MailMergeFields) AddFillIn(range_ *Range, optArgs ...interface{}) *MailMergeField {
 	optArgs = ole.ProcessOptArgs(MailMergeFields_AddFillIn_OptArgs, optArgs)
-	retVal := this.Call(0x00000067, []interface{}{range_}, optArgs...)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000067, []interface{}{range_}, optArgs...)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 var MailMergeFields_AddIf_OptArgs= []string{
@@ -124,23 +127,23 @@ var MailMergeFields_AddIf_OptArgs= []string{
 
 func (this *MailMergeFields) AddIf(range_ *Range, mergeField string, comparison int32, optArgs ...interface{}) *MailMergeField {
 	optArgs = ole.ProcessOptArgs(MailMergeFields_AddIf_OptArgs, optArgs)
-	retVal := this.Call(0x00000068, []interface{}{range_, mergeField, comparison}, optArgs...)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000068, []interface{}{range_, mergeField, comparison}, optArgs...)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeFields) AddMergeRec(range_ *Range) *MailMergeField {
-	retVal := this.Call(0x00000069, []interface{}{range_})
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000069, []interface{}{range_})
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeFields) AddMergeSeq(range_ *Range) *MailMergeField {
-	retVal := this.Call(0x0000006a, []interface{}{range_})
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006a, []interface{}{range_})
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeFields) AddNext(range_ *Range) *MailMergeField {
-	retVal := this.Call(0x0000006b, []interface{}{range_})
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006b, []interface{}{range_})
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 var MailMergeFields_AddNextIf_OptArgs= []string{
@@ -149,8 +152,8 @@ var MailMergeFields_AddNextIf_OptArgs= []string{
 
 func (this *MailMergeFields) AddNextIf(range_ *Range, mergeField string, comparison int32, optArgs ...interface{}) *MailMergeField {
 	optArgs = ole.ProcessOptArgs(MailMergeFields_AddNextIf_OptArgs, optArgs)
-	retVal := this.Call(0x0000006c, []interface{}{range_, mergeField, comparison}, optArgs...)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006c, []interface{}{range_, mergeField, comparison}, optArgs...)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 var MailMergeFields_AddSet_OptArgs= []string{
@@ -159,8 +162,8 @@ var MailMergeFields_AddSet_OptArgs= []string{
 
 func (this *MailMergeFields) AddSet(range_ *Range, name string, optArgs ...interface{}) *MailMergeField {
 	optArgs = ole.ProcessOptArgs(MailMergeFields_AddSet_OptArgs, optArgs)
-	retVal := this.Call(0x0000006d, []interface{}{range_, name}, optArgs...)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006d, []interface{}{range_, name}, optArgs...)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 
 var MailMergeFields_AddSkipIf_OptArgs= []string{
@@ -169,7 +172,7 @@ var MailMergeFields_AddSkipIf_OptArgs= []string{
 
 func (this *MailMergeFields) AddSkipIf(range_ *Range, mergeField string, comparison int32, optArgs ...interface{}) *MailMergeField {
 	optArgs = ole.ProcessOptArgs(MailMergeFields_AddSkipIf_OptArgs, optArgs)
-	retVal := this.Call(0x0000006e, []interface{}{range_, mergeField, comparison}, optArgs...)
-	return NewMailMergeField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006e, []interface{}{range_, mergeField, comparison}, optArgs...)
+	return NewMailMergeField(retVal.IDispatch(), false, true)
 }
 

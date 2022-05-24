@@ -16,6 +16,9 @@ type Reviewer struct {
 }
 
 func NewReviewer(pDisp *win32.IDispatch, addRef bool, scoped bool) *Reviewer {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Reviewer{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewReviewer(pDisp *win32.IDispatch, addRef bool, scoped bool) *Reviewer {
 }
 
 func ReviewerFromVar(v ole.Variant) *Reviewer {
-	return NewReviewer(v.PdispValVal(), false, false)
+	return NewReviewer(v.IDispatch(), false, false)
 }
 
 func (this *Reviewer) IID() *syscall.GUID {
@@ -42,27 +45,26 @@ func (this *Reviewer) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Reviewer) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Reviewer) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Reviewer) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Reviewer) Visible() bool {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Reviewer) SetVisible(rhs bool)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 

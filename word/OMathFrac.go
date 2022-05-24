@@ -16,6 +16,9 @@ type OMathFrac struct {
 }
 
 func NewOMathFrac(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathFrac {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathFrac{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathFrac(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathFrac {
 }
 
 func OMathFracFromVar(v ole.Variant) *OMathFrac {
-	return NewOMathFrac(v.PdispValVal(), false, false)
+	return NewOMathFrac(v.IDispatch(), false, false)
 }
 
 func (this *OMathFrac) IID() *syscall.GUID {
@@ -42,37 +45,36 @@ func (this *OMathFrac) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathFrac) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathFrac) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathFrac) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathFrac) Num() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathFrac) Den() *OMath {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathFrac) Type() int32 {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathFrac) SetType(rhs int32)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 

@@ -16,6 +16,9 @@ type Subdocument struct {
 }
 
 func NewSubdocument(pDisp *win32.IDispatch, addRef bool, scoped bool) *Subdocument {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Subdocument{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSubdocument(pDisp *win32.IDispatch, addRef bool, scoped bool) *Subdocume
 }
 
 func SubdocumentFromVar(v ole.Variant) *Subdocument {
-	return NewSubdocument(v.PdispValVal(), false, false)
+	return NewSubdocument(v.IDispatch(), false, false)
 }
 
 func (this *Subdocument) IID() *syscall.GUID {
@@ -42,67 +45,66 @@ func (this *Subdocument) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Subdocument) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Subdocument) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Subdocument) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Subdocument) Locked() bool {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Subdocument) SetLocked(rhs bool)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *Subdocument) Range() *Range {
-	retVal := this.PropGet(0x00000002, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000002, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Subdocument) Name() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Subdocument) Path() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Subdocument) HasFile() bool {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Subdocument) Level() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *Subdocument) Delete()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
 func (this *Subdocument) Split(range_ *Range)  {
-	retVal := this.Call(0x00000065, []interface{}{range_})
+	retVal, _ := this.Call(0x00000065, []interface{}{range_})
 	_= retVal
 }
 
 func (this *Subdocument) Open() *Document {
-	retVal := this.Call(0x00000066, nil)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, nil)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 

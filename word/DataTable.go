@@ -16,6 +16,9 @@ type DataTable struct {
 }
 
 func NewDataTable(pDisp *win32.IDispatch, addRef bool, scoped bool) *DataTable {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &DataTable{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewDataTable(pDisp *win32.IDispatch, addRef bool, scoped bool) *DataTable {
 }
 
 func DataTableFromVar(v ole.Variant) *DataTable {
-	return NewDataTable(v.PdispValVal(), false, false)
+	return NewDataTable(v.IDispatch(), false, false)
 }
 
 func (this *DataTable) IID() *syscall.GUID {
@@ -42,93 +45,88 @@ func (this *DataTable) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *DataTable) ShowLegendKey() bool {
-	retVal := this.PropGet(0x60020000, nil)
+	retVal, _ := this.PropGet(0x60020000, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DataTable) SetShowLegendKey(rhs bool)  {
-	retVal := this.PropPut(0x60020000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020000, []interface{}{rhs})
 }
 
 func (this *DataTable) HasBorderHorizontal() bool {
-	retVal := this.PropGet(0x60020002, nil)
+	retVal, _ := this.PropGet(0x60020002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DataTable) SetHasBorderHorizontal(rhs bool)  {
-	retVal := this.PropPut(0x60020002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020002, []interface{}{rhs})
 }
 
 func (this *DataTable) HasBorderVertical() bool {
-	retVal := this.PropGet(0x60020004, nil)
+	retVal, _ := this.PropGet(0x60020004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DataTable) SetHasBorderVertical(rhs bool)  {
-	retVal := this.PropPut(0x60020004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020004, []interface{}{rhs})
 }
 
 func (this *DataTable) HasBorderOutline() bool {
-	retVal := this.PropGet(0x60020006, nil)
+	retVal, _ := this.PropGet(0x60020006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DataTable) SetHasBorderOutline(rhs bool)  {
-	retVal := this.PropPut(0x60020006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020006, []interface{}{rhs})
 }
 
 func (this *DataTable) Border() *ChartBorder {
-	retVal := this.PropGet(0x60020008, nil)
-	return NewChartBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020008, nil)
+	return NewChartBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *DataTable) Font() *ChartFont {
-	retVal := this.PropGet(0x60020009, nil)
-	return NewChartFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020009, nil)
+	return NewChartFont(retVal.IDispatch(), false, true)
 }
 
 func (this *DataTable) Select()  {
-	retVal := this.Call(0x6002000a, nil)
+	retVal, _ := this.Call(0x6002000a, nil)
 	_= retVal
 }
 
 func (this *DataTable) Delete()  {
-	retVal := this.Call(0x6002000b, nil)
+	retVal, _ := this.Call(0x6002000b, nil)
 	_= retVal
 }
 
 func (this *DataTable) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x6002000c, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x6002000c, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *DataTable) AutoScaleFont() ole.Variant {
-	retVal := this.PropGet(0x6002000d, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x6002000d, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DataTable) SetAutoScaleFont(rhs interface{})  {
-	retVal := this.PropPut(0x6002000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000d, []interface{}{rhs})
 }
 
 func (this *DataTable) Format() *ChartFormat {
-	retVal := this.PropGet(0x6002000f, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x6002000f, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *DataTable) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *DataTable) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

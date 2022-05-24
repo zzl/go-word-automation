@@ -17,6 +17,9 @@ type TaskPanes struct {
 }
 
 func NewTaskPanes(pDisp *win32.IDispatch, addRef bool, scoped bool) *TaskPanes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TaskPanes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTaskPanes(pDisp *win32.IDispatch, addRef bool, scoped bool) *TaskPanes {
 }
 
 func TaskPanesFromVar(v ole.Variant) *TaskPanes {
-	return NewTaskPanes(v.PdispValVal(), false, false)
+	return NewTaskPanes(v.IDispatch(), false, false)
 }
 
 func (this *TaskPanes) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *TaskPanes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TaskPanes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *TaskPanes) ForEach(action func(item *TaskPane) bool) {
 }
 
 func (this *TaskPanes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *TaskPanes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TaskPanes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TaskPanes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TaskPanes) Item(index int32) *TaskPane {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTaskPane(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTaskPane(retVal.IDispatch(), false, true)
 }
 

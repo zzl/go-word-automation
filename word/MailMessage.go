@@ -16,6 +16,9 @@ type MailMessage struct {
 }
 
 func NewMailMessage(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMessage {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MailMessage{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewMailMessage(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMessa
 }
 
 func MailMessageFromVar(v ole.Variant) *MailMessage {
-	return NewMailMessage(v.PdispValVal(), false, false)
+	return NewMailMessage(v.IDispatch(), false, false)
 }
 
 func (this *MailMessage) IID() *syscall.GUID {
@@ -42,72 +45,72 @@ func (this *MailMessage) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MailMessage) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMessage) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMessage) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MailMessage) CheckName()  {
-	retVal := this.Call(0x0000014e, nil)
+	retVal, _ := this.Call(0x0000014e, nil)
 	_= retVal
 }
 
 func (this *MailMessage) Delete()  {
-	retVal := this.Call(0x0000014f, nil)
+	retVal, _ := this.Call(0x0000014f, nil)
 	_= retVal
 }
 
 func (this *MailMessage) DisplayMoveDialog()  {
-	retVal := this.Call(0x00000150, nil)
+	retVal, _ := this.Call(0x00000150, nil)
 	_= retVal
 }
 
 func (this *MailMessage) DisplayProperties()  {
-	retVal := this.Call(0x00000151, nil)
+	retVal, _ := this.Call(0x00000151, nil)
 	_= retVal
 }
 
 func (this *MailMessage) DisplaySelectNamesDialog()  {
-	retVal := this.Call(0x00000152, nil)
+	retVal, _ := this.Call(0x00000152, nil)
 	_= retVal
 }
 
 func (this *MailMessage) Forward()  {
-	retVal := this.Call(0x00000153, nil)
+	retVal, _ := this.Call(0x00000153, nil)
 	_= retVal
 }
 
 func (this *MailMessage) GoToNext()  {
-	retVal := this.Call(0x00000154, nil)
+	retVal, _ := this.Call(0x00000154, nil)
 	_= retVal
 }
 
 func (this *MailMessage) GoToPrevious()  {
-	retVal := this.Call(0x00000155, nil)
+	retVal, _ := this.Call(0x00000155, nil)
 	_= retVal
 }
 
 func (this *MailMessage) Reply()  {
-	retVal := this.Call(0x00000156, nil)
+	retVal, _ := this.Call(0x00000156, nil)
 	_= retVal
 }
 
 func (this *MailMessage) ReplyAll()  {
-	retVal := this.Call(0x00000157, nil)
+	retVal, _ := this.Call(0x00000157, nil)
 	_= retVal
 }
 
 func (this *MailMessage) ToggleHeader()  {
-	retVal := this.Call(0x00000158, nil)
+	retVal, _ := this.Call(0x00000158, nil)
 	_= retVal
 }
 

@@ -16,6 +16,9 @@ type TextInput struct {
 }
 
 func NewTextInput(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextInput {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TextInput{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTextInput(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextInput {
 }
 
 func TextInputFromVar(v ole.Variant) *TextInput {
-	return NewTextInput(v.PdispValVal(), false, false)
+	return NewTextInput(v.IDispatch(), false, false)
 }
 
 func (this *TextInput) IID() *syscall.GUID {
@@ -42,57 +45,55 @@ func (this *TextInput) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TextInput) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TextInput) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextInput) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TextInput) Valid() bool {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TextInput) Default() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TextInput) SetDefault(rhs string)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *TextInput) Type() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextInput) Format() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TextInput) Width() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextInput) SetWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *TextInput) Clear()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
@@ -102,7 +103,7 @@ var TextInput_EditType_OptArgs= []string{
 
 func (this *TextInput) EditType(type_ int32, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(TextInput_EditType_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, []interface{}{type_}, optArgs...)
+	retVal, _ := this.Call(0x00000066, []interface{}{type_}, optArgs...)
 	_= retVal
 }
 

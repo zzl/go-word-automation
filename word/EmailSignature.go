@@ -16,6 +16,9 @@ type EmailSignature struct {
 }
 
 func NewEmailSignature(pDisp *win32.IDispatch, addRef bool, scoped bool) *EmailSignature {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &EmailSignature{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewEmailSignature(pDisp *win32.IDispatch, addRef bool, scoped bool) *EmailS
 }
 
 func EmailSignatureFromVar(v ole.Variant) *EmailSignature {
-	return NewEmailSignature(v.PdispValVal(), false, false)
+	return NewEmailSignature(v.IDispatch(), false, false)
 }
 
 func (this *EmailSignature) IID() *syscall.GUID {
@@ -42,42 +45,40 @@ func (this *EmailSignature) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *EmailSignature) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *EmailSignature) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *EmailSignature) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *EmailSignature) NewMessageSignature() string {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *EmailSignature) SetNewMessageSignature(rhs string)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *EmailSignature) ReplyMessageSignature() string {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *EmailSignature) SetReplyMessageSignature(rhs string)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *EmailSignature) EmailSignatureEntries() *EmailSignatureEntries {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewEmailSignatureEntries(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewEmailSignatureEntries(retVal.IDispatch(), false, true)
 }
 

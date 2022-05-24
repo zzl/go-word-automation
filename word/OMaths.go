@@ -17,6 +17,9 @@ type OMaths struct {
 }
 
 func NewOMaths(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMaths {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMaths{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOMaths(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMaths {
 }
 
 func OMathsFromVar(v ole.Variant) *OMaths {
-	return NewOMaths(v.PdispValVal(), false, false)
+	return NewOMaths(v.IDispatch(), false, false)
 }
 
 func (this *OMaths) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *OMaths) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMaths) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,42 +72,42 @@ func (this *OMaths) ForEach(action func(item *OMath) bool) {
 }
 
 func (this *OMaths) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMaths) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMaths) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMaths) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMaths) Item(index int32) *OMath {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMaths) Linearize()  {
-	retVal := this.Call(0x000000c8, nil)
+	retVal, _ := this.Call(0x000000c8, nil)
 	_= retVal
 }
 
 func (this *OMaths) BuildUp()  {
-	retVal := this.Call(0x000000c9, nil)
+	retVal, _ := this.Call(0x000000c9, nil)
 	_= retVal
 }
 
 func (this *OMaths) Add(range_ *Range) *Range {
-	retVal := this.Call(0x000000ca, []interface{}{range_})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000ca, []interface{}{range_})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

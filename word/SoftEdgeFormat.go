@@ -16,6 +16,9 @@ type SoftEdgeFormat struct {
 }
 
 func NewSoftEdgeFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *SoftEdgeFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SoftEdgeFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSoftEdgeFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *SoftEd
 }
 
 func SoftEdgeFormatFromVar(v ole.Variant) *SoftEdgeFormat {
-	return NewSoftEdgeFormat(v.PdispValVal(), false, false)
+	return NewSoftEdgeFormat(v.IDispatch(), false, false)
 }
 
 func (this *SoftEdgeFormat) IID() *syscall.GUID {
@@ -42,37 +45,35 @@ func (this *SoftEdgeFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SoftEdgeFormat) Type() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *SoftEdgeFormat) SetType(rhs int32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *SoftEdgeFormat) Radius() float32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.FltValVal()
 }
 
 func (this *SoftEdgeFormat) SetRadius(rhs float32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *SoftEdgeFormat) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SoftEdgeFormat) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SoftEdgeFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 

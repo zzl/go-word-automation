@@ -16,6 +16,9 @@ type Editor struct {
 }
 
 func NewEditor(pDisp *win32.IDispatch, addRef bool, scoped bool) *Editor {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Editor{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewEditor(pDisp *win32.IDispatch, addRef bool, scoped bool) *Editor {
 }
 
 func EditorFromVar(v ole.Variant) *Editor {
-	return NewEditor(v.PdispValVal(), false, false)
+	return NewEditor(v.IDispatch(), false, false)
 }
 
 func (this *Editor) IID() *syscall.GUID {
@@ -42,52 +45,52 @@ func (this *Editor) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Editor) ID() string {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Editor) Name() string {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Editor) Range() *Range {
-	retVal := this.PropGet(0x00000066, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Editor) NextRange() *Range {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Editor) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Editor) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Editor) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Editor) Delete()  {
-	retVal := this.Call(0x000001f4, nil)
+	retVal, _ := this.Call(0x000001f4, nil)
 	_= retVal
 }
 
 func (this *Editor) DeleteAll()  {
-	retVal := this.Call(0x000001f5, nil)
+	retVal, _ := this.Call(0x000001f5, nil)
 	_= retVal
 }
 
 func (this *Editor) SelectAll()  {
-	retVal := this.Call(0x000001f6, nil)
+	retVal, _ := this.Call(0x000001f6, nil)
 	_= retVal
 }
 

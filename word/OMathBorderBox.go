@@ -16,6 +16,9 @@ type OMathBorderBox struct {
 }
 
 func NewOMathBorderBox(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathBorderBox {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathBorderBox{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathBorderBox(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathB
 }
 
 func OMathBorderBoxFromVar(v ole.Variant) *OMathBorderBox {
-	return NewOMathBorderBox(v.PdispValVal(), false, false)
+	return NewOMathBorderBox(v.IDispatch(), false, false)
 }
 
 func (this *OMathBorderBox) IID() *syscall.GUID {
@@ -42,102 +45,94 @@ func (this *OMathBorderBox) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathBorderBox) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathBorderBox) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathBorderBox) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathBorderBox) E() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathBorderBox) HideTop() bool {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetHideTop(rhs bool)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) HideBot() bool {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetHideBot(rhs bool)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) HideLeft() bool {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetHideLeft(rhs bool)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) HideRight() bool {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetHideRight(rhs bool)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) StrikeH() bool {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetStrikeH(rhs bool)  {
-	retVal := this.PropPut(0x0000006c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006c, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) StrikeV() bool {
-	retVal := this.PropGet(0x0000006d, nil)
+	retVal, _ := this.PropGet(0x0000006d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetStrikeV(rhs bool)  {
-	retVal := this.PropPut(0x0000006d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006d, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) StrikeBLTR() bool {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetStrikeBLTR(rhs bool)  {
-	retVal := this.PropPut(0x0000006e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006e, []interface{}{rhs})
 }
 
 func (this *OMathBorderBox) StrikeTLBR() bool {
-	retVal := this.PropGet(0x0000006f, nil)
+	retVal, _ := this.PropGet(0x0000006f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBorderBox) SetStrikeTLBR(rhs bool)  {
-	retVal := this.PropPut(0x0000006f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006f, []interface{}{rhs})
 }
 

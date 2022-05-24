@@ -16,6 +16,9 @@ type View struct {
 }
 
 func NewView(pDisp *win32.IDispatch, addRef bool, scoped bool) *View {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &View{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewView(pDisp *win32.IDispatch, addRef bool, scoped bool) *View {
 }
 
 func ViewFromVar(v ole.Variant) *View {
-	return NewView(v.PdispValVal(), false, false)
+	return NewView(v.IDispatch(), false, false)
 }
 
 func (this *View) IID() *syscall.GUID {
@@ -42,323 +45,293 @@ func (this *View) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *View) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *View) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *View) Type() int32 {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetType(rhs int32)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *View) FullScreen() bool {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetFullScreen(rhs bool)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *View) Draft() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetDraft(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *View) ShowAll() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowAll(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *View) ShowFieldCodes() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowFieldCodes(rhs bool)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *View) MailMergeDataView() bool {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetMailMergeDataView(rhs bool)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *View) Magnifier() bool {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetMagnifier(rhs bool)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *View) ShowFirstLineOnly() bool {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowFirstLineOnly(rhs bool)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *View) ShowFormat() bool {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowFormat(rhs bool)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *View) Zoom() *Zoom {
-	retVal := this.PropGet(0x0000000a, nil)
-	return NewZoom(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return NewZoom(retVal.IDispatch(), false, true)
 }
 
 func (this *View) ShowObjectAnchors() bool {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowObjectAnchors(rhs bool)  {
-	retVal := this.PropPut(0x0000000b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000b, []interface{}{rhs})
 }
 
 func (this *View) ShowTextBoundaries() bool {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowTextBoundaries(rhs bool)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *View) ShowHighlight() bool {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowHighlight(rhs bool)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *View) ShowDrawings() bool {
-	retVal := this.PropGet(0x0000000e, nil)
+	retVal, _ := this.PropGet(0x0000000e, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowDrawings(rhs bool)  {
-	retVal := this.PropPut(0x0000000e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000e, []interface{}{rhs})
 }
 
 func (this *View) ShowTabs() bool {
-	retVal := this.PropGet(0x0000000f, nil)
+	retVal, _ := this.PropGet(0x0000000f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowTabs(rhs bool)  {
-	retVal := this.PropPut(0x0000000f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000f, []interface{}{rhs})
 }
 
 func (this *View) ShowSpaces() bool {
-	retVal := this.PropGet(0x00000010, nil)
+	retVal, _ := this.PropGet(0x00000010, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowSpaces(rhs bool)  {
-	retVal := this.PropPut(0x00000010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000010, []interface{}{rhs})
 }
 
 func (this *View) ShowParagraphs() bool {
-	retVal := this.PropGet(0x00000011, nil)
+	retVal, _ := this.PropGet(0x00000011, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowParagraphs(rhs bool)  {
-	retVal := this.PropPut(0x00000011, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000011, []interface{}{rhs})
 }
 
 func (this *View) ShowHyphens() bool {
-	retVal := this.PropGet(0x00000012, nil)
+	retVal, _ := this.PropGet(0x00000012, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowHyphens(rhs bool)  {
-	retVal := this.PropPut(0x00000012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000012, []interface{}{rhs})
 }
 
 func (this *View) ShowHiddenText() bool {
-	retVal := this.PropGet(0x00000013, nil)
+	retVal, _ := this.PropGet(0x00000013, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowHiddenText(rhs bool)  {
-	retVal := this.PropPut(0x00000013, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000013, []interface{}{rhs})
 }
 
 func (this *View) WrapToWindow() bool {
-	retVal := this.PropGet(0x00000014, nil)
+	retVal, _ := this.PropGet(0x00000014, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetWrapToWindow(rhs bool)  {
-	retVal := this.PropPut(0x00000014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000014, []interface{}{rhs})
 }
 
 func (this *View) ShowPicturePlaceHolders() bool {
-	retVal := this.PropGet(0x00000015, nil)
+	retVal, _ := this.PropGet(0x00000015, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowPicturePlaceHolders(rhs bool)  {
-	retVal := this.PropPut(0x00000015, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000015, []interface{}{rhs})
 }
 
 func (this *View) ShowBookmarks() bool {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowBookmarks(rhs bool)  {
-	retVal := this.PropPut(0x00000016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000016, []interface{}{rhs})
 }
 
 func (this *View) FieldShading() int32 {
-	retVal := this.PropGet(0x00000017, nil)
+	retVal, _ := this.PropGet(0x00000017, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetFieldShading(rhs int32)  {
-	retVal := this.PropPut(0x00000017, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000017, []interface{}{rhs})
 }
 
 func (this *View) ShowAnimation() bool {
-	retVal := this.PropGet(0x00000018, nil)
+	retVal, _ := this.PropGet(0x00000018, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowAnimation(rhs bool)  {
-	retVal := this.PropPut(0x00000018, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000018, []interface{}{rhs})
 }
 
 func (this *View) TableGridlines() bool {
-	retVal := this.PropGet(0x00000019, nil)
+	retVal, _ := this.PropGet(0x00000019, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetTableGridlines(rhs bool)  {
-	retVal := this.PropPut(0x00000019, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000019, []interface{}{rhs})
 }
 
 func (this *View) EnlargeFontsLessThan() int32 {
-	retVal := this.PropGet(0x0000001a, nil)
+	retVal, _ := this.PropGet(0x0000001a, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetEnlargeFontsLessThan(rhs int32)  {
-	retVal := this.PropPut(0x0000001a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001a, []interface{}{rhs})
 }
 
 func (this *View) ShowMainTextLayer() bool {
-	retVal := this.PropGet(0x0000001b, nil)
+	retVal, _ := this.PropGet(0x0000001b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowMainTextLayer(rhs bool)  {
-	retVal := this.PropPut(0x0000001b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001b, []interface{}{rhs})
 }
 
 func (this *View) SeekView() int32 {
-	retVal := this.PropGet(0x0000001c, nil)
+	retVal, _ := this.PropGet(0x0000001c, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetSeekView(rhs int32)  {
-	retVal := this.PropPut(0x0000001c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001c, []interface{}{rhs})
 }
 
 func (this *View) SplitSpecial() int32 {
-	retVal := this.PropGet(0x0000001d, nil)
+	retVal, _ := this.PropGet(0x0000001d, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetSplitSpecial(rhs int32)  {
-	retVal := this.PropPut(0x0000001d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001d, []interface{}{rhs})
 }
 
 func (this *View) BrowseToWindow() int32 {
-	retVal := this.PropGet(0x0000001e, nil)
+	retVal, _ := this.PropGet(0x0000001e, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetBrowseToWindow(rhs int32)  {
-	retVal := this.PropPut(0x0000001e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001e, []interface{}{rhs})
 }
 
 func (this *View) ShowOptionalBreaks() bool {
-	retVal := this.PropGet(0x0000001f, nil)
+	retVal, _ := this.PropGet(0x0000001f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowOptionalBreaks(rhs bool)  {
-	retVal := this.PropPut(0x0000001f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001f, []interface{}{rhs})
 }
 
 var View_CollapseOutline_OptArgs= []string{
@@ -367,7 +340,7 @@ var View_CollapseOutline_OptArgs= []string{
 
 func (this *View) CollapseOutline(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(View_CollapseOutline_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, nil, optArgs...)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
 	_= retVal
 }
 
@@ -377,302 +350,275 @@ var View_ExpandOutline_OptArgs= []string{
 
 func (this *View) ExpandOutline(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(View_ExpandOutline_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, nil, optArgs...)
+	retVal, _ := this.Call(0x00000066, nil, optArgs...)
 	_= retVal
 }
 
 func (this *View) ShowAllHeadings()  {
-	retVal := this.Call(0x00000067, nil)
+	retVal, _ := this.Call(0x00000067, nil)
 	_= retVal
 }
 
 func (this *View) ShowHeading(level int32)  {
-	retVal := this.Call(0x00000068, []interface{}{level})
+	retVal, _ := this.Call(0x00000068, []interface{}{level})
 	_= retVal
 }
 
 func (this *View) PreviousHeaderFooter()  {
-	retVal := this.Call(0x00000069, nil)
+	retVal, _ := this.Call(0x00000069, nil)
 	_= retVal
 }
 
 func (this *View) NextHeaderFooter()  {
-	retVal := this.Call(0x0000006a, nil)
+	retVal, _ := this.Call(0x0000006a, nil)
 	_= retVal
 }
 
 func (this *View) DisplayPageBoundaries() bool {
-	retVal := this.PropGet(0x00000020, nil)
+	retVal, _ := this.PropGet(0x00000020, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetDisplayPageBoundaries(rhs bool)  {
-	retVal := this.PropPut(0x00000020, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000020, []interface{}{rhs})
 }
 
 func (this *View) DisplaySmartTags() bool {
-	retVal := this.PropGet(0x00000021, nil)
+	retVal, _ := this.PropGet(0x00000021, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetDisplaySmartTags(rhs bool)  {
-	retVal := this.PropPut(0x00000021, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000021, []interface{}{rhs})
 }
 
 func (this *View) ShowRevisionsAndComments() bool {
-	retVal := this.PropGet(0x00000022, nil)
+	retVal, _ := this.PropGet(0x00000022, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowRevisionsAndComments(rhs bool)  {
-	retVal := this.PropPut(0x00000022, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000022, []interface{}{rhs})
 }
 
 func (this *View) ShowComments() bool {
-	retVal := this.PropGet(0x00000023, nil)
+	retVal, _ := this.PropGet(0x00000023, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowComments(rhs bool)  {
-	retVal := this.PropPut(0x00000023, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000023, []interface{}{rhs})
 }
 
 func (this *View) ShowInsertionsAndDeletions() bool {
-	retVal := this.PropGet(0x00000024, nil)
+	retVal, _ := this.PropGet(0x00000024, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowInsertionsAndDeletions(rhs bool)  {
-	retVal := this.PropPut(0x00000024, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000024, []interface{}{rhs})
 }
 
 func (this *View) ShowFormatChanges() bool {
-	retVal := this.PropGet(0x00000025, nil)
+	retVal, _ := this.PropGet(0x00000025, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowFormatChanges(rhs bool)  {
-	retVal := this.PropPut(0x00000025, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000025, []interface{}{rhs})
 }
 
 func (this *View) RevisionsView() int32 {
-	retVal := this.PropGet(0x00000026, nil)
+	retVal, _ := this.PropGet(0x00000026, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetRevisionsView(rhs int32)  {
-	retVal := this.PropPut(0x00000026, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000026, []interface{}{rhs})
 }
 
 func (this *View) RevisionsMode() int32 {
-	retVal := this.PropGet(0x00000027, nil)
+	retVal, _ := this.PropGet(0x00000027, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetRevisionsMode(rhs int32)  {
-	retVal := this.PropPut(0x00000027, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000027, []interface{}{rhs})
 }
 
 func (this *View) RevisionsBalloonWidth() float32 {
-	retVal := this.PropGet(0x00000028, nil)
+	retVal, _ := this.PropGet(0x00000028, nil)
 	return retVal.FltValVal()
 }
 
 func (this *View) SetRevisionsBalloonWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000028, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000028, []interface{}{rhs})
 }
 
 func (this *View) RevisionsBalloonWidthType() int32 {
-	retVal := this.PropGet(0x00000029, nil)
+	retVal, _ := this.PropGet(0x00000029, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetRevisionsBalloonWidthType(rhs int32)  {
-	retVal := this.PropPut(0x00000029, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000029, []interface{}{rhs})
 }
 
 func (this *View) RevisionsBalloonSide() int32 {
-	retVal := this.PropGet(0x0000002a, nil)
+	retVal, _ := this.PropGet(0x0000002a, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetRevisionsBalloonSide(rhs int32)  {
-	retVal := this.PropPut(0x0000002a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000002a, []interface{}{rhs})
 }
 
 func (this *View) Reviewers() *Reviewers {
-	retVal := this.PropGet(0x0000002b, nil)
-	return NewReviewers(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000002b, nil)
+	return NewReviewers(retVal.IDispatch(), false, true)
 }
 
 func (this *View) RevisionsBalloonShowConnectingLines() bool {
-	retVal := this.PropGet(0x0000002c, nil)
+	retVal, _ := this.PropGet(0x0000002c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetRevisionsBalloonShowConnectingLines(rhs bool)  {
-	retVal := this.PropPut(0x0000002c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000002c, []interface{}{rhs})
 }
 
 func (this *View) ReadingLayout() bool {
-	retVal := this.PropGet(0x0000002d, nil)
+	retVal, _ := this.PropGet(0x0000002d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetReadingLayout(rhs bool)  {
-	retVal := this.PropPut(0x0000002d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000002d, []interface{}{rhs})
 }
 
 func (this *View) ShowXMLMarkup() int32 {
-	retVal := this.PropGet(0x0000002e, nil)
+	retVal, _ := this.PropGet(0x0000002e, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetShowXMLMarkup(rhs int32)  {
-	retVal := this.PropPut(0x0000002e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000002e, []interface{}{rhs})
 }
 
 func (this *View) ShadeEditableRanges() int32 {
-	retVal := this.PropGet(0x0000002f, nil)
+	retVal, _ := this.PropGet(0x0000002f, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetShadeEditableRanges(rhs int32)  {
-	retVal := this.PropPut(0x0000002f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000002f, []interface{}{rhs})
 }
 
 func (this *View) ShowInkAnnotations() bool {
-	retVal := this.PropGet(0x00000030, nil)
+	retVal, _ := this.PropGet(0x00000030, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowInkAnnotations(rhs bool)  {
-	retVal := this.PropPut(0x00000030, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000030, []interface{}{rhs})
 }
 
 func (this *View) DisplayBackgrounds() bool {
-	retVal := this.PropGet(0x00000031, nil)
+	retVal, _ := this.PropGet(0x00000031, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetDisplayBackgrounds(rhs bool)  {
-	retVal := this.PropPut(0x00000031, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000031, []interface{}{rhs})
 }
 
 func (this *View) ReadingLayoutActualView() bool {
-	retVal := this.PropGet(0x00000032, nil)
+	retVal, _ := this.PropGet(0x00000032, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetReadingLayoutActualView(rhs bool)  {
-	retVal := this.PropPut(0x00000032, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000032, []interface{}{rhs})
 }
 
 func (this *View) ReadingLayoutAllowMultiplePages() bool {
-	retVal := this.PropGet(0x00000033, nil)
+	retVal, _ := this.PropGet(0x00000033, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetReadingLayoutAllowMultiplePages(rhs bool)  {
-	retVal := this.PropPut(0x00000033, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000033, []interface{}{rhs})
 }
 
 func (this *View) ReadingLayoutAllowEditing() bool {
-	retVal := this.PropGet(0x00000035, nil)
+	retVal, _ := this.PropGet(0x00000035, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetReadingLayoutAllowEditing(rhs bool)  {
-	retVal := this.PropPut(0x00000035, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000035, []interface{}{rhs})
 }
 
 func (this *View) ReadingLayoutTruncateMargins() int32 {
-	retVal := this.PropGet(0x00000036, nil)
+	retVal, _ := this.PropGet(0x00000036, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetReadingLayoutTruncateMargins(rhs int32)  {
-	retVal := this.PropPut(0x00000036, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000036, []interface{}{rhs})
 }
 
 func (this *View) ShowMarkupAreaHighlight() bool {
-	retVal := this.PropGet(0x00000034, nil)
+	retVal, _ := this.PropGet(0x00000034, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowMarkupAreaHighlight(rhs bool)  {
-	retVal := this.PropPut(0x00000034, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000034, []interface{}{rhs})
 }
 
 func (this *View) Panning() bool {
-	retVal := this.PropGet(0x00000037, nil)
+	retVal, _ := this.PropGet(0x00000037, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetPanning(rhs bool)  {
-	retVal := this.PropPut(0x00000037, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000037, []interface{}{rhs})
 }
 
 func (this *View) ShowCropMarks() bool {
-	retVal := this.PropGet(0x00000038, nil)
+	retVal, _ := this.PropGet(0x00000038, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowCropMarks(rhs bool)  {
-	retVal := this.PropPut(0x00000038, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000038, []interface{}{rhs})
 }
 
 func (this *View) MarkupMode() int32 {
-	retVal := this.PropGet(0x00000039, nil)
+	retVal, _ := this.PropGet(0x00000039, nil)
 	return retVal.LValVal()
 }
 
 func (this *View) SetMarkupMode(rhs int32)  {
-	retVal := this.PropPut(0x00000039, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000039, []interface{}{rhs})
 }
 
 func (this *View) ConflictMode() bool {
-	retVal := this.PropGet(0x0000003a, nil)
+	retVal, _ := this.PropGet(0x0000003a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetConflictMode(rhs bool)  {
-	retVal := this.PropPut(0x0000003a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000003a, []interface{}{rhs})
 }
 
 func (this *View) ShowOtherAuthors() bool {
-	retVal := this.PropGet(0x0000003b, nil)
+	retVal, _ := this.PropGet(0x0000003b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *View) SetShowOtherAuthors(rhs bool)  {
-	retVal := this.PropPut(0x0000003b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000003b, []interface{}{rhs})
 }
 

@@ -17,6 +17,9 @@ type CustomProperties struct {
 }
 
 func NewCustomProperties(pDisp *win32.IDispatch, addRef bool, scoped bool) *CustomProperties {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CustomProperties{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCustomProperties(pDisp *win32.IDispatch, addRef bool, scoped bool) *Cust
 }
 
 func CustomPropertiesFromVar(v ole.Variant) *CustomProperties {
-	return NewCustomProperties(v.PdispValVal(), false, false)
+	return NewCustomProperties(v.IDispatch(), false, false)
 }
 
 func (this *CustomProperties) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *CustomProperties) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CustomProperties) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,32 +72,32 @@ func (this *CustomProperties) ForEach(action func(item *CustomProperty) bool) {
 }
 
 func (this *CustomProperties) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomProperties) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CustomProperties) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomProperties) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CustomProperties) Item(index *ole.Variant) *CustomProperty {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCustomProperty(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCustomProperty(retVal.IDispatch(), false, true)
 }
 
 func (this *CustomProperties) Add(name string, value string) *CustomProperty {
-	retVal := this.Call(0x00000005, []interface{}{name, value})
-	return NewCustomProperty(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000005, []interface{}{name, value})
+	return NewCustomProperty(retVal.IDispatch(), false, true)
 }
 

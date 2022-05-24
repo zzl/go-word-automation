@@ -16,6 +16,9 @@ type SmartTagType struct {
 }
 
 func NewSmartTagType(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTagType {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTagType{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSmartTagType(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTag
 }
 
 func SmartTagTypeFromVar(v ole.Variant) *SmartTagType {
-	return NewSmartTagType(v.PdispValVal(), false, false)
+	return NewSmartTagType(v.IDispatch(), false, false)
 }
 
 func (this *SmartTagType) IID() *syscall.GUID {
@@ -42,37 +45,37 @@ func (this *SmartTagType) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTagType) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTagType) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagType) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagType) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTagType) SmartTagActions() *SmartTagActions {
-	retVal := this.PropGet(0x000003eb, nil)
-	return NewSmartTagActions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003eb, nil)
+	return NewSmartTagActions(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagType) SmartTagRecognizers() *SmartTagRecognizers {
-	retVal := this.PropGet(0x000003ec, nil)
-	return NewSmartTagRecognizers(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003ec, nil)
+	return NewSmartTagRecognizers(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagType) FriendlyName() string {
-	retVal := this.PropGet(0x000003ed, nil)
+	retVal, _ := this.PropGet(0x000003ed, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

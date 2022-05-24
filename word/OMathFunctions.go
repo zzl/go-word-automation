@@ -17,6 +17,9 @@ type OMathFunctions struct {
 }
 
 func NewOMathFunctions(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathFunctions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathFunctions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOMathFunctions(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathF
 }
 
 func OMathFunctionsFromVar(v ole.Variant) *OMathFunctions {
-	return NewOMathFunctions(v.PdispValVal(), false, false)
+	return NewOMathFunctions(v.IDispatch(), false, false)
 }
 
 func (this *OMathFunctions) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *OMathFunctions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathFunctions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *OMathFunctions) ForEach(action func(item *OMathFunction) bool) {
 }
 
 func (this *OMathFunctions) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathFunctions) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathFunctions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathFunctions) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathFunctions) Item(index int32) *OMathFunction {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOMathFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOMathFunction(retVal.IDispatch(), false, true)
 }
 
 var OMathFunctions_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var OMathFunctions_Add_OptArgs= []string{
 
 func (this *OMathFunctions) Add(range_ *Range, type_ int32, optArgs ...interface{}) *OMathFunction {
 	optArgs = ole.ProcessOptArgs(OMathFunctions_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000068, []interface{}{range_, type_}, optArgs...)
-	return NewOMathFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000068, []interface{}{range_, type_}, optArgs...)
+	return NewOMathFunction(retVal.IDispatch(), false, true)
 }
 

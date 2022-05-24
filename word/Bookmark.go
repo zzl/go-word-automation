@@ -16,6 +16,9 @@ type Bookmark struct {
 }
 
 func NewBookmark(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bookmark {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Bookmark{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBookmark(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bookmark {
 }
 
 func BookmarkFromVar(v ole.Variant) *Bookmark {
-	return NewBookmark(v.PdispValVal(), false, false)
+	return NewBookmark(v.IDispatch(), false, false)
 }
 
 func (this *Bookmark) IID() *syscall.GUID {
@@ -42,77 +45,75 @@ func (this *Bookmark) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Bookmark) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Bookmark) Range() *Range {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Bookmark) Empty() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Bookmark) Start() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmark) SetStart(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Bookmark) End() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmark) SetEnd(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *Bookmark) Column() bool {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Bookmark) StoryType() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmark) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Bookmark) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmark) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Bookmark) Select()  {
-	retVal := this.Call(0x0000ffff, nil)
+	retVal, _ := this.Call(0x0000ffff, nil)
 	_= retVal
 }
 
 func (this *Bookmark) Delete()  {
-	retVal := this.Call(0x0000000b, nil)
+	retVal, _ := this.Call(0x0000000b, nil)
 	_= retVal
 }
 
 func (this *Bookmark) Copy(name string) *Bookmark {
-	retVal := this.Call(0x0000000c, []interface{}{name})
-	return NewBookmark(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000c, []interface{}{name})
+	return NewBookmark(retVal.IDispatch(), false, true)
 }
 

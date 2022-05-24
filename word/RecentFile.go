@@ -16,6 +16,9 @@ type RecentFile struct {
 }
 
 func NewRecentFile(pDisp *win32.IDispatch, addRef bool, scoped bool) *RecentFile {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &RecentFile{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewRecentFile(pDisp *win32.IDispatch, addRef bool, scoped bool) *RecentFile
 }
 
 func RecentFileFromVar(v ole.Variant) *RecentFile {
-	return NewRecentFile(v.PdispValVal(), false, false)
+	return NewRecentFile(v.IDispatch(), false, false)
 }
 
 func (this *RecentFile) IID() *syscall.GUID {
@@ -42,52 +45,51 @@ func (this *RecentFile) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *RecentFile) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *RecentFile) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *RecentFile) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *RecentFile) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *RecentFile) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *RecentFile) ReadOnly() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *RecentFile) SetReadOnly(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *RecentFile) Path() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *RecentFile) Open() *Document {
-	retVal := this.Call(0x00000004, nil)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000004, nil)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 func (this *RecentFile) Delete()  {
-	retVal := this.Call(0x00000005, nil)
+	retVal, _ := this.Call(0x00000005, nil)
 	_= retVal
 }
 

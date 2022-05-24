@@ -17,6 +17,9 @@ type Sources struct {
 }
 
 func NewSources(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sources {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Sources{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSources(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sources {
 }
 
 func SourcesFromVar(v ole.Variant) *Sources {
-	return NewSources(v.PdispValVal(), false, false)
+	return NewSources(v.IDispatch(), false, false)
 }
 
 func (this *Sources) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Sources) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Sources) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,32 +72,32 @@ func (this *Sources) ForEach(action func(item *Source) bool) {
 }
 
 func (this *Sources) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Sources) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Sources) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Sources) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Sources) Item(index int32) *Source {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewSource(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewSource(retVal.IDispatch(), false, true)
 }
 
 func (this *Sources) Add(data string)  {
-	retVal := this.Call(0x0000006b, []interface{}{data})
+	retVal, _ := this.Call(0x0000006b, []interface{}{data})
 	_= retVal
 }
 

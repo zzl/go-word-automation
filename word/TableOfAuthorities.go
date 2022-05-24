@@ -16,6 +16,9 @@ type TableOfAuthorities struct {
 }
 
 func NewTableOfAuthorities(pDisp *win32.IDispatch, addRef bool, scoped bool) *TableOfAuthorities {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TableOfAuthorities{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTableOfAuthorities(pDisp *win32.IDispatch, addRef bool, scoped bool) *Ta
 }
 
 func TableOfAuthoritiesFromVar(v ole.Variant) *TableOfAuthorities {
-	return NewTableOfAuthorities(v.PdispValVal(), false, false)
+	return NewTableOfAuthorities(v.IDispatch(), false, false)
 }
 
 func (this *TableOfAuthorities) IID() *syscall.GUID {
@@ -42,142 +45,131 @@ func (this *TableOfAuthorities) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TableOfAuthorities) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TableOfAuthorities) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TableOfAuthorities) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TableOfAuthorities) Passim() bool {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TableOfAuthorities) SetPassim(rhs bool)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) KeepEntryFormatting() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TableOfAuthorities) SetKeepEntryFormatting(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) Category() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *TableOfAuthorities) SetCategory(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) Bookmark() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthorities) SetBookmark(rhs string)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) Separator() string {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthorities) SetSeparator(rhs string)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) IncludeSequenceName() string {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthorities) SetIncludeSequenceName(rhs string)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) EntrySeparator() string {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthorities) SetEntrySeparator(rhs string)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) PageRangeSeparator() string {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthorities) SetPageRangeSeparator(rhs string)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) IncludeCategoryHeader() bool {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TableOfAuthorities) SetIncludeCategoryHeader(rhs bool)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) PageNumberSeparator() string {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthorities) SetPageNumberSeparator(rhs string)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) Range() *Range {
-	retVal := this.PropGet(0x0000000b, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000b, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *TableOfAuthorities) TabLeader() int32 {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.LValVal()
 }
 
 func (this *TableOfAuthorities) SetTabLeader(rhs int32)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *TableOfAuthorities) Delete()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
 func (this *TableOfAuthorities) Update()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

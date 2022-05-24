@@ -16,6 +16,9 @@ type Style struct {
 }
 
 func NewStyle(pDisp *win32.IDispatch, addRef bool, scoped bool) *Style {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Style{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewStyle(pDisp *win32.IDispatch, addRef bool, scoped bool) *Style {
 }
 
 func StyleFromVar(v ole.Variant) *Style {
-	return NewStyle(v.PdispValVal(), false, false)
+	return NewStyle(v.IDispatch(), false, false)
 }
 
 func (this *Style) IID() *syscall.GUID {
@@ -42,164 +45,154 @@ func (this *Style) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Style) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Style) NameLocal() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Style) SetNameLocal(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *Style) BaseStyle() ole.Variant {
-	retVal := this.PropGet(0x00000001, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000001, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Style) SetBaseStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *Style) Description() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Style) Type() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) BuiltIn() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) NextParagraphStyle() ole.Variant {
-	retVal := this.PropGet(0x00000005, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000005, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Style) SetNextParagraphStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *Style) InUse() bool {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) Shading() *Shading {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewShading(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewShading(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) Borders() *Borders {
-	retVal := this.PropGet(0x00000008, nil)
-	return NewBorders(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000008, nil)
+	return NewBorders(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) SetBorders(rhs *Borders)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *Style) ParagraphFormat() *ParagraphFormat {
-	retVal := this.PropGet(0x00000009, nil)
-	return NewParagraphFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000009, nil)
+	return NewParagraphFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) SetParagraphFormat(rhs *ParagraphFormat)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *Style) Font() *Font {
-	retVal := this.PropGet(0x0000000a, nil)
-	return NewFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return NewFont(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) SetFont(rhs *Font)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *Style) Frame() *Frame {
-	retVal := this.PropGet(0x0000000b, nil)
-	return NewFrame(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000b, nil)
+	return NewFrame(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) LanguageID() int32 {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) SetLanguageID(rhs int32)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *Style) AutomaticallyUpdate() bool {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetAutomaticallyUpdate(rhs bool)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *Style) ListTemplate() *ListTemplate {
-	retVal := this.PropGet(0x0000000e, nil)
-	return NewListTemplate(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000e, nil)
+	return NewListTemplate(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) ListLevelNumber() int32 {
-	retVal := this.PropGet(0x0000000f, nil)
+	retVal, _ := this.PropGet(0x0000000f, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) LanguageIDFarEast() int32 {
-	retVal := this.PropGet(0x00000010, nil)
+	retVal, _ := this.PropGet(0x00000010, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) SetLanguageIDFarEast(rhs int32)  {
-	retVal := this.PropPut(0x00000010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000010, []interface{}{rhs})
 }
 
 func (this *Style) Hidden() bool {
-	retVal := this.PropGet(0x00000011, nil)
+	retVal, _ := this.PropGet(0x00000011, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetHidden(rhs bool)  {
-	retVal := this.PropPut(0x00000011, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000011, []interface{}{rhs})
 }
 
 func (this *Style) Delete()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
@@ -209,98 +202,90 @@ var Style_LinkToListTemplate_OptArgs= []string{
 
 func (this *Style) LinkToListTemplate(listTemplate *ListTemplate, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Style_LinkToListTemplate_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{listTemplate}, optArgs...)
+	retVal, _ := this.Call(0x00000065, []interface{}{listTemplate}, optArgs...)
 	_= retVal
 }
 
 func (this *Style) NoProofing() int32 {
-	retVal := this.PropGet(0x00000012, nil)
+	retVal, _ := this.PropGet(0x00000012, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) SetNoProofing(rhs int32)  {
-	retVal := this.PropPut(0x00000012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000012, []interface{}{rhs})
 }
 
 func (this *Style) LinkStyle() ole.Variant {
-	retVal := this.PropGet(0x00000068, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000068, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Style) SetLinkStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *Style) Visibility() bool {
-	retVal := this.PropGet(0x00000013, nil)
+	retVal, _ := this.PropGet(0x00000013, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetVisibility(rhs bool)  {
-	retVal := this.PropPut(0x00000013, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000013, []interface{}{rhs})
 }
 
 func (this *Style) NoSpaceBetweenParagraphsOfSameStyle() bool {
-	retVal := this.PropGet(0x00000014, nil)
+	retVal, _ := this.PropGet(0x00000014, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetNoSpaceBetweenParagraphsOfSameStyle(rhs bool)  {
-	retVal := this.PropPut(0x00000014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000014, []interface{}{rhs})
 }
 
 func (this *Style) Table() *TableStyle {
-	retVal := this.PropGet(0x00000015, nil)
-	return NewTableStyle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000015, nil)
+	return NewTableStyle(retVal.IDispatch(), false, true)
 }
 
 func (this *Style) Locked() bool {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetLocked(rhs bool)  {
-	retVal := this.PropPut(0x00000016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000016, []interface{}{rhs})
 }
 
 func (this *Style) Priority() int32 {
-	retVal := this.PropGet(0x00000017, nil)
+	retVal, _ := this.PropGet(0x00000017, nil)
 	return retVal.LValVal()
 }
 
 func (this *Style) SetPriority(rhs int32)  {
-	retVal := this.PropPut(0x00000017, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000017, []interface{}{rhs})
 }
 
 func (this *Style) UnhideWhenUsed() bool {
-	retVal := this.PropGet(0x00000018, nil)
+	retVal, _ := this.PropGet(0x00000018, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetUnhideWhenUsed(rhs bool)  {
-	retVal := this.PropPut(0x00000018, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000018, []interface{}{rhs})
 }
 
 func (this *Style) QuickStyle() bool {
-	retVal := this.PropGet(0x00000019, nil)
+	retVal, _ := this.PropGet(0x00000019, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Style) SetQuickStyle(rhs bool)  {
-	retVal := this.PropPut(0x00000019, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000019, []interface{}{rhs})
 }
 
 func (this *Style) Linked() bool {
-	retVal := this.PropGet(0x0000001a, nil)
+	retVal, _ := this.PropGet(0x0000001a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 

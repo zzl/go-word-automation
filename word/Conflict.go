@@ -16,6 +16,9 @@ type Conflict struct {
 }
 
 func NewConflict(pDisp *win32.IDispatch, addRef bool, scoped bool) *Conflict {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Conflict{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewConflict(pDisp *win32.IDispatch, addRef bool, scoped bool) *Conflict {
 }
 
 func ConflictFromVar(v ole.Variant) *Conflict {
-	return NewConflict(v.PdispValVal(), false, false)
+	return NewConflict(v.IDispatch(), false, false)
 }
 
 func (this *Conflict) IID() *syscall.GUID {
@@ -42,42 +45,42 @@ func (this *Conflict) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Conflict) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Conflict) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Conflict) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Conflict) Range() *Range {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Conflict) Type() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Conflict) Index() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Conflict) Accept()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *Conflict) Reject()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

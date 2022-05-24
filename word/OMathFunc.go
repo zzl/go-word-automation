@@ -16,6 +16,9 @@ type OMathFunc struct {
 }
 
 func NewOMathFunc(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathFunc {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathFunc{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathFunc(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathFunc {
 }
 
 func OMathFuncFromVar(v ole.Variant) *OMathFunc {
-	return NewOMathFunc(v.PdispValVal(), false, false)
+	return NewOMathFunc(v.IDispatch(), false, false)
 }
 
 func (this *OMathFunc) IID() *syscall.GUID {
@@ -42,27 +45,27 @@ func (this *OMathFunc) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathFunc) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathFunc) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathFunc) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathFunc) FName() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathFunc) E() *OMath {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 

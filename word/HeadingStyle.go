@@ -16,6 +16,9 @@ type HeadingStyle struct {
 }
 
 func NewHeadingStyle(pDisp *win32.IDispatch, addRef bool, scoped bool) *HeadingStyle {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HeadingStyle{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewHeadingStyle(pDisp *win32.IDispatch, addRef bool, scoped bool) *HeadingS
 }
 
 func HeadingStyleFromVar(v ole.Variant) *HeadingStyle {
-	return NewHeadingStyle(v.PdispValVal(), false, false)
+	return NewHeadingStyle(v.IDispatch(), false, false)
 }
 
 func (this *HeadingStyle) IID() *syscall.GUID {
@@ -42,43 +45,41 @@ func (this *HeadingStyle) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HeadingStyle) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HeadingStyle) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeadingStyle) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HeadingStyle) Style() ole.Variant {
-	retVal := this.PropGet(0x00000000, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000000, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *HeadingStyle) SetStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *HeadingStyle) Level() int16 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.IValVal()
 }
 
 func (this *HeadingStyle) SetLevel(rhs int16)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *HeadingStyle) Delete()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 

@@ -17,6 +17,9 @@ type SmartTagActions struct {
 }
 
 func NewSmartTagActions(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTagActions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTagActions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSmartTagActions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Smart
 }
 
 func SmartTagActionsFromVar(v ole.Variant) *SmartTagActions {
-	return NewSmartTagActions(v.PdispValVal(), false, false)
+	return NewSmartTagActions(v.IDispatch(), false, false)
 }
 
 func (this *SmartTagActions) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *SmartTagActions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTagActions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,32 +72,32 @@ func (this *SmartTagActions) ForEach(action func(item *SmartTagAction) bool) {
 }
 
 func (this *SmartTagActions) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagActions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagActions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagActions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTagActions) Item(index *ole.Variant) *SmartTagAction {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewSmartTagAction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewSmartTagAction(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagActions) ReloadActions()  {
-	retVal := this.Call(0x000003eb, nil)
+	retVal, _ := this.Call(0x000003eb, nil)
 	_= retVal
 }
 

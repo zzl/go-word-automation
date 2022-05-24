@@ -17,6 +17,9 @@ type HangulHanjaConversionDictionaries struct {
 }
 
 func NewHangulHanjaConversionDictionaries(pDisp *win32.IDispatch, addRef bool, scoped bool) *HangulHanjaConversionDictionaries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HangulHanjaConversionDictionaries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewHangulHanjaConversionDictionaries(pDisp *win32.IDispatch, addRef bool, s
 }
 
 func HangulHanjaConversionDictionariesFromVar(v ole.Variant) *HangulHanjaConversionDictionaries {
-	return NewHangulHanjaConversionDictionaries(v.PdispValVal(), false, false)
+	return NewHangulHanjaConversionDictionaries(v.IDispatch(), false, false)
 }
 
 func (this *HangulHanjaConversionDictionaries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *HangulHanjaConversionDictionaries) GetIDispatch(addRef bool) *win32.
 }
 
 func (this *HangulHanjaConversionDictionaries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulHanjaConversionDictionaries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulHanjaConversionDictionaries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HangulHanjaConversionDictionaries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,42 +87,41 @@ func (this *HangulHanjaConversionDictionaries) ForEach(action func(item *Diction
 }
 
 func (this *HangulHanjaConversionDictionaries) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulHanjaConversionDictionaries) Maximum() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulHanjaConversionDictionaries) ActiveCustomDictionary() *Dictionary {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulHanjaConversionDictionaries) SetActiveCustomDictionary(rhs *Dictionary)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *HangulHanjaConversionDictionaries) BuiltinDictionary() *Dictionary {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulHanjaConversionDictionaries) Item(index *ole.Variant) *Dictionary {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulHanjaConversionDictionaries) Add(fileName string) *Dictionary {
-	retVal := this.Call(0x00000065, []interface{}{fileName})
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{fileName})
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulHanjaConversionDictionaries) ClearAll()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

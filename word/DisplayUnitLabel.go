@@ -16,6 +16,9 @@ type DisplayUnitLabel struct {
 }
 
 func NewDisplayUnitLabel(pDisp *win32.IDispatch, addRef bool, scoped bool) *DisplayUnitLabel {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &DisplayUnitLabel{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewDisplayUnitLabel(pDisp *win32.IDispatch, addRef bool, scoped bool) *Disp
 }
 
 func DisplayUnitLabelFromVar(v ole.Variant) *DisplayUnitLabel {
-	return NewDisplayUnitLabel(v.PdispValVal(), false, false)
+	return NewDisplayUnitLabel(v.IDispatch(), false, false)
 }
 
 func (this *DisplayUnitLabel) IID() *syscall.GUID {
@@ -42,13 +45,12 @@ func (this *DisplayUnitLabel) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *DisplayUnitLabel) Caption() string {
-	retVal := this.PropGet(0x60020000, nil)
+	retVal, _ := this.PropGet(0x60020000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) SetCaption(rhs string)  {
-	retVal := this.PropPut(0x60020000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020000, []interface{}{rhs})
 }
 
 var DisplayUnitLabel_Characters_OptArgs= []string{
@@ -57,228 +59,213 @@ var DisplayUnitLabel_Characters_OptArgs= []string{
 
 func (this *DisplayUnitLabel) Characters(optArgs ...interface{}) *ChartCharacters {
 	optArgs = ole.ProcessOptArgs(DisplayUnitLabel_Characters_OptArgs, optArgs)
-	retVal := this.PropGet(0x60020002, nil, optArgs...)
-	return NewChartCharacters(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020002, nil, optArgs...)
+	return NewChartCharacters(retVal.IDispatch(), false, true)
 }
 
 func (this *DisplayUnitLabel) Font() *ChartFont {
-	retVal := this.PropGet(0x60020003, nil)
-	return NewChartFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020003, nil)
+	return NewChartFont(retVal.IDispatch(), false, true)
 }
 
 func (this *DisplayUnitLabel) HorizontalAlignment() ole.Variant {
-	retVal := this.PropGet(0x60020004, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020004, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DisplayUnitLabel) SetHorizontalAlignment(rhs interface{})  {
-	retVal := this.PropPut(0x60020004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020004, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Left() float64 {
-	retVal := this.PropGet(0x60020006, nil)
+	retVal, _ := this.PropGet(0x60020006, nil)
 	return retVal.DblValVal()
 }
 
 func (this *DisplayUnitLabel) SetLeft(rhs float64)  {
-	retVal := this.PropPut(0x60020006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020006, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Orientation() ole.Variant {
-	retVal := this.PropGet(0x60020008, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020008, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DisplayUnitLabel) SetOrientation(rhs interface{})  {
-	retVal := this.PropPut(0x60020008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020008, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Shadow() bool {
-	retVal := this.PropGet(0x6002000a, nil)
+	retVal, _ := this.PropGet(0x6002000a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DisplayUnitLabel) SetShadow(rhs bool)  {
-	retVal := this.PropPut(0x6002000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000a, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Text() string {
-	retVal := this.PropGet(0x6002000c, nil)
+	retVal, _ := this.PropGet(0x6002000c, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) SetText(rhs string)  {
-	retVal := this.PropPut(0x6002000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000c, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Top() float64 {
-	retVal := this.PropGet(0x6002000e, nil)
+	retVal, _ := this.PropGet(0x6002000e, nil)
 	return retVal.DblValVal()
 }
 
 func (this *DisplayUnitLabel) SetTop(rhs float64)  {
-	retVal := this.PropPut(0x6002000e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000e, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) VerticalAlignment() ole.Variant {
-	retVal := this.PropGet(0x60020010, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020010, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DisplayUnitLabel) SetVerticalAlignment(rhs interface{})  {
-	retVal := this.PropPut(0x60020010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020010, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) ReadingOrder() int32 {
-	retVal := this.PropGet(0x60020012, nil)
+	retVal, _ := this.PropGet(0x60020012, nil)
 	return retVal.LValVal()
 }
 
 func (this *DisplayUnitLabel) SetReadingOrder(rhs int32)  {
-	retVal := this.PropPut(0x60020012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020012, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) AutoScaleFont() ole.Variant {
-	retVal := this.PropGet(0x60020014, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020014, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DisplayUnitLabel) SetAutoScaleFont(rhs interface{})  {
-	retVal := this.PropPut(0x60020014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020014, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Interior() *Interior {
-	retVal := this.PropGet(0x60020016, nil)
-	return NewInterior(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020016, nil)
+	return NewInterior(retVal.IDispatch(), false, true)
 }
 
 func (this *DisplayUnitLabel) Fill() *ChartFillFormat {
-	retVal := this.PropGet(0x60020017, nil)
-	return NewChartFillFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020017, nil)
+	return NewChartFillFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *DisplayUnitLabel) Delete() ole.Variant {
-	retVal := this.Call(0x60020018, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x60020018, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DisplayUnitLabel) Border() *ChartBorder {
-	retVal := this.PropGet(0x60020019, nil)
-	return NewChartBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020019, nil)
+	return NewChartBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *DisplayUnitLabel) Name() string {
-	retVal := this.PropGet(0x6002001a, nil)
+	retVal, _ := this.PropGet(0x6002001a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x6002001b, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x6002001b, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *DisplayUnitLabel) Select() ole.Variant {
-	retVal := this.Call(0x6002001c, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x6002001c, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *DisplayUnitLabel) IncludeInLayout() bool {
-	retVal := this.PropGet(0x00000972, nil)
+	retVal, _ := this.PropGet(0x00000972, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DisplayUnitLabel) SetIncludeInLayout(rhs bool)  {
-	retVal := this.PropPut(0x00000972, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000972, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Position() int32 {
-	retVal := this.PropGet(0x00000687, nil)
+	retVal, _ := this.PropGet(0x00000687, nil)
 	return retVal.LValVal()
 }
 
 func (this *DisplayUnitLabel) SetPosition(rhs int32)  {
-	retVal := this.PropPut(0x00000687, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000687, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) Format() *ChartFormat {
-	retVal := this.PropGet(0x60020021, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020021, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *DisplayUnitLabel) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *DisplayUnitLabel) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 
 func (this *DisplayUnitLabel) Height() float64 {
-	retVal := this.PropGet(0x60020022, nil)
+	retVal, _ := this.PropGet(0x60020022, nil)
 	return retVal.DblValVal()
 }
 
 func (this *DisplayUnitLabel) Width() float64 {
-	retVal := this.PropGet(0x60020025, nil)
+	retVal, _ := this.PropGet(0x60020025, nil)
 	return retVal.DblValVal()
 }
 
 func (this *DisplayUnitLabel) Formula() string {
-	retVal := this.PropGet(0x60020026, nil)
+	retVal, _ := this.PropGet(0x60020026, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) SetFormula(rhs string)  {
-	retVal := this.PropPut(0x60020026, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020026, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) FormulaR1C1() string {
-	retVal := this.PropGet(0x60020028, nil)
+	retVal, _ := this.PropGet(0x60020028, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) SetFormulaR1C1(rhs string)  {
-	retVal := this.PropPut(0x60020028, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020028, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) FormulaLocal() string {
-	retVal := this.PropGet(0x6002002a, nil)
+	retVal, _ := this.PropGet(0x6002002a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) SetFormulaLocal(rhs string)  {
-	retVal := this.PropPut(0x6002002a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002002a, []interface{}{rhs})
 }
 
 func (this *DisplayUnitLabel) FormulaR1C1Local() string {
-	retVal := this.PropGet(0x6002002c, nil)
+	retVal, _ := this.PropGet(0x6002002c, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DisplayUnitLabel) SetFormulaR1C1Local(rhs string)  {
-	retVal := this.PropPut(0x6002002c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002002c, []interface{}{rhs})
 }
 

@@ -16,6 +16,9 @@ type GlowFormat struct {
 }
 
 func NewGlowFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *GlowFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &GlowFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewGlowFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *GlowFormat
 }
 
 func GlowFormatFromVar(v ole.Variant) *GlowFormat {
-	return NewGlowFormat(v.PdispValVal(), false, false)
+	return NewGlowFormat(v.IDispatch(), false, false)
 }
 
 func (this *GlowFormat) IID() *syscall.GUID {
@@ -42,42 +45,40 @@ func (this *GlowFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *GlowFormat) Radius() float32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.FltValVal()
 }
 
 func (this *GlowFormat) SetRadius(rhs float32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *GlowFormat) Color() *ColorFormat {
-	retVal := this.PropGet(0x00000002, nil)
-	return NewColorFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000002, nil)
+	return NewColorFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *GlowFormat) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *GlowFormat) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *GlowFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *GlowFormat) Transparency() float32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.FltValVal()
 }
 
 func (this *GlowFormat) SetTransparency(rhs float32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 

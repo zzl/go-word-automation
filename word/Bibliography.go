@@ -16,6 +16,9 @@ type Bibliography struct {
 }
 
 func NewBibliography(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bibliography {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Bibliography{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBibliography(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bibliogr
 }
 
 func BibliographyFromVar(v ole.Variant) *Bibliography {
-	return NewBibliography(v.PdispValVal(), false, false)
+	return NewBibliography(v.IDispatch(), false, false)
 }
 
 func (this *Bibliography) IID() *syscall.GUID {
@@ -42,37 +45,36 @@ func (this *Bibliography) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Bibliography) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Bibliography) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bibliography) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Bibliography) Sources() *Sources {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewSources(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewSources(retVal.IDispatch(), false, true)
 }
 
 func (this *Bibliography) BibliographyStyle() string {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Bibliography) SetBibliographyStyle(rhs string)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *Bibliography) GenerateUniqueTag() string {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

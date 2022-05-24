@@ -17,6 +17,9 @@ type ReadabilityStatistics struct {
 }
 
 func NewReadabilityStatistics(pDisp *win32.IDispatch, addRef bool, scoped bool) *ReadabilityStatistics {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ReadabilityStatistics{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewReadabilityStatistics(pDisp *win32.IDispatch, addRef bool, scoped bool) 
 }
 
 func ReadabilityStatisticsFromVar(v ole.Variant) *ReadabilityStatistics {
-	return NewReadabilityStatistics(v.PdispValVal(), false, false)
+	return NewReadabilityStatistics(v.IDispatch(), false, false)
 }
 
 func (this *ReadabilityStatistics) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *ReadabilityStatistics) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ReadabilityStatistics) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ReadabilityStatistics) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ReadabilityStatistics) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ReadabilityStatistics) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,12 +87,12 @@ func (this *ReadabilityStatistics) ForEach(action func(item *ReadabilityStatisti
 }
 
 func (this *ReadabilityStatistics) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *ReadabilityStatistics) Item(index *ole.Variant) *ReadabilityStatistic {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewReadabilityStatistic(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewReadabilityStatistic(retVal.IDispatch(), false, true)
 }
 

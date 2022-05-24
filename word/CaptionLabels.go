@@ -17,6 +17,9 @@ type CaptionLabels struct {
 }
 
 func NewCaptionLabels(pDisp *win32.IDispatch, addRef bool, scoped bool) *CaptionLabels {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CaptionLabels{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCaptionLabels(pDisp *win32.IDispatch, addRef bool, scoped bool) *Caption
 }
 
 func CaptionLabelsFromVar(v ole.Variant) *CaptionLabels {
-	return NewCaptionLabels(v.PdispValVal(), false, false)
+	return NewCaptionLabels(v.IDispatch(), false, false)
 }
 
 func (this *CaptionLabels) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *CaptionLabels) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CaptionLabels) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CaptionLabels) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CaptionLabels) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CaptionLabels) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *CaptionLabels) ForEach(action func(item *CaptionLabel) bool) {
 }
 
 func (this *CaptionLabels) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *CaptionLabels) Item(index *ole.Variant) *CaptionLabel {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCaptionLabel(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCaptionLabel(retVal.IDispatch(), false, true)
 }
 
 func (this *CaptionLabels) Add(name string) *CaptionLabel {
-	retVal := this.Call(0x00000064, []interface{}{name})
-	return NewCaptionLabel(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{name})
+	return NewCaptionLabel(retVal.IDispatch(), false, true)
 }
 

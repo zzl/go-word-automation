@@ -16,6 +16,9 @@ type RoutingSlip struct {
 }
 
 func NewRoutingSlip(pDisp *win32.IDispatch, addRef bool, scoped bool) *RoutingSlip {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &RoutingSlip{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewRoutingSlip(pDisp *win32.IDispatch, addRef bool, scoped bool) *RoutingSl
 }
 
 func RoutingSlipFromVar(v ole.Variant) *RoutingSlip {
-	return NewRoutingSlip(v.PdispValVal(), false, false)
+	return NewRoutingSlip(v.IDispatch(), false, false)
 }
 
 func (this *RoutingSlip) IID() *syscall.GUID {
@@ -42,82 +45,76 @@ func (this *RoutingSlip) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *RoutingSlip) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *RoutingSlip) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *RoutingSlip) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *RoutingSlip) Subject() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *RoutingSlip) SetSubject(rhs string)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *RoutingSlip) Message() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *RoutingSlip) SetMessage(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *RoutingSlip) Delivery() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *RoutingSlip) SetDelivery(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *RoutingSlip) TrackStatus() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *RoutingSlip) SetTrackStatus(rhs bool)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *RoutingSlip) Protect() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *RoutingSlip) SetProtect(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *RoutingSlip) ReturnWhenDone() bool {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *RoutingSlip) SetReturnWhenDone(rhs bool)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *RoutingSlip) Status() int32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.LValVal()
 }
 
@@ -127,18 +124,18 @@ var RoutingSlip_Recipients_OptArgs= []string{
 
 func (this *RoutingSlip) Recipients(optArgs ...interface{}) ole.Variant {
 	optArgs = ole.ProcessOptArgs(RoutingSlip_Recipients_OptArgs, optArgs)
-	retVal := this.PropGet(0x00000009, nil, optArgs...)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000009, nil, optArgs...)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *RoutingSlip) Reset()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *RoutingSlip) AddRecipient(recipient string)  {
-	retVal := this.Call(0x00000066, []interface{}{recipient})
+	retVal, _ := this.Call(0x00000066, []interface{}{recipient})
 	_= retVal
 }
 

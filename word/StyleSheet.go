@@ -16,6 +16,9 @@ type StyleSheet struct {
 }
 
 func NewStyleSheet(pDisp *win32.IDispatch, addRef bool, scoped bool) *StyleSheet {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &StyleSheet{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewStyleSheet(pDisp *win32.IDispatch, addRef bool, scoped bool) *StyleSheet
 }
 
 func StyleSheetFromVar(v ole.Variant) *StyleSheet {
-	return NewStyleSheet(v.PdispValVal(), false, false)
+	return NewStyleSheet(v.IDispatch(), false, false)
 }
 
 func (this *StyleSheet) IID() *syscall.GUID {
@@ -42,67 +45,65 @@ func (this *StyleSheet) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *StyleSheet) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *StyleSheet) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *StyleSheet) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000064, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *StyleSheet) FullName() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *StyleSheet) Index() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *StyleSheet) Name() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *StyleSheet) Path() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *StyleSheet) Type() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *StyleSheet) SetType(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *StyleSheet) Title() string {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *StyleSheet) SetTitle(rhs string)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *StyleSheet) Move(precedence int32)  {
-	retVal := this.Call(0x00000007, []interface{}{precedence})
+	retVal, _ := this.Call(0x00000007, []interface{}{precedence})
 	_= retVal
 }
 
 func (this *StyleSheet) Delete()  {
-	retVal := this.Call(0x00000008, nil)
+	retVal, _ := this.Call(0x00000008, nil)
 	_= retVal
 }
 

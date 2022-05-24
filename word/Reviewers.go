@@ -17,6 +17,9 @@ type Reviewers struct {
 }
 
 func NewReviewers(pDisp *win32.IDispatch, addRef bool, scoped bool) *Reviewers {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Reviewers{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewReviewers(pDisp *win32.IDispatch, addRef bool, scoped bool) *Reviewers {
 }
 
 func ReviewersFromVar(v ole.Variant) *Reviewers {
-	return NewReviewers(v.PdispValVal(), false, false)
+	return NewReviewers(v.IDispatch(), false, false)
 }
 
 func (this *Reviewers) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Reviewers) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Reviewers) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *Reviewers) ForEach(action func(item *Reviewer) bool) {
 }
 
 func (this *Reviewers) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Reviewers) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Reviewers) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Reviewers) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Reviewers) Item(index *ole.Variant) *Reviewer {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewReviewer(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewReviewer(retVal.IDispatch(), false, true)
 }
 

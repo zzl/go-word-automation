@@ -16,6 +16,9 @@ type OMathMatRow struct {
 }
 
 func NewOMathMatRow(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMatRow {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathMatRow{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathMatRow(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMatR
 }
 
 func OMathMatRowFromVar(v ole.Variant) *OMathMatRow {
-	return NewOMathMatRow(v.PdispValVal(), false, false)
+	return NewOMathMatRow(v.IDispatch(), false, false)
 }
 
 func (this *OMathMatRow) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *OMathMatRow) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathMatRow) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMatRow) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatRow) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathMatRow) Args() *OMathArgs {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMathArgs(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMathArgs(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMatRow) RowIndex() int32 {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatRow) Delete()  {
-	retVal := this.Call(0x000000c8, nil)
+	retVal, _ := this.Call(0x000000c8, nil)
 	_= retVal
 }
 

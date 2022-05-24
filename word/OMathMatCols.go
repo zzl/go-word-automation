@@ -17,6 +17,9 @@ type OMathMatCols struct {
 }
 
 func NewOMathMatCols(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMatCols {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathMatCols{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOMathMatCols(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMat
 }
 
 func OMathMatColsFromVar(v ole.Variant) *OMathMatCols {
-	return NewOMathMatCols(v.PdispValVal(), false, false)
+	return NewOMathMatCols(v.IDispatch(), false, false)
 }
 
 func (this *OMathMatCols) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *OMathMatCols) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathMatCols) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *OMathMatCols) ForEach(action func(item *OMathMatCol) bool) {
 }
 
 func (this *OMathMatCols) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMatCols) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatCols) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathMatCols) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatCols) Item(index int32) *OMathMatCol {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOMathMatCol(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOMathMatCol(retVal.IDispatch(), false, true)
 }
 
 var OMathMatCols_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var OMathMatCols_Add_OptArgs= []string{
 
 func (this *OMathMatCols) Add(optArgs ...interface{}) *OMathMatCol {
 	optArgs = ole.ProcessOptArgs(OMathMatCols_Add_OptArgs, optArgs)
-	retVal := this.Call(0x000000c8, nil, optArgs...)
-	return NewOMathMatCol(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, nil, optArgs...)
+	return NewOMathMatCol(retVal.IDispatch(), false, true)
 }
 

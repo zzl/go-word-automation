@@ -16,6 +16,9 @@ type OLEControl_ struct {
 }
 
 func NewOLEControl_(pDisp *win32.IDispatch, addRef bool, scoped bool) *OLEControl_ {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OLEControl_{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOLEControl_(pDisp *win32.IDispatch, addRef bool, scoped bool) *OLEContro
 }
 
 func OLEControl_FromVar(v ole.Variant) *OLEControl_ {
-	return NewOLEControl_(v.PdispValVal(), false, false)
+	return NewOLEControl_(v.IDispatch(), false, false)
 }
 
 func (this *OLEControl_) IID() *syscall.GUID {
@@ -42,92 +45,86 @@ func (this *OLEControl_) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OLEControl_) Left() float32 {
-	retVal := this.PropGet(-2147417853, nil)
+	retVal, _ := this.PropGet(-2147417853, nil)
 	return retVal.FltValVal()
 }
 
 func (this *OLEControl_) SetLeft(rhs float32)  {
-	retVal := this.PropPut(-2147417853, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(-2147417853, []interface{}{rhs})
 }
 
 func (this *OLEControl_) Top() float32 {
-	retVal := this.PropGet(-2147417852, nil)
+	retVal, _ := this.PropGet(-2147417852, nil)
 	return retVal.FltValVal()
 }
 
 func (this *OLEControl_) SetTop(rhs float32)  {
-	retVal := this.PropPut(-2147417852, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(-2147417852, []interface{}{rhs})
 }
 
 func (this *OLEControl_) Height() float32 {
-	retVal := this.PropGet(-2147417851, nil)
+	retVal, _ := this.PropGet(-2147417851, nil)
 	return retVal.FltValVal()
 }
 
 func (this *OLEControl_) SetHeight(rhs float32)  {
-	retVal := this.PropPut(-2147417851, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(-2147417851, []interface{}{rhs})
 }
 
 func (this *OLEControl_) Width() float32 {
-	retVal := this.PropGet(-2147417850, nil)
+	retVal, _ := this.PropGet(-2147417850, nil)
 	return retVal.FltValVal()
 }
 
 func (this *OLEControl_) SetWidth(rhs float32)  {
-	retVal := this.PropPut(-2147417850, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(-2147417850, []interface{}{rhs})
 }
 
 func (this *OLEControl_) Name() string {
-	retVal := this.PropGet(-2147418112, nil)
+	retVal, _ := this.PropGet(-2147418112, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEControl_) SetName(rhs string)  {
-	retVal := this.PropPut(-2147418112, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(-2147418112, []interface{}{rhs})
 }
 
 func (this *OLEControl_) Automation() *ole.DispatchClass {
-	retVal := this.PropGet(-2147417849, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(-2147417849, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OLEControl_) Select()  {
-	retVal := this.Call(-2147417568, nil)
+	retVal, _ := this.Call(-2147417568, nil)
 	_= retVal
 }
 
 func (this *OLEControl_) Copy()  {
-	retVal := this.Call(-2147417560, nil)
+	retVal, _ := this.Call(-2147417560, nil)
 	_= retVal
 }
 
 func (this *OLEControl_) Cut()  {
-	retVal := this.Call(-2147417559, nil)
+	retVal, _ := this.Call(-2147417559, nil)
 	_= retVal
 }
 
 func (this *OLEControl_) Delete()  {
-	retVal := this.Call(-2147417520, nil)
+	retVal, _ := this.Call(-2147417520, nil)
 	_= retVal
 }
 
 func (this *OLEControl_) Activate()  {
-	retVal := this.Call(-2147417519, nil)
+	retVal, _ := this.Call(-2147417519, nil)
 	_= retVal
 }
 
 func (this *OLEControl_) AltHTML() string {
-	retVal := this.PropGet(-2147415101, nil)
+	retVal, _ := this.PropGet(-2147415101, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OLEControl_) SetAltHTML(rhs string)  {
-	retVal := this.PropPut(-2147415101, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(-2147415101, []interface{}{rhs})
 }
 

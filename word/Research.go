@@ -16,6 +16,9 @@ type Research struct {
 }
 
 func NewResearch(pDisp *win32.IDispatch, addRef bool, scoped bool) *Research {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Research{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewResearch(pDisp *win32.IDispatch, addRef bool, scoped bool) *Research {
 }
 
 func ResearchFromVar(v ole.Variant) *Research {
-	return NewResearch(v.PdispValVal(), false, false)
+	return NewResearch(v.IDispatch(), false, false)
 }
 
 func (this *Research) IID() *syscall.GUID {
@@ -42,44 +45,48 @@ func (this *Research) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Research) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Research) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Research) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
-func (this *Research) Query(serviceID string, queryString string, queryLanguage int32, useSelection bool, launchQuery bool) ole.Variant {
-	retVal := this.Call(0x000001f4, []interface{}{serviceID, queryString, queryLanguage, useSelection, launchQuery})
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+var Research_Query_OptArgs= []string{
+	"QueryString", "QueryLanguage", "UseSelection", "LaunchQuery", 
+}
+
+func (this *Research) Query(serviceID string, optArgs ...interface{}) ole.Variant {
+	optArgs = ole.ProcessOptArgs(Research_Query_OptArgs, optArgs)
+	retVal, _ := this.Call(0x000001f4, []interface{}{serviceID}, optArgs...)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Research) SetLanguagePair(languageFrom int32, languageTo int32) ole.Variant {
-	retVal := this.Call(0x000001f5, []interface{}{languageFrom, languageTo})
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x000001f5, []interface{}{languageFrom, languageTo})
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Research) IsResearchService(serviceID string) bool {
-	retVal := this.Call(0x000001f6, []interface{}{serviceID})
+	retVal, _ := this.Call(0x000001f6, []interface{}{serviceID})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Research) FavoriteService() string {
-	retVal := this.PropGet(0x000003eb, nil)
+	retVal, _ := this.PropGet(0x000003eb, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Research) SetFavoriteService(rhs string)  {
-	retVal := this.PropPut(0x000003eb, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003eb, []interface{}{rhs})
 }
 

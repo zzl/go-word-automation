@@ -16,6 +16,9 @@ type HTMLDivision struct {
 }
 
 func NewHTMLDivision(pDisp *win32.IDispatch, addRef bool, scoped bool) *HTMLDivision {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HTMLDivision{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewHTMLDivision(pDisp *win32.IDispatch, addRef bool, scoped bool) *HTMLDivi
 }
 
 func HTMLDivisionFromVar(v ole.Variant) *HTMLDivision {
-	return NewHTMLDivision(v.PdispValVal(), false, false)
+	return NewHTMLDivision(v.IDispatch(), false, false)
 }
 
 func (this *HTMLDivision) IID() *syscall.GUID {
@@ -42,73 +45,69 @@ func (this *HTMLDivision) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HTMLDivision) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HTMLDivision) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HTMLDivision) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HTMLDivision) Range() *Range {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *HTMLDivision) Borders() *Borders {
-	retVal := this.PropGet(0x0000044c, nil)
-	return NewBorders(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044c, nil)
+	return NewBorders(retVal.IDispatch(), false, true)
 }
 
 func (this *HTMLDivision) LeftIndent() float32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.FltValVal()
 }
 
 func (this *HTMLDivision) SetLeftIndent(rhs float32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *HTMLDivision) RightIndent() float32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.FltValVal()
 }
 
 func (this *HTMLDivision) SetRightIndent(rhs float32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *HTMLDivision) SpaceBefore() float32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.FltValVal()
 }
 
 func (this *HTMLDivision) SetSpaceBefore(rhs float32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *HTMLDivision) SpaceAfter() float32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.FltValVal()
 }
 
 func (this *HTMLDivision) SetSpaceAfter(rhs float32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *HTMLDivision) HTMLDivisions() *HTMLDivisions {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewHTMLDivisions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewHTMLDivisions(retVal.IDispatch(), false, true)
 }
 
 var HTMLDivision_HTMLDivisionParent_OptArgs= []string{
@@ -117,12 +116,12 @@ var HTMLDivision_HTMLDivisionParent_OptArgs= []string{
 
 func (this *HTMLDivision) HTMLDivisionParent(optArgs ...interface{}) *HTMLDivision {
 	optArgs = ole.ProcessOptArgs(HTMLDivision_HTMLDivisionParent_OptArgs, optArgs)
-	retVal := this.Call(0x00000008, nil, optArgs...)
-	return NewHTMLDivision(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000008, nil, optArgs...)
+	return NewHTMLDivision(retVal.IDispatch(), false, true)
 }
 
 func (this *HTMLDivision) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

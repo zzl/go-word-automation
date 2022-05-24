@@ -17,6 +17,9 @@ type Templates struct {
 }
 
 func NewTemplates(pDisp *win32.IDispatch, addRef bool, scoped bool) *Templates {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Templates{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTemplates(pDisp *win32.IDispatch, addRef bool, scoped bool) *Templates {
 }
 
 func TemplatesFromVar(v ole.Variant) *Templates {
-	return NewTemplates(v.PdispValVal(), false, false)
+	return NewTemplates(v.IDispatch(), false, false)
 }
 
 func (this *Templates) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *Templates) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Templates) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Templates) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Templates) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Templates) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Templates) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,12 +92,12 @@ func (this *Templates) ForEach(action func(item *Template) bool) {
 }
 
 func (this *Templates) Item(index *ole.Variant) *Template {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTemplate(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTemplate(retVal.IDispatch(), false, true)
 }
 
 func (this *Templates) LoadBuildingBlocks()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 

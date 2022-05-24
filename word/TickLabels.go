@@ -16,6 +16,9 @@ type TickLabels struct {
 }
 
 func NewTickLabels(pDisp *win32.IDispatch, addRef bool, scoped bool) *TickLabels {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TickLabels{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTickLabels(pDisp *win32.IDispatch, addRef bool, scoped bool) *TickLabels
 }
 
 func TickLabelsFromVar(v ole.Variant) *TickLabels {
-	return NewTickLabels(v.PdispValVal(), false, false)
+	return NewTickLabels(v.IDispatch(), false, false)
 }
 
 func (this *TickLabels) IID() *syscall.GUID {
@@ -42,141 +45,132 @@ func (this *TickLabels) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TickLabels) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x60020000, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x60020000, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TickLabels) Delete() ole.Variant {
-	retVal := this.Call(0x60020001, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x60020001, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *TickLabels) Font() *ChartFont {
-	retVal := this.PropGet(0x60020002, nil)
-	return NewChartFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020002, nil)
+	return NewChartFont(retVal.IDispatch(), false, true)
 }
 
 func (this *TickLabels) Name() string {
-	retVal := this.PropGet(0x60020003, nil)
+	retVal, _ := this.PropGet(0x60020003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TickLabels) NumberFormat() string {
-	retVal := this.PropGet(0x60020004, nil)
+	retVal, _ := this.PropGet(0x60020004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TickLabels) SetNumberFormat(rhs string)  {
-	retVal := this.PropPut(0x60020004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020004, []interface{}{rhs})
 }
 
 func (this *TickLabels) NumberFormatLinked() bool {
-	retVal := this.PropGet(0x60020006, nil)
+	retVal, _ := this.PropGet(0x60020006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TickLabels) SetNumberFormatLinked(rhs bool)  {
-	retVal := this.PropPut(0x60020006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020006, []interface{}{rhs})
 }
 
 func (this *TickLabels) NumberFormatLocal() ole.Variant {
-	retVal := this.PropGet(0x60020008, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020008, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *TickLabels) SetNumberFormatLocal(rhs interface{})  {
-	retVal := this.PropPut(0x60020008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020008, []interface{}{rhs})
 }
 
 func (this *TickLabels) Orientation() int32 {
-	retVal := this.PropGet(0x6002000a, nil)
+	retVal, _ := this.PropGet(0x6002000a, nil)
 	return retVal.LValVal()
 }
 
 func (this *TickLabels) SetOrientation(rhs int32)  {
-	retVal := this.PropPut(0x6002000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000a, []interface{}{rhs})
 }
 
 func (this *TickLabels) Select() ole.Variant {
-	retVal := this.Call(0x6002000c, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x6002000c, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *TickLabels) ReadingOrder() int32 {
-	retVal := this.PropGet(0x6002000d, nil)
+	retVal, _ := this.PropGet(0x6002000d, nil)
 	return retVal.LValVal()
 }
 
 func (this *TickLabels) SetReadingOrder(rhs int32)  {
-	retVal := this.PropPut(0x6002000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000d, []interface{}{rhs})
 }
 
 func (this *TickLabels) AutoScaleFont() ole.Variant {
-	retVal := this.PropGet(0x6002000f, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x6002000f, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *TickLabels) SetAutoScaleFont(rhs interface{})  {
-	retVal := this.PropPut(0x6002000f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000f, []interface{}{rhs})
 }
 
 func (this *TickLabels) Depth() int32 {
-	retVal := this.PropGet(0x60020011, nil)
+	retVal, _ := this.PropGet(0x60020011, nil)
 	return retVal.LValVal()
 }
 
 func (this *TickLabels) Offset() int32 {
-	retVal := this.PropGet(0x60020012, nil)
+	retVal, _ := this.PropGet(0x60020012, nil)
 	return retVal.LValVal()
 }
 
 func (this *TickLabels) SetOffset(rhs int32)  {
-	retVal := this.PropPut(0x60020012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020012, []interface{}{rhs})
 }
 
 func (this *TickLabels) Alignment() int32 {
-	retVal := this.PropGet(0x60020014, nil)
+	retVal, _ := this.PropGet(0x60020014, nil)
 	return retVal.LValVal()
 }
 
 func (this *TickLabels) SetAlignment(rhs int32)  {
-	retVal := this.PropPut(0x60020014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020014, []interface{}{rhs})
 }
 
 func (this *TickLabels) MultiLevel() bool {
-	retVal := this.PropGet(0x60020016, nil)
+	retVal, _ := this.PropGet(0x60020016, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TickLabels) SetMultiLevel(rhs bool)  {
-	retVal := this.PropPut(0x60020016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020016, []interface{}{rhs})
 }
 
 func (this *TickLabels) Format() *ChartFormat {
-	retVal := this.PropGet(0x60020018, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020018, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *TickLabels) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TickLabels) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

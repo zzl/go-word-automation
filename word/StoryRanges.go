@@ -17,6 +17,9 @@ type StoryRanges struct {
 }
 
 func NewStoryRanges(pDisp *win32.IDispatch, addRef bool, scoped bool) *StoryRanges {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &StoryRanges{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewStoryRanges(pDisp *win32.IDispatch, addRef bool, scoped bool) *StoryRang
 }
 
 func StoryRangesFromVar(v ole.Variant) *StoryRanges {
-	return NewStoryRanges(v.PdispValVal(), false, false)
+	return NewStoryRanges(v.IDispatch(), false, false)
 }
 
 func (this *StoryRanges) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *StoryRanges) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *StoryRanges) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *StoryRanges) ForEach(action func(item *Range) bool) {
 }
 
 func (this *StoryRanges) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *StoryRanges) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *StoryRanges) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *StoryRanges) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *StoryRanges) Item(index int32) *Range {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

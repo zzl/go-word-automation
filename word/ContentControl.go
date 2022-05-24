@@ -16,6 +16,9 @@ type ContentControl struct {
 }
 
 func NewContentControl(pDisp *win32.IDispatch, addRef bool, scoped bool) *ContentControl {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ContentControl{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewContentControl(pDisp *win32.IDispatch, addRef bool, scoped bool) *Conten
 }
 
 func ContentControlFromVar(v ole.Variant) *ContentControl {
-	return NewContentControl(v.PdispValVal(), false, false)
+	return NewContentControl(v.IDispatch(), false, false)
 }
 
 func (this *ContentControl) IID() *syscall.GUID {
@@ -42,238 +45,243 @@ func (this *ContentControl) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ContentControl) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControl) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControl) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ContentControl) Range() *Range {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControl) LockContentControl() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ContentControl) SetLockContentControl(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *ContentControl) LockContents() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ContentControl) SetLockContents(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *ContentControl) XMLMapping() *XMLMapping {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewXMLMapping(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewXMLMapping(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControl) Type() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControl) SetType(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *ContentControl) Copy()  {
-	retVal := this.Call(0x00000006, nil)
+	retVal, _ := this.Call(0x00000006, nil)
 	_= retVal
 }
 
 func (this *ContentControl) Cut()  {
-	retVal := this.Call(0x00000007, nil)
+	retVal, _ := this.Call(0x00000007, nil)
 	_= retVal
 }
 
-func (this *ContentControl) Delete(deleteContents bool)  {
-	retVal := this.Call(0x00000008, []interface{}{deleteContents})
+var ContentControl_Delete_OptArgs= []string{
+	"DeleteContents", 
+}
+
+func (this *ContentControl) Delete(optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(ContentControl_Delete_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000008, nil, optArgs...)
 	_= retVal
 }
 
 func (this *ContentControl) DropdownListEntries() *ContentControlListEntries {
-	retVal := this.PropGet(0x00000009, nil)
-	return NewContentControlListEntries(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000009, nil)
+	return NewContentControlListEntries(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControl) PlaceholderText() *BuildingBlock {
-	retVal := this.PropGet(0x0000000a, nil)
-	return NewBuildingBlock(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return NewBuildingBlock(retVal.IDispatch(), false, true)
 }
 
-func (this *ContentControl) SetPlaceholderText(buildingBlock *BuildingBlock, range_ *Range, text string)  {
-	retVal := this.Call(0x0000000b, []interface{}{buildingBlock, range_, text})
+var ContentControl_SetPlaceholderText_OptArgs= []string{
+	"BuildingBlock", "Range", "Text", 
+}
+
+func (this *ContentControl) SetPlaceholderText(optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(ContentControl_SetPlaceholderText_OptArgs, optArgs)
+	retVal, _ := this.Call(0x0000000b, nil, optArgs...)
 	_= retVal
 }
 
 func (this *ContentControl) Title() string {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ContentControl) SetTitle(rhs string)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *ContentControl) DateDisplayFormat() string {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ContentControl) SetDateDisplayFormat(rhs string)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *ContentControl) MultiLine() bool {
-	retVal := this.PropGet(0x0000000f, nil)
+	retVal, _ := this.PropGet(0x0000000f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ContentControl) SetMultiLine(rhs bool)  {
-	retVal := this.PropPut(0x0000000f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000f, []interface{}{rhs})
 }
 
 func (this *ContentControl) ParentContentControl() *ContentControl {
-	retVal := this.PropGet(0x00000010, nil)
-	return NewContentControl(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000010, nil)
+	return NewContentControl(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControl) Temporary() bool {
-	retVal := this.PropGet(0x00000011, nil)
+	retVal, _ := this.PropGet(0x00000011, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ContentControl) SetTemporary(rhs bool)  {
-	retVal := this.PropPut(0x00000011, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000011, []interface{}{rhs})
 }
 
 func (this *ContentControl) ID() string {
-	retVal := this.PropGet(0x00000012, nil)
+	retVal, _ := this.PropGet(0x00000012, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ContentControl) ShowingPlaceholderText() bool {
-	retVal := this.PropGet(0x00000013, nil)
+	retVal, _ := this.PropGet(0x00000013, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ContentControl) DateStorageFormat() int32 {
-	retVal := this.PropGet(0x00000014, nil)
+	retVal, _ := this.PropGet(0x00000014, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControl) SetDateStorageFormat(rhs int32)  {
-	retVal := this.PropPut(0x00000014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000014, []interface{}{rhs})
 }
 
 func (this *ContentControl) BuildingBlockType() int32 {
-	retVal := this.PropGet(0x00000015, nil)
+	retVal, _ := this.PropGet(0x00000015, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControl) SetBuildingBlockType(rhs int32)  {
-	retVal := this.PropPut(0x00000015, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000015, []interface{}{rhs})
 }
 
 func (this *ContentControl) BuildingBlockCategory() string {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ContentControl) SetBuildingBlockCategory(rhs string)  {
-	retVal := this.PropPut(0x00000016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000016, []interface{}{rhs})
 }
 
 func (this *ContentControl) DateDisplayLocale() int32 {
-	retVal := this.PropGet(0x00000017, nil)
+	retVal, _ := this.PropGet(0x00000017, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControl) SetDateDisplayLocale(rhs int32)  {
-	retVal := this.PropPut(0x00000017, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000017, []interface{}{rhs})
 }
 
 func (this *ContentControl) Ungroup()  {
-	retVal := this.Call(0x00000018, nil)
+	retVal, _ := this.Call(0x00000018, nil)
 	_= retVal
 }
 
 func (this *ContentControl) DefaultTextStyle() ole.Variant {
-	retVal := this.PropGet(0x00000019, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000019, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ContentControl) SetDefaultTextStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000019, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000019, []interface{}{rhs})
 }
 
 func (this *ContentControl) DateCalendarType() int32 {
-	retVal := this.PropGet(0x0000001a, nil)
+	retVal, _ := this.PropGet(0x0000001a, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControl) SetDateCalendarType(rhs int32)  {
-	retVal := this.PropPut(0x0000001a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001a, []interface{}{rhs})
 }
 
 func (this *ContentControl) Tag() string {
-	retVal := this.PropGet(0x0000001b, nil)
+	retVal, _ := this.PropGet(0x0000001b, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ContentControl) SetTag(rhs string)  {
-	retVal := this.PropPut(0x0000001b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001b, []interface{}{rhs})
 }
 
 func (this *ContentControl) Checked() bool {
-	retVal := this.PropGet(0x0000001c, nil)
+	retVal, _ := this.PropGet(0x0000001c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ContentControl) SetChecked(rhs bool)  {
-	retVal := this.PropPut(0x0000001c, []interface{}{rhs})
+	_ = this.PropPut(0x0000001c, []interface{}{rhs})
+}
+
+var ContentControl_SetCheckedSymbol_OptArgs= []string{
+	"Font", 
+}
+
+func (this *ContentControl) SetCheckedSymbol(characterNumber int32, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(ContentControl_SetCheckedSymbol_OptArgs, optArgs)
+	retVal, _ := this.Call(0x0000001d, []interface{}{characterNumber}, optArgs...)
 	_= retVal
 }
 
-func (this *ContentControl) SetCheckedSymbol(characterNumber int32, font string)  {
-	retVal := this.Call(0x0000001d, []interface{}{characterNumber, font})
-	_= retVal
+var ContentControl_SetUncheckedSymbol_OptArgs= []string{
+	"Font", 
 }
 
-func (this *ContentControl) SetUncheckedSymbol(characterNumber int32, font string)  {
-	retVal := this.Call(0x0000001e, []interface{}{characterNumber, font})
+func (this *ContentControl) SetUncheckedSymbol(characterNumber int32, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(ContentControl_SetUncheckedSymbol_OptArgs, optArgs)
+	retVal, _ := this.Call(0x0000001e, []interface{}{characterNumber}, optArgs...)
 	_= retVal
 }
 

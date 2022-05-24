@@ -16,6 +16,9 @@ type DropDown struct {
 }
 
 func NewDropDown(pDisp *win32.IDispatch, addRef bool, scoped bool) *DropDown {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &DropDown{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewDropDown(pDisp *win32.IDispatch, addRef bool, scoped bool) *DropDown {
 }
 
 func DropDownFromVar(v ole.Variant) *DropDown {
-	return NewDropDown(v.PdispValVal(), false, false)
+	return NewDropDown(v.IDispatch(), false, false)
 }
 
 func (this *DropDown) IID() *syscall.GUID {
@@ -42,47 +45,45 @@ func (this *DropDown) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *DropDown) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *DropDown) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *DropDown) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *DropDown) Valid() bool {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *DropDown) Default() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *DropDown) SetDefault(rhs int32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *DropDown) Value() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *DropDown) SetValue(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *DropDown) ListEntries() *ListEntries {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewListEntries(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewListEntries(retVal.IDispatch(), false, true)
 }
 

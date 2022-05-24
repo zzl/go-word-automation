@@ -17,6 +17,9 @@ type Cells struct {
 }
 
 func NewCells(pDisp *win32.IDispatch, addRef bool, scoped bool) *Cells {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Cells{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCells(pDisp *win32.IDispatch, addRef bool, scoped bool) *Cells {
 }
 
 func CellsFromVar(v ole.Variant) *Cells {
-	return NewCells(v.PdispValVal(), false, false)
+	return NewCells(v.IDispatch(), false, false)
 }
 
 func (this *Cells) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Cells) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Cells) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,83 +72,78 @@ func (this *Cells) ForEach(action func(item *Cell) bool) {
 }
 
 func (this *Cells) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Cells) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Cells) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Cells) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Cells) Width() float32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.FltValVal()
 }
 
 func (this *Cells) SetWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *Cells) Height() float32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.FltValVal()
 }
 
 func (this *Cells) SetHeight(rhs float32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *Cells) HeightRule() int32 {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.LValVal()
 }
 
 func (this *Cells) SetHeightRule(rhs int32)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *Cells) VerticalAlignment() int32 {
-	retVal := this.PropGet(0x00000450, nil)
+	retVal, _ := this.PropGet(0x00000450, nil)
 	return retVal.LValVal()
 }
 
 func (this *Cells) SetVerticalAlignment(rhs int32)  {
-	retVal := this.PropPut(0x00000450, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000450, []interface{}{rhs})
 }
 
 func (this *Cells) Borders() *Borders {
-	retVal := this.PropGet(0x0000044c, nil)
-	return NewBorders(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044c, nil)
+	return NewBorders(retVal.IDispatch(), false, true)
 }
 
 func (this *Cells) SetBorders(rhs *Borders)  {
-	retVal := this.PropPut(0x0000044c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044c, []interface{}{rhs})
 }
 
 func (this *Cells) Shading() *Shading {
-	retVal := this.PropGet(0x00000065, nil)
-	return NewShading(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000065, nil)
+	return NewShading(retVal.IDispatch(), false, true)
 }
 
 func (this *Cells) Item(index int32) *Cell {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCell(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCell(retVal.IDispatch(), false, true)
 }
 
 var Cells_Add_OptArgs= []string{
@@ -154,8 +152,8 @@ var Cells_Add_OptArgs= []string{
 
 func (this *Cells) Add(optArgs ...interface{}) *Cell {
 	optArgs = ole.ProcessOptArgs(Cells_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000004, nil, optArgs...)
-	return NewCell(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000004, nil, optArgs...)
+	return NewCell(retVal.IDispatch(), false, true)
 }
 
 var Cells_Delete_OptArgs= []string{
@@ -164,22 +162,22 @@ var Cells_Delete_OptArgs= []string{
 
 func (this *Cells) Delete(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Cells_Delete_OptArgs, optArgs)
-	retVal := this.Call(0x000000c8, nil, optArgs...)
+	retVal, _ := this.Call(0x000000c8, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Cells) SetWidth_(columnWidth float32, rulerStyle int32)  {
-	retVal := this.Call(0x000000ca, []interface{}{columnWidth, rulerStyle})
+	retVal, _ := this.Call(0x000000ca, []interface{}{columnWidth, rulerStyle})
 	_= retVal
 }
 
 func (this *Cells) SetHeight_(rowHeight *ole.Variant, heightRule int32)  {
-	retVal := this.Call(0x000000cb, []interface{}{rowHeight, heightRule})
+	retVal, _ := this.Call(0x000000cb, []interface{}{rowHeight, heightRule})
 	_= retVal
 }
 
 func (this *Cells) Merge()  {
-	retVal := this.Call(0x000000cc, nil)
+	retVal, _ := this.Call(0x000000cc, nil)
 	_= retVal
 }
 
@@ -189,47 +187,45 @@ var Cells_Split_OptArgs= []string{
 
 func (this *Cells) Split(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Cells_Split_OptArgs, optArgs)
-	retVal := this.Call(0x000000cd, nil, optArgs...)
+	retVal, _ := this.Call(0x000000cd, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Cells) DistributeHeight()  {
-	retVal := this.Call(0x000000ce, nil)
+	retVal, _ := this.Call(0x000000ce, nil)
 	_= retVal
 }
 
 func (this *Cells) DistributeWidth()  {
-	retVal := this.Call(0x000000cf, nil)
+	retVal, _ := this.Call(0x000000cf, nil)
 	_= retVal
 }
 
 func (this *Cells) AutoFit()  {
-	retVal := this.Call(0x000000d0, nil)
+	retVal, _ := this.Call(0x000000d0, nil)
 	_= retVal
 }
 
 func (this *Cells) NestingLevel() int32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.LValVal()
 }
 
 func (this *Cells) PreferredWidth() float32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.FltValVal()
 }
 
 func (this *Cells) SetPreferredWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *Cells) PreferredWidthType() int32 {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.LValVal()
 }
 
 func (this *Cells) SetPreferredWidthType(rhs int32)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 

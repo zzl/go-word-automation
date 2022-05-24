@@ -16,6 +16,9 @@ type FirstLetterException struct {
 }
 
 func NewFirstLetterException(pDisp *win32.IDispatch, addRef bool, scoped bool) *FirstLetterException {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FirstLetterException{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewFirstLetterException(pDisp *win32.IDispatch, addRef bool, scoped bool) *
 }
 
 func FirstLetterExceptionFromVar(v ole.Variant) *FirstLetterException {
-	return NewFirstLetterException(v.PdispValVal(), false, false)
+	return NewFirstLetterException(v.IDispatch(), false, false)
 }
 
 func (this *FirstLetterException) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *FirstLetterException) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FirstLetterException) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FirstLetterException) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FirstLetterException) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FirstLetterException) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *FirstLetterException) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *FirstLetterException) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

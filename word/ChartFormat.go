@@ -16,6 +16,9 @@ type ChartFormat struct {
 }
 
 func NewChartFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ChartFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewChartFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartForm
 }
 
 func ChartFormatFromVar(v ole.Variant) *ChartFormat {
-	return NewChartFormat(v.PdispValVal(), false, false)
+	return NewChartFormat(v.IDispatch(), false, false)
 }
 
 func (this *ChartFormat) IID() *syscall.GUID {
@@ -42,57 +45,57 @@ func (this *ChartFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ChartFormat) Fill() *FillFormat {
-	retVal := this.PropGet(0x60020000, nil)
-	return NewFillFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020000, nil)
+	return NewFillFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) Glow() *GlowFormat {
-	retVal := this.PropGet(0x60020001, nil)
-	return NewGlowFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020001, nil)
+	return NewGlowFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) Line() *LineFormat {
-	retVal := this.PropGet(0x60020002, nil)
-	return NewLineFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020002, nil)
+	return NewLineFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x60020003, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x60020003, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartFormat) PictureFormat() *PictureFormat {
-	retVal := this.PropGet(0x60020004, nil)
-	return NewPictureFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020004, nil)
+	return NewPictureFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) Shadow() *ShadowFormat {
-	retVal := this.PropGet(0x60020005, nil)
-	return NewShadowFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020005, nil)
+	return NewShadowFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) SoftEdge() *SoftEdgeFormat {
-	retVal := this.PropGet(0x60020006, nil)
-	return NewSoftEdgeFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020006, nil)
+	return NewSoftEdgeFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) TextFrame2() *ole.DispatchClass {
-	retVal := this.PropGet(0x60020007, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x60020007, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartFormat) ThreeD() *ThreeDFormat {
-	retVal := this.PropGet(0x60020008, nil)
-	return NewThreeDFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020008, nil)
+	return NewThreeDFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartFormat) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartFormat) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

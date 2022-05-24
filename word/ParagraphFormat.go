@@ -16,6 +16,9 @@ type ParagraphFormat struct {
 }
 
 func NewParagraphFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *ParagraphFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ParagraphFormat{ParagraphFormat_{ole.OleClient{pDisp}}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewParagraphFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *Parag
 }
 
 func NewParagraphFormatFromVar(v ole.Variant, addRef bool, scoped bool) *ParagraphFormat {
-	return NewParagraphFormat(v.PdispValVal(), addRef, scoped)
+	return NewParagraphFormat(v.IDispatch(), addRef, scoped)
 }
 
 func NewParagraphFormatInstance(scoped bool) (*ParagraphFormat, error) {

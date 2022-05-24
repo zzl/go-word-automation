@@ -16,6 +16,9 @@ type OMathBox struct {
 }
 
 func NewOMathBox(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathBox {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathBox{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathBox(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathBox {
 }
 
 func OMathBoxFromVar(v ole.Variant) *OMathBox {
-	return NewOMathBox(v.PdispValVal(), false, false)
+	return NewOMathBox(v.IDispatch(), false, false)
 }
 
 func (this *OMathBox) IID() *syscall.GUID {
@@ -42,52 +45,49 @@ func (this *OMathBox) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathBox) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathBox) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathBox) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathBox) E() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathBox) OpEmu() bool {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBox) SetOpEmu(rhs bool)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *OMathBox) NoBreak() bool {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBox) SetNoBreak(rhs bool)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *OMathBox) Diff() bool {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathBox) SetDiff(rhs bool)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 

@@ -17,6 +17,9 @@ type TablesOfContents struct {
 }
 
 func NewTablesOfContents(pDisp *win32.IDispatch, addRef bool, scoped bool) *TablesOfContents {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TablesOfContents{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTablesOfContents(pDisp *win32.IDispatch, addRef bool, scoped bool) *Tabl
 }
 
 func TablesOfContentsFromVar(v ole.Variant) *TablesOfContents {
-	return NewTablesOfContents(v.PdispValVal(), false, false)
+	return NewTablesOfContents(v.IDispatch(), false, false)
 }
 
 func (this *TablesOfContents) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *TablesOfContents) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TablesOfContents) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TablesOfContents) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfContents) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TablesOfContents) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,23 +87,22 @@ func (this *TablesOfContents) ForEach(action func(item *TableOfContents) bool) {
 }
 
 func (this *TablesOfContents) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfContents) Format() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfContents) SetFormat(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *TablesOfContents) Item(index int32) *TableOfContents {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTableOfContents(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTableOfContents(retVal.IDispatch(), false, true)
 }
 
 var TablesOfContents_AddOld_OptArgs= []string{
@@ -110,8 +112,8 @@ var TablesOfContents_AddOld_OptArgs= []string{
 
 func (this *TablesOfContents) AddOld(range_ *Range, optArgs ...interface{}) *TableOfContents {
 	optArgs = ole.ProcessOptArgs(TablesOfContents_AddOld_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{range_}, optArgs...)
-	return NewTableOfContents(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{range_}, optArgs...)
+	return NewTableOfContents(retVal.IDispatch(), false, true)
 }
 
 var TablesOfContents_MarkEntry_OptArgs= []string{
@@ -120,8 +122,8 @@ var TablesOfContents_MarkEntry_OptArgs= []string{
 
 func (this *TablesOfContents) MarkEntry(range_ *Range, optArgs ...interface{}) *Field {
 	optArgs = ole.ProcessOptArgs(TablesOfContents_MarkEntry_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{range_}, optArgs...)
-	return NewField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{range_}, optArgs...)
+	return NewField(retVal.IDispatch(), false, true)
 }
 
 var TablesOfContents_Add2000_OptArgs= []string{
@@ -132,8 +134,8 @@ var TablesOfContents_Add2000_OptArgs= []string{
 
 func (this *TablesOfContents) Add2000(range_ *Range, optArgs ...interface{}) *TableOfContents {
 	optArgs = ole.ProcessOptArgs(TablesOfContents_Add2000_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, []interface{}{range_}, optArgs...)
-	return NewTableOfContents(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{range_}, optArgs...)
+	return NewTableOfContents(retVal.IDispatch(), false, true)
 }
 
 var TablesOfContents_Add_OptArgs= []string{
@@ -144,7 +146,7 @@ var TablesOfContents_Add_OptArgs= []string{
 
 func (this *TablesOfContents) Add(range_ *Range, optArgs ...interface{}) *TableOfContents {
 	optArgs = ole.ProcessOptArgs(TablesOfContents_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000067, []interface{}{range_}, optArgs...)
-	return NewTableOfContents(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000067, []interface{}{range_}, optArgs...)
+	return NewTableOfContents(retVal.IDispatch(), false, true)
 }
 

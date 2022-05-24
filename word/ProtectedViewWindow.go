@@ -16,6 +16,9 @@ type ProtectedViewWindow struct {
 }
 
 func NewProtectedViewWindow(pDisp *win32.IDispatch, addRef bool, scoped bool) *ProtectedViewWindow {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ProtectedViewWindow{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewProtectedViewWindow(pDisp *win32.IDispatch, addRef bool, scoped bool) *P
 }
 
 func ProtectedViewWindowFromVar(v ole.Variant) *ProtectedViewWindow {
-	return NewProtectedViewWindow(v.PdispValVal(), false, false)
+	return NewProtectedViewWindow(v.IDispatch(), false, false)
 }
 
 func (this *ProtectedViewWindow) IID() *syscall.GUID {
@@ -42,117 +45,110 @@ func (this *ProtectedViewWindow) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ProtectedViewWindow) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ProtectedViewWindow) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ProtectedViewWindow) Caption() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ProtectedViewWindow) SetCaption(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) Document() *Document {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 func (this *ProtectedViewWindow) Left() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) SetLeft(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) Top() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) SetTop(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) Width() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) SetWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) Height() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) SetHeight(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) WindowState() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) SetWindowState(rhs int32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) Active() bool {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ProtectedViewWindow) Index() int32 {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProtectedViewWindow) Visible() bool {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ProtectedViewWindow) SetVisible(rhs bool)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *ProtectedViewWindow) SourceName() string {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ProtectedViewWindow) SourcePath() string {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ProtectedViewWindow) Activate()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
@@ -162,17 +158,17 @@ var ProtectedViewWindow_Edit_OptArgs= []string{
 
 func (this *ProtectedViewWindow) Edit(optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(ProtectedViewWindow_Edit_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, nil, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 func (this *ProtectedViewWindow) Close()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 
 func (this *ProtectedViewWindow) ToggleRibbon()  {
-	retVal := this.Call(0x00000067, nil)
+	retVal, _ := this.Call(0x00000067, nil)
 	_= retVal
 }
 

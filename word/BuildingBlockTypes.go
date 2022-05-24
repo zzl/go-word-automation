@@ -16,6 +16,9 @@ type BuildingBlockTypes struct {
 }
 
 func NewBuildingBlockTypes(pDisp *win32.IDispatch, addRef bool, scoped bool) *BuildingBlockTypes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &BuildingBlockTypes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBuildingBlockTypes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bu
 }
 
 func BuildingBlockTypesFromVar(v ole.Variant) *BuildingBlockTypes {
-	return NewBuildingBlockTypes(v.PdispValVal(), false, false)
+	return NewBuildingBlockTypes(v.IDispatch(), false, false)
 }
 
 func (this *BuildingBlockTypes) IID() *syscall.GUID {
@@ -42,27 +45,27 @@ func (this *BuildingBlockTypes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *BuildingBlockTypes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *BuildingBlockTypes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlockTypes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *BuildingBlockTypes) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlockTypes) Item(index int32) *BuildingBlockType {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewBuildingBlockType(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewBuildingBlockType(retVal.IDispatch(), false, true)
 }
 

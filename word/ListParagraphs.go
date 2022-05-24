@@ -17,6 +17,9 @@ type ListParagraphs struct {
 }
 
 func NewListParagraphs(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListParagraphs {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListParagraphs{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewListParagraphs(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListPa
 }
 
 func ListParagraphsFromVar(v ole.Variant) *ListParagraphs {
-	return NewListParagraphs(v.PdispValVal(), false, false)
+	return NewListParagraphs(v.IDispatch(), false, false)
 }
 
 func (this *ListParagraphs) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *ListParagraphs) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListParagraphs) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *ListParagraphs) ForEach(action func(item *Paragraph) bool) {
 }
 
 func (this *ListParagraphs) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListParagraphs) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListParagraphs) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListParagraphs) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListParagraphs) Item(index int32) *Paragraph {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewParagraph(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewParagraph(retVal.IDispatch(), false, true)
 }
 

@@ -16,6 +16,9 @@ type BuildingBlockType struct {
 }
 
 func NewBuildingBlockType(pDisp *win32.IDispatch, addRef bool, scoped bool) *BuildingBlockType {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &BuildingBlockType{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBuildingBlockType(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bui
 }
 
 func BuildingBlockTypeFromVar(v ole.Variant) *BuildingBlockType {
-	return NewBuildingBlockType(v.PdispValVal(), false, false)
+	return NewBuildingBlockType(v.IDispatch(), false, false)
 }
 
 func (this *BuildingBlockType) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *BuildingBlockType) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *BuildingBlockType) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *BuildingBlockType) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlockType) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *BuildingBlockType) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *BuildingBlockType) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *BuildingBlockType) Categories() *Categories {
-	retVal := this.PropGet(0x00000014, nil)
-	return NewCategories(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000014, nil)
+	return NewCategories(retVal.IDispatch(), false, true)
 }
 

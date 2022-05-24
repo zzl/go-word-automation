@@ -16,6 +16,9 @@ type TextRetrievalMode struct {
 }
 
 func NewTextRetrievalMode(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextRetrievalMode {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TextRetrievalMode{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTextRetrievalMode(pDisp *win32.IDispatch, addRef bool, scoped bool) *Tex
 }
 
 func TextRetrievalModeFromVar(v ole.Variant) *TextRetrievalMode {
-	return NewTextRetrievalMode(v.PdispValVal(), false, false)
+	return NewTextRetrievalMode(v.IDispatch(), false, false)
 }
 
 func (this *TextRetrievalMode) IID() *syscall.GUID {
@@ -42,52 +45,49 @@ func (this *TextRetrievalMode) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TextRetrievalMode) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TextRetrievalMode) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextRetrievalMode) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TextRetrievalMode) ViewType() int32 {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextRetrievalMode) SetViewType(rhs int32)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *TextRetrievalMode) Duplicate() *TextRetrievalMode {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewTextRetrievalMode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewTextRetrievalMode(retVal.IDispatch(), false, true)
 }
 
 func (this *TextRetrievalMode) IncludeHiddenText() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TextRetrievalMode) SetIncludeHiddenText(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *TextRetrievalMode) IncludeFieldCodes() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TextRetrievalMode) SetIncludeFieldCodes(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 

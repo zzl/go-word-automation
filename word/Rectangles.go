@@ -17,6 +17,9 @@ type Rectangles struct {
 }
 
 func NewRectangles(pDisp *win32.IDispatch, addRef bool, scoped bool) *Rectangles {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Rectangles{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewRectangles(pDisp *win32.IDispatch, addRef bool, scoped bool) *Rectangles
 }
 
 func RectanglesFromVar(v ole.Variant) *Rectangles {
-	return NewRectangles(v.PdispValVal(), false, false)
+	return NewRectangles(v.IDispatch(), false, false)
 }
 
 func (this *Rectangles) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Rectangles) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Rectangles) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *Rectangles) ForEach(action func(item *Rectangle) bool) {
 }
 
 func (this *Rectangles) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Rectangles) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Rectangles) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Rectangles) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Rectangles) Item(index int32) *Rectangle {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRectangle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRectangle(retVal.IDispatch(), false, true)
 }
 

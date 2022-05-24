@@ -17,6 +17,9 @@ type ProofreadingErrors struct {
 }
 
 func NewProofreadingErrors(pDisp *win32.IDispatch, addRef bool, scoped bool) *ProofreadingErrors {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ProofreadingErrors{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewProofreadingErrors(pDisp *win32.IDispatch, addRef bool, scoped bool) *Pr
 }
 
 func ProofreadingErrorsFromVar(v ole.Variant) *ProofreadingErrors {
-	return NewProofreadingErrors(v.PdispValVal(), false, false)
+	return NewProofreadingErrors(v.IDispatch(), false, false)
 }
 
 func (this *ProofreadingErrors) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *ProofreadingErrors) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ProofreadingErrors) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ProofreadingErrors) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProofreadingErrors) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ProofreadingErrors) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *ProofreadingErrors) ForEach(action func(item *Range) bool) {
 }
 
 func (this *ProofreadingErrors) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProofreadingErrors) Type() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *ProofreadingErrors) Item(index int32) *Range {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

@@ -16,6 +16,9 @@ type AutoCorrect struct {
 }
 
 func NewAutoCorrect(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCorrect {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoCorrect{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewAutoCorrect(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCorre
 }
 
 func AutoCorrectFromVar(v ole.Variant) *AutoCorrect {
-	return NewAutoCorrect(v.PdispValVal(), false, false)
+	return NewAutoCorrect(v.IDispatch(), false, false)
 }
 
 func (this *AutoCorrect) IID() *syscall.GUID {
@@ -42,182 +45,168 @@ func (this *AutoCorrect) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoCorrect) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrect) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCorrect) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoCorrect) CorrectDays() bool {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectDays(rhs bool)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) CorrectInitialCaps() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectInitialCaps(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) CorrectSentenceCaps() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectSentenceCaps(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) ReplaceText() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetReplaceText(rhs bool)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) Entries() *AutoCorrectEntries {
-	retVal := this.PropGet(0x00000006, nil)
-	return NewAutoCorrectEntries(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000006, nil)
+	return NewAutoCorrectEntries(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrect) FirstLetterExceptions() *FirstLetterExceptions {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewFirstLetterExceptions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewFirstLetterExceptions(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrect) FirstLetterAutoAdd() bool {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetFirstLetterAutoAdd(rhs bool)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) TwoInitialCapsExceptions() *TwoInitialCapsExceptions {
-	retVal := this.PropGet(0x00000009, nil)
-	return NewTwoInitialCapsExceptions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000009, nil)
+	return NewTwoInitialCapsExceptions(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrect) TwoInitialCapsAutoAdd() bool {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetTwoInitialCapsAutoAdd(rhs bool)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) CorrectCapsLock() bool {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectCapsLock(rhs bool)  {
-	retVal := this.PropPut(0x0000000b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000b, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) CorrectHangulAndAlphabet() bool {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectHangulAndAlphabet(rhs bool)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) HangulAndAlphabetExceptions() *HangulAndAlphabetExceptions {
-	retVal := this.PropGet(0x0000000d, nil)
-	return NewHangulAndAlphabetExceptions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000d, nil)
+	return NewHangulAndAlphabetExceptions(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrect) HangulAndAlphabetAutoAdd() bool {
-	retVal := this.PropGet(0x0000000e, nil)
+	retVal, _ := this.PropGet(0x0000000e, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetHangulAndAlphabetAutoAdd(rhs bool)  {
-	retVal := this.PropPut(0x0000000e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000e, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) ReplaceTextFromSpellingChecker() bool {
-	retVal := this.PropGet(0x0000000f, nil)
+	retVal, _ := this.PropGet(0x0000000f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetReplaceTextFromSpellingChecker(rhs bool)  {
-	retVal := this.PropPut(0x0000000f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000f, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) OtherCorrectionsAutoAdd() bool {
-	retVal := this.PropGet(0x00000010, nil)
+	retVal, _ := this.PropGet(0x00000010, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetOtherCorrectionsAutoAdd(rhs bool)  {
-	retVal := this.PropPut(0x00000010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000010, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) OtherCorrectionsExceptions() *OtherCorrectionsExceptions {
-	retVal := this.PropGet(0x00000011, nil)
-	return NewOtherCorrectionsExceptions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000011, nil)
+	return NewOtherCorrectionsExceptions(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrect) CorrectKeyboardSetting() bool {
-	retVal := this.PropGet(0x00000012, nil)
+	retVal, _ := this.PropGet(0x00000012, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectKeyboardSetting(rhs bool)  {
-	retVal := this.PropPut(0x00000012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000012, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) CorrectTableCells() bool {
-	retVal := this.PropGet(0x00000013, nil)
+	retVal, _ := this.PropGet(0x00000013, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetCorrectTableCells(rhs bool)  {
-	retVal := this.PropPut(0x00000013, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000013, []interface{}{rhs})
 }
 
 func (this *AutoCorrect) DisplayAutoCorrectOptions() bool {
-	retVal := this.PropGet(0x00000014, nil)
+	retVal, _ := this.PropGet(0x00000014, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrect) SetDisplayAutoCorrectOptions(rhs bool)  {
-	retVal := this.PropPut(0x00000014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000014, []interface{}{rhs})
 }
 

@@ -16,6 +16,9 @@ type OtherCorrectionsException struct {
 }
 
 func NewOtherCorrectionsException(pDisp *win32.IDispatch, addRef bool, scoped bool) *OtherCorrectionsException {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OtherCorrectionsException{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOtherCorrectionsException(pDisp *win32.IDispatch, addRef bool, scoped bo
 }
 
 func OtherCorrectionsExceptionFromVar(v ole.Variant) *OtherCorrectionsException {
-	return NewOtherCorrectionsException(v.PdispValVal(), false, false)
+	return NewOtherCorrectionsException(v.IDispatch(), false, false)
 }
 
 func (this *OtherCorrectionsException) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *OtherCorrectionsException) GetIDispatch(addRef bool) *win32.IDispatc
 }
 
 func (this *OtherCorrectionsException) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OtherCorrectionsException) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *OtherCorrectionsException) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OtherCorrectionsException) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *OtherCorrectionsException) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OtherCorrectionsException) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

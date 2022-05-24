@@ -17,6 +17,9 @@ type FirstLetterExceptions struct {
 }
 
 func NewFirstLetterExceptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *FirstLetterExceptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FirstLetterExceptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewFirstLetterExceptions(pDisp *win32.IDispatch, addRef bool, scoped bool) 
 }
 
 func FirstLetterExceptionsFromVar(v ole.Variant) *FirstLetterExceptions {
-	return NewFirstLetterExceptions(v.PdispValVal(), false, false)
+	return NewFirstLetterExceptions(v.IDispatch(), false, false)
 }
 
 func (this *FirstLetterExceptions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *FirstLetterExceptions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FirstLetterExceptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FirstLetterExceptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FirstLetterExceptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FirstLetterExceptions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *FirstLetterExceptions) ForEach(action func(item *FirstLetterExceptio
 }
 
 func (this *FirstLetterExceptions) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *FirstLetterExceptions) Item(index *ole.Variant) *FirstLetterException {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewFirstLetterException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewFirstLetterException(retVal.IDispatch(), false, true)
 }
 
 func (this *FirstLetterExceptions) Add(name string) *FirstLetterException {
-	retVal := this.Call(0x00000065, []interface{}{name})
-	return NewFirstLetterException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name})
+	return NewFirstLetterException(retVal.IDispatch(), false, true)
 }
 

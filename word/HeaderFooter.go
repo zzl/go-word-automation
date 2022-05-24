@@ -16,6 +16,9 @@ type HeaderFooter struct {
 }
 
 func NewHeaderFooter(pDisp *win32.IDispatch, addRef bool, scoped bool) *HeaderFooter {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HeaderFooter{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewHeaderFooter(pDisp *win32.IDispatch, addRef bool, scoped bool) *HeaderFo
 }
 
 func HeaderFooterFromVar(v ole.Variant) *HeaderFooter {
-	return NewHeaderFooter(v.PdispValVal(), false, false)
+	return NewHeaderFooter(v.IDispatch(), false, false)
 }
 
 func (this *HeaderFooter) IID() *syscall.GUID {
@@ -42,62 +45,60 @@ func (this *HeaderFooter) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HeaderFooter) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HeaderFooter) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeaderFooter) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HeaderFooter) Range() *Range {
-	retVal := this.PropGet(0x00000000, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000000, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *HeaderFooter) Index() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeaderFooter) IsHeader() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *HeaderFooter) Exists() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *HeaderFooter) SetExists(rhs bool)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *HeaderFooter) PageNumbers() *PageNumbers {
-	retVal := this.PropGet(0x00000005, nil)
-	return NewPageNumbers(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000005, nil)
+	return NewPageNumbers(retVal.IDispatch(), false, true)
 }
 
 func (this *HeaderFooter) LinkToPrevious() bool {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *HeaderFooter) SetLinkToPrevious(rhs bool)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *HeaderFooter) Shapes() *Shapes {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewShapes(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewShapes(retVal.IDispatch(), false, true)
 }
 

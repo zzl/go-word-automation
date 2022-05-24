@@ -16,6 +16,9 @@ type AutoTextEntry struct {
 }
 
 func NewAutoTextEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoTextEntry {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoTextEntry{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewAutoTextEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoTex
 }
 
 func AutoTextEntryFromVar(v ole.Variant) *AutoTextEntry {
-	return NewAutoTextEntry(v.PdispValVal(), false, false)
+	return NewAutoTextEntry(v.IDispatch(), false, false)
 }
 
 func (this *AutoTextEntry) IID() *syscall.GUID {
@@ -42,52 +45,50 @@ func (this *AutoTextEntry) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoTextEntry) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoTextEntry) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoTextEntry) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoTextEntry) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoTextEntry) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *AutoTextEntry) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *AutoTextEntry) StyleName() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *AutoTextEntry) Value() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *AutoTextEntry) SetValue(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *AutoTextEntry) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
@@ -97,7 +98,7 @@ var AutoTextEntry_Insert_OptArgs= []string{
 
 func (this *AutoTextEntry) Insert(where *Range, optArgs ...interface{}) *Range {
 	optArgs = ole.ProcessOptArgs(AutoTextEntry_Insert_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, []interface{}{where}, optArgs...)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{where}, optArgs...)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

@@ -16,6 +16,9 @@ type Source struct {
 }
 
 func NewSource(pDisp *win32.IDispatch, addRef bool, scoped bool) *Source {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Source{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSource(pDisp *win32.IDispatch, addRef bool, scoped bool) *Source {
 }
 
 func SourceFromVar(v ole.Variant) *Source {
-	return NewSource(v.PdispValVal(), false, false)
+	return NewSource(v.IDispatch(), false, false)
 }
 
 func (this *Source) IID() *syscall.GUID {
@@ -42,47 +45,46 @@ func (this *Source) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Source) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Source) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *Source) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Source) Tag() string {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Source) Field(name string) string {
-	retVal := this.PropGet(0x00000068, []interface{}{name})
+	retVal, _ := this.PropGet(0x00000068, []interface{}{name})
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Source) SetField(name string, rhs string)  {
-	retVal := this.PropPut(0x00000068, []interface{}{name, rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{name, rhs})
 }
 
 func (this *Source) XML() string {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Source) Cited() bool {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Source) Delete()  {
-	retVal := this.Call(0x0000006a, nil)
+	retVal, _ := this.Call(0x0000006a, nil)
 	_= retVal
 }
 

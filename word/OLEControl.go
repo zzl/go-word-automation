@@ -16,6 +16,9 @@ type OLEControl struct {
 }
 
 func NewOLEControl(pDisp *win32.IDispatch, addRef bool, scoped bool) *OLEControl {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OLEControl{OLEControl_{ole.OleClient{pDisp}}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOLEControl(pDisp *win32.IDispatch, addRef bool, scoped bool) *OLEControl
 }
 
 func NewOLEControlFromVar(v ole.Variant, addRef bool, scoped bool) *OLEControl {
-	return NewOLEControl(v.PdispValVal(), addRef, scoped)
+	return NewOLEControl(v.IDispatch(), addRef, scoped)
 }
 
 func NewOLEControlInstance(scoped bool) (*OLEControl, error) {

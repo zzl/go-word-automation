@@ -17,6 +17,9 @@ type XMLNodes struct {
 }
 
 func NewXMLNodes(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLNodes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLNodes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewXMLNodes(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLNodes {
 }
 
 func XMLNodesFromVar(v ole.Variant) *XMLNodes {
-	return NewXMLNodes(v.PdispValVal(), false, false)
+	return NewXMLNodes(v.IDispatch(), false, false)
 }
 
 func (this *XMLNodes) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *XMLNodes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLNodes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *XMLNodes) ForEach(action func(item *XMLNode) bool) {
 }
 
 func (this *XMLNodes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNodes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNodes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNodes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLNodes) Item(index int32) *XMLNode {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 
 var XMLNodes_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var XMLNodes_Add_OptArgs= []string{
 
 func (this *XMLNodes) Add(name string, namespace string, optArgs ...interface{}) *XMLNode {
 	optArgs = ole.ProcessOptArgs(XMLNodes_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{name, namespace}, optArgs...)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{name, namespace}, optArgs...)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 

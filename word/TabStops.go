@@ -17,6 +17,9 @@ type TabStops struct {
 }
 
 func NewTabStops(pDisp *win32.IDispatch, addRef bool, scoped bool) *TabStops {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TabStops{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTabStops(pDisp *win32.IDispatch, addRef bool, scoped bool) *TabStops {
 }
 
 func TabStopsFromVar(v ole.Variant) *TabStops {
-	return NewTabStops(v.PdispValVal(), false, false)
+	return NewTabStops(v.IDispatch(), false, false)
 }
 
 func (this *TabStops) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *TabStops) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TabStops) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *TabStops) ForEach(action func(item *TabStop) bool) {
 }
 
 func (this *TabStops) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *TabStops) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TabStops) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TabStops) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TabStops) Item(index *ole.Variant) *TabStop {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTabStop(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTabStop(retVal.IDispatch(), false, true)
 }
 
 var TabStops_Add_OptArgs= []string{
@@ -99,22 +102,22 @@ var TabStops_Add_OptArgs= []string{
 
 func (this *TabStops) Add(position float32, optArgs ...interface{}) *TabStop {
 	optArgs = ole.ProcessOptArgs(TabStops_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{position}, optArgs...)
-	return NewTabStop(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{position}, optArgs...)
+	return NewTabStop(retVal.IDispatch(), false, true)
 }
 
 func (this *TabStops) ClearAll()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *TabStops) Before(position float32) *TabStop {
-	retVal := this.Call(0x00000066, []interface{}{position})
-	return NewTabStop(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{position})
+	return NewTabStop(retVal.IDispatch(), false, true)
 }
 
 func (this *TabStops) After(position float32) *TabStop {
-	retVal := this.Call(0x00000067, []interface{}{position})
-	return NewTabStop(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000067, []interface{}{position})
+	return NewTabStop(retVal.IDispatch(), false, true)
 }
 

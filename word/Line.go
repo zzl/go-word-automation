@@ -16,6 +16,9 @@ type Line struct {
 }
 
 func NewLine(pDisp *win32.IDispatch, addRef bool, scoped bool) *Line {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Line{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewLine(pDisp *win32.IDispatch, addRef bool, scoped bool) *Line {
 }
 
 func LineFromVar(v ole.Variant) *Line {
-	return NewLine(v.PdispValVal(), false, false)
+	return NewLine(v.IDispatch(), false, false)
 }
 
 func (this *Line) IID() *syscall.GUID {
@@ -42,52 +45,52 @@ func (this *Line) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Line) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Line) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Line) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Line) LineType() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Line) Left() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Line) Top() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Line) Width() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Line) Height() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *Line) Range() *Range {
-	retVal := this.PropGet(0x00000007, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000007, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Line) Rectangles() *Rectangles {
-	retVal := this.PropGet(0x00000008, nil)
-	return NewRectangles(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000008, nil)
+	return NewRectangles(retVal.IDispatch(), false, true)
 }
 

@@ -17,6 +17,9 @@ type Pages struct {
 }
 
 func NewPages(pDisp *win32.IDispatch, addRef bool, scoped bool) *Pages {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Pages{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewPages(pDisp *win32.IDispatch, addRef bool, scoped bool) *Pages {
 }
 
 func PagesFromVar(v ole.Variant) *Pages {
-	return NewPages(v.PdispValVal(), false, false)
+	return NewPages(v.IDispatch(), false, false)
 }
 
 func (this *Pages) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Pages) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Pages) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *Pages) ForEach(action func(item *Page) bool) {
 }
 
 func (this *Pages) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Pages) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Pages) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Pages) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Pages) Item(index int32) *Page {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewPage(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewPage(retVal.IDispatch(), false, true)
 }
 

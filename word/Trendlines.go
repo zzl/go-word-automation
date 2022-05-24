@@ -17,6 +17,9 @@ type Trendlines struct {
 }
 
 func NewTrendlines(pDisp *win32.IDispatch, addRef bool, scoped bool) *Trendlines {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Trendlines{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTrendlines(pDisp *win32.IDispatch, addRef bool, scoped bool) *Trendlines
 }
 
 func TrendlinesFromVar(v ole.Variant) *Trendlines {
-	return NewTrendlines(v.PdispValVal(), false, false)
+	return NewTrendlines(v.IDispatch(), false, false)
 }
 
 func (this *Trendlines) IID() *syscall.GUID {
@@ -43,23 +46,23 @@ func (this *Trendlines) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Trendlines) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 var Trendlines_Add_OptArgs= []string{
-	"Order", "Period", "Forward", "Backward", 
-	"Intercept", "DisplayEquation", "DisplayRSquared", "Name", 
+	"Type", "Order", "Period", "Forward", 
+	"Backward", "Intercept", "DisplayEquation", "DisplayRSquared", "Name", 
 }
 
-func (this *Trendlines) Add(type_ int32, optArgs ...interface{}) *Trendline {
+func (this *Trendlines) Add(optArgs ...interface{}) *Trendline {
 	optArgs = ole.ProcessOptArgs(Trendlines_Add_OptArgs, optArgs)
-	retVal := this.Call(0x000000b5, []interface{}{type_}, optArgs...)
-	return NewTrendline(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000b5, nil, optArgs...)
+	return NewTrendline(retVal.IDispatch(), false, true)
 }
 
 func (this *Trendlines) Count() int32 {
-	retVal := this.PropGet(0x00000076, nil)
+	retVal, _ := this.PropGet(0x00000076, nil)
 	return retVal.LValVal()
 }
 
@@ -69,12 +72,12 @@ var Trendlines_Item_OptArgs= []string{
 
 func (this *Trendlines) Item(optArgs ...interface{}) *Trendline {
 	optArgs = ole.ProcessOptArgs(Trendlines_Item_OptArgs, optArgs)
-	retVal := this.Call(0x00000000, nil, optArgs...)
-	return NewTrendline(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, nil, optArgs...)
+	return NewTrendline(retVal.IDispatch(), false, true)
 }
 
 func (this *Trendlines) NewEnum_() *com.UnknownClass {
-	retVal := this.Call(-4, nil)
+	retVal, _ := this.Call(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -100,12 +103,12 @@ func (this *Trendlines) ForEach(action func(item *Trendline) bool) {
 }
 
 func (this *Trendlines) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Trendlines) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 
@@ -115,7 +118,7 @@ var Trendlines_Default__OptArgs= []string{
 
 func (this *Trendlines) Default_(optArgs ...interface{}) *Trendline {
 	optArgs = ole.ProcessOptArgs(Trendlines_Default__OptArgs, optArgs)
-	retVal := this.Call(0x60020007, nil, optArgs...)
-	return NewTrendline(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x60020007, nil, optArgs...)
+	return NewTrendline(retVal.IDispatch(), false, true)
 }
 

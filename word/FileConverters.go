@@ -17,6 +17,9 @@ type FileConverters struct {
 }
 
 func NewFileConverters(pDisp *win32.IDispatch, addRef bool, scoped bool) *FileConverters {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FileConverters{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewFileConverters(pDisp *win32.IDispatch, addRef bool, scoped bool) *FileCo
 }
 
 func FileConvertersFromVar(v ole.Variant) *FileConverters {
-	return NewFileConverters(v.PdispValVal(), false, false)
+	return NewFileConverters(v.IDispatch(), false, false)
 }
 
 func (this *FileConverters) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *FileConverters) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FileConverters) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FileConverters) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FileConverters) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FileConverters) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *FileConverters) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,17 +92,16 @@ func (this *FileConverters) ForEach(action func(item *FileConverter) bool) {
 }
 
 func (this *FileConverters) ConvertMacWordChevrons() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *FileConverters) SetConvertMacWordChevrons(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *FileConverters) Item(index *ole.Variant) *FileConverter {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewFileConverter(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewFileConverter(retVal.IDispatch(), false, true)
 }
 

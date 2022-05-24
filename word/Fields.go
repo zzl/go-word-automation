@@ -17,6 +17,9 @@ type Fields struct {
 }
 
 func NewFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *Fields {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Fields{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *Fields {
 }
 
 func FieldsFromVar(v ole.Variant) *Fields {
-	return NewFields(v.PdispValVal(), false, false)
+	return NewFields(v.IDispatch(), false, false)
 }
 
 func (this *Fields) IID() *syscall.GUID {
@@ -43,37 +46,36 @@ func (this *Fields) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Fields) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Fields) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Fields) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Fields) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Fields) Locked() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Fields) SetLocked(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *Fields) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -99,27 +101,27 @@ func (this *Fields) ForEach(action func(item *Field) bool) {
 }
 
 func (this *Fields) Item(index int32) *Field {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewField(retVal.IDispatch(), false, true)
 }
 
 func (this *Fields) ToggleShowCodes()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
 func (this *Fields) Update() int32 {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *Fields) Unlink()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 
 func (this *Fields) UpdateSource()  {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	_= retVal
 }
 
@@ -129,7 +131,7 @@ var Fields_Add_OptArgs= []string{
 
 func (this *Fields) Add(range_ *Range, optArgs ...interface{}) *Field {
 	optArgs = ole.ProcessOptArgs(Fields_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000069, []interface{}{range_}, optArgs...)
-	return NewField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000069, []interface{}{range_}, optArgs...)
+	return NewField(retVal.IDispatch(), false, true)
 }
 

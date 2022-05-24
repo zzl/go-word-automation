@@ -29,4 +29,7 @@ func main() {
 		return true
 	})
 
+	com.WithScope(func() {
+
+	})
 }

@@ -17,6 +17,9 @@ type Sections struct {
 }
 
 func NewSections(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sections {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Sections{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSections(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sections {
 }
 
 func SectionsFromVar(v ole.Variant) *Sections {
-	return NewSections(v.PdispValVal(), false, false)
+	return NewSections(v.IDispatch(), false, false)
 }
 
 func (this *Sections) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Sections) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Sections) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,48 +72,47 @@ func (this *Sections) ForEach(action func(item *Section) bool) {
 }
 
 func (this *Sections) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Sections) First() *Section {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewSection(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewSection(retVal.IDispatch(), false, true)
 }
 
 func (this *Sections) Last() *Section {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewSection(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewSection(retVal.IDispatch(), false, true)
 }
 
 func (this *Sections) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Sections) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Sections) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Sections) PageSetup() *PageSetup {
-	retVal := this.PropGet(0x0000044d, nil)
-	return NewPageSetup(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044d, nil)
+	return NewPageSetup(retVal.IDispatch(), false, true)
 }
 
 func (this *Sections) SetPageSetup(rhs *PageSetup)  {
-	retVal := this.PropPut(0x0000044d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044d, []interface{}{rhs})
 }
 
 func (this *Sections) Item(index int32) *Section {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewSection(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewSection(retVal.IDispatch(), false, true)
 }
 
 var Sections_Add_OptArgs= []string{
@@ -119,7 +121,7 @@ var Sections_Add_OptArgs= []string{
 
 func (this *Sections) Add(optArgs ...interface{}) *Section {
 	optArgs = ole.ProcessOptArgs(Sections_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000005, nil, optArgs...)
-	return NewSection(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000005, nil, optArgs...)
+	return NewSection(retVal.IDispatch(), false, true)
 }
 

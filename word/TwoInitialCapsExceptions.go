@@ -17,6 +17,9 @@ type TwoInitialCapsExceptions struct {
 }
 
 func NewTwoInitialCapsExceptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *TwoInitialCapsExceptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TwoInitialCapsExceptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTwoInitialCapsExceptions(pDisp *win32.IDispatch, addRef bool, scoped boo
 }
 
 func TwoInitialCapsExceptionsFromVar(v ole.Variant) *TwoInitialCapsExceptions {
-	return NewTwoInitialCapsExceptions(v.PdispValVal(), false, false)
+	return NewTwoInitialCapsExceptions(v.IDispatch(), false, false)
 }
 
 func (this *TwoInitialCapsExceptions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *TwoInitialCapsExceptions) GetIDispatch(addRef bool) *win32.IDispatch
 }
 
 func (this *TwoInitialCapsExceptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TwoInitialCapsExceptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TwoInitialCapsExceptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TwoInitialCapsExceptions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *TwoInitialCapsExceptions) ForEach(action func(item *TwoInitialCapsEx
 }
 
 func (this *TwoInitialCapsExceptions) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *TwoInitialCapsExceptions) Item(index *ole.Variant) *TwoInitialCapsException {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTwoInitialCapsException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTwoInitialCapsException(retVal.IDispatch(), false, true)
 }
 
 func (this *TwoInitialCapsExceptions) Add(name string) *TwoInitialCapsException {
-	retVal := this.Call(0x00000065, []interface{}{name})
-	return NewTwoInitialCapsException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name})
+	return NewTwoInitialCapsException(retVal.IDispatch(), false, true)
 }
 

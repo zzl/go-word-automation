@@ -17,6 +17,9 @@ type Characters struct {
 }
 
 func NewCharacters(pDisp *win32.IDispatch, addRef bool, scoped bool) *Characters {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Characters{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCharacters(pDisp *win32.IDispatch, addRef bool, scoped bool) *Characters
 }
 
 func CharactersFromVar(v ole.Variant) *Characters {
-	return NewCharacters(v.PdispValVal(), false, false)
+	return NewCharacters(v.IDispatch(), false, false)
 }
 
 func (this *Characters) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Characters) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Characters) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,37 +72,37 @@ func (this *Characters) ForEach(action func(item *Range) bool) {
 }
 
 func (this *Characters) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Characters) First() *Range {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Characters) Last() *Range {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Characters) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Characters) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Characters) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Characters) Item(index int32) *Range {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

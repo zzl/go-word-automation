@@ -17,6 +17,9 @@ type ListEntries struct {
 }
 
 func NewListEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListEntries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListEntries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewListEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListEntri
 }
 
 func ListEntriesFromVar(v ole.Variant) *ListEntries {
-	return NewListEntries(v.PdispValVal(), false, false)
+	return NewListEntries(v.IDispatch(), false, false)
 }
 
 func (this *ListEntries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *ListEntries) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListEntries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListEntries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListEntries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListEntries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,13 +87,13 @@ func (this *ListEntries) ForEach(action func(item *ListEntry) bool) {
 }
 
 func (this *ListEntries) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListEntries) Item(index *ole.Variant) *ListEntry {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewListEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewListEntry(retVal.IDispatch(), false, true)
 }
 
 var ListEntries_Add_OptArgs= []string{
@@ -99,12 +102,12 @@ var ListEntries_Add_OptArgs= []string{
 
 func (this *ListEntries) Add(name string, optArgs ...interface{}) *ListEntry {
 	optArgs = ole.ProcessOptArgs(ListEntries_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{name}, optArgs...)
-	return NewListEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name}, optArgs...)
+	return NewListEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *ListEntries) Clear()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

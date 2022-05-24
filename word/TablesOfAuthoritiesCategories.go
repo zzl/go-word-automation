@@ -17,6 +17,9 @@ type TablesOfAuthoritiesCategories struct {
 }
 
 func NewTablesOfAuthoritiesCategories(pDisp *win32.IDispatch, addRef bool, scoped bool) *TablesOfAuthoritiesCategories {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TablesOfAuthoritiesCategories{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTablesOfAuthoritiesCategories(pDisp *win32.IDispatch, addRef bool, scope
 }
 
 func TablesOfAuthoritiesCategoriesFromVar(v ole.Variant) *TablesOfAuthoritiesCategories {
-	return NewTablesOfAuthoritiesCategories(v.PdispValVal(), false, false)
+	return NewTablesOfAuthoritiesCategories(v.IDispatch(), false, false)
 }
 
 func (this *TablesOfAuthoritiesCategories) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *TablesOfAuthoritiesCategories) GetIDispatch(addRef bool) *win32.IDis
 }
 
 func (this *TablesOfAuthoritiesCategories) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TablesOfAuthoritiesCategories) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfAuthoritiesCategories) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TablesOfAuthoritiesCategories) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,12 +87,12 @@ func (this *TablesOfAuthoritiesCategories) ForEach(action func(item *TableOfAuth
 }
 
 func (this *TablesOfAuthoritiesCategories) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfAuthoritiesCategories) Item(index *ole.Variant) *TableOfAuthoritiesCategory {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTableOfAuthoritiesCategory(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTableOfAuthoritiesCategory(retVal.IDispatch(), false, true)
 }
 

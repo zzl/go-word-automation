@@ -16,6 +16,9 @@ type LeaderLines struct {
 }
 
 func NewLeaderLines(pDisp *win32.IDispatch, addRef bool, scoped bool) *LeaderLines {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &LeaderLines{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewLeaderLines(pDisp *win32.IDispatch, addRef bool, scoped bool) *LeaderLin
 }
 
 func LeaderLinesFromVar(v ole.Variant) *LeaderLines {
-	return NewLeaderLines(v.PdispValVal(), false, false)
+	return NewLeaderLines(v.IDispatch(), false, false)
 }
 
 func (this *LeaderLines) IID() *syscall.GUID {
@@ -42,37 +45,37 @@ func (this *LeaderLines) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *LeaderLines) Select()  {
-	retVal := this.Call(0x000000eb, nil)
+	retVal, _ := this.Call(0x000000eb, nil)
 	_= retVal
 }
 
 func (this *LeaderLines) Border() *ChartBorder {
-	retVal := this.PropGet(0x00000080, nil)
-	return NewChartBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000080, nil)
+	return NewChartBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *LeaderLines) Delete()  {
-	retVal := this.Call(0x00000075, nil)
+	retVal, _ := this.Call(0x00000075, nil)
 	_= retVal
 }
 
 func (this *LeaderLines) Format() *ChartFormat {
-	retVal := this.PropGet(0x60020003, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020003, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *LeaderLines) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *LeaderLines) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 
 func (this *LeaderLines) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 

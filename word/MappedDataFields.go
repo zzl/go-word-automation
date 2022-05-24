@@ -17,6 +17,9 @@ type MappedDataFields struct {
 }
 
 func NewMappedDataFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *MappedDataFields {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MappedDataFields{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewMappedDataFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *Mapp
 }
 
 func MappedDataFieldsFromVar(v ole.Variant) *MappedDataFields {
-	return NewMappedDataFields(v.PdispValVal(), false, false)
+	return NewMappedDataFields(v.IDispatch(), false, false)
 }
 
 func (this *MappedDataFields) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *MappedDataFields) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MappedDataFields) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MappedDataFields) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MappedDataFields) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MappedDataFields) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *MappedDataFields) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,7 +92,7 @@ func (this *MappedDataFields) ForEach(action func(item *MappedDataField) bool) {
 }
 
 func (this *MappedDataFields) Item(index int32) *MappedDataField {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewMappedDataField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewMappedDataField(retVal.IDispatch(), false, true)
 }
 

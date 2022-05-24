@@ -16,6 +16,9 @@ type OMathAutoCorrectEntry struct {
 }
 
 func NewOMathAutoCorrectEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathAutoCorrectEntry {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathAutoCorrectEntry{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathAutoCorrectEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) 
 }
 
 func OMathAutoCorrectEntryFromVar(v ole.Variant) *OMathAutoCorrectEntry {
-	return NewOMathAutoCorrectEntry(v.PdispValVal(), false, false)
+	return NewOMathAutoCorrectEntry(v.IDispatch(), false, false)
 }
 
 func (this *OMathAutoCorrectEntry) IID() *syscall.GUID {
@@ -42,47 +45,45 @@ func (this *OMathAutoCorrectEntry) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathAutoCorrectEntry) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathAutoCorrectEntry) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathAutoCorrectEntry) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathAutoCorrectEntry) Index() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathAutoCorrectEntry) Name() string {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OMathAutoCorrectEntry) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *OMathAutoCorrectEntry) Value() string {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *OMathAutoCorrectEntry) SetValue(rhs string)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *OMathAutoCorrectEntry) Delete()  {
-	retVal := this.Call(0x000000c8, nil)
+	retVal, _ := this.Call(0x000000c8, nil)
 	_= retVal
 }
 

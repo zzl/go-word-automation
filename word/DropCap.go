@@ -16,6 +16,9 @@ type DropCap struct {
 }
 
 func NewDropCap(pDisp *win32.IDispatch, addRef bool, scoped bool) *DropCap {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &DropCap{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewDropCap(pDisp *win32.IDispatch, addRef bool, scoped bool) *DropCap {
 }
 
 func DropCapFromVar(v ole.Variant) *DropCap {
-	return NewDropCap(v.PdispValVal(), false, false)
+	return NewDropCap(v.IDispatch(), false, false)
 }
 
 func (this *DropCap) IID() *syscall.GUID {
@@ -42,67 +45,63 @@ func (this *DropCap) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *DropCap) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *DropCap) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *DropCap) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *DropCap) Position() int32 {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.LValVal()
 }
 
 func (this *DropCap) SetPosition(rhs int32)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *DropCap) FontName() string {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *DropCap) SetFontName(rhs string)  {
-	retVal := this.PropPut(0x0000000b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000b, []interface{}{rhs})
 }
 
 func (this *DropCap) LinesToDrop() int32 {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.LValVal()
 }
 
 func (this *DropCap) SetLinesToDrop(rhs int32)  {
-	retVal := this.PropPut(0x0000000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000c, []interface{}{rhs})
 }
 
 func (this *DropCap) DistanceFromText() float32 {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.FltValVal()
 }
 
 func (this *DropCap) SetDistanceFromText(rhs float32)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *DropCap) Clear()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
 func (this *DropCap) Enable()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

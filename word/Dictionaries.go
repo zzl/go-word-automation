@@ -17,6 +17,9 @@ type Dictionaries struct {
 }
 
 func NewDictionaries(pDisp *win32.IDispatch, addRef bool, scoped bool) *Dictionaries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Dictionaries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewDictionaries(pDisp *win32.IDispatch, addRef bool, scoped bool) *Dictiona
 }
 
 func DictionariesFromVar(v ole.Variant) *Dictionaries {
-	return NewDictionaries(v.PdispValVal(), false, false)
+	return NewDictionaries(v.IDispatch(), false, false)
 }
 
 func (this *Dictionaries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Dictionaries) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Dictionaries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Dictionaries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Dictionaries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Dictionaries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,37 +87,36 @@ func (this *Dictionaries) ForEach(action func(item *Dictionary) bool) {
 }
 
 func (this *Dictionaries) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Dictionaries) Maximum() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Dictionaries) ActiveCustomDictionary() *Dictionary {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Dictionaries) SetActiveCustomDictionary(rhs *Dictionary)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Dictionaries) Item(index *ole.Variant) *Dictionary {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Dictionaries) Add(fileName string) *Dictionary {
-	retVal := this.Call(0x00000065, []interface{}{fileName})
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{fileName})
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Dictionaries) ClearAll()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

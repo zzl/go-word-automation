@@ -16,6 +16,9 @@ type MailMergeFieldName struct {
 }
 
 func NewMailMergeFieldName(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMergeFieldName {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MailMergeFieldName{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewMailMergeFieldName(pDisp *win32.IDispatch, addRef bool, scoped bool) *Ma
 }
 
 func MailMergeFieldNameFromVar(v ole.Variant) *MailMergeFieldName {
-	return NewMailMergeFieldName(v.PdispValVal(), false, false)
+	return NewMailMergeFieldName(v.IDispatch(), false, false)
 }
 
 func (this *MailMergeFieldName) IID() *syscall.GUID {
@@ -42,27 +45,27 @@ func (this *MailMergeFieldName) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MailMergeFieldName) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeFieldName) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeFieldName) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MailMergeFieldName) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *MailMergeFieldName) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 

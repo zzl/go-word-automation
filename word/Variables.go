@@ -17,6 +17,9 @@ type Variables struct {
 }
 
 func NewVariables(pDisp *win32.IDispatch, addRef bool, scoped bool) *Variables {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Variables{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewVariables(pDisp *win32.IDispatch, addRef bool, scoped bool) *Variables {
 }
 
 func VariablesFromVar(v ole.Variant) *Variables {
-	return NewVariables(v.PdispValVal(), false, false)
+	return NewVariables(v.IDispatch(), false, false)
 }
 
 func (this *Variables) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Variables) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Variables) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *Variables) ForEach(action func(item *Variable) bool) {
 }
 
 func (this *Variables) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Variables) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Variables) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Variables) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Variables) Item(index *ole.Variant) *Variable {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewVariable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewVariable(retVal.IDispatch(), false, true)
 }
 
 var Variables_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var Variables_Add_OptArgs= []string{
 
 func (this *Variables) Add(name string, optArgs ...interface{}) *Variable {
 	optArgs = ole.ProcessOptArgs(Variables_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000007, []interface{}{name}, optArgs...)
-	return NewVariable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000007, []interface{}{name}, optArgs...)
+	return NewVariable(retVal.IDispatch(), false, true)
 }
 

@@ -16,6 +16,9 @@ type ChartFont struct {
 }
 
 func NewChartFont(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartFont {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ChartFont{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewChartFont(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartFont {
 }
 
 func ChartFontFromVar(v ole.Variant) *ChartFont {
-	return NewChartFont(v.PdispValVal(), false, false)
+	return NewChartFont(v.IDispatch(), false, false)
 }
 
 func (this *ChartFont) IID() *syscall.GUID {
@@ -42,171 +45,157 @@ func (this *ChartFont) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ChartFont) Background() ole.Variant {
-	retVal := this.PropGet(0x60020000, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020000, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetBackground(rhs interface{})  {
-	retVal := this.PropPut(0x60020000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020000, []interface{}{rhs})
 }
 
 func (this *ChartFont) Bold() ole.Variant {
-	retVal := this.PropGet(0x60020002, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020002, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetBold(rhs interface{})  {
-	retVal := this.PropPut(0x60020002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020002, []interface{}{rhs})
 }
 
 func (this *ChartFont) Color() ole.Variant {
-	retVal := this.PropGet(0x60020004, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020004, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetColor(rhs interface{})  {
-	retVal := this.PropPut(0x60020004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020004, []interface{}{rhs})
 }
 
 func (this *ChartFont) ColorIndex() ole.Variant {
-	retVal := this.PropGet(0x60020006, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020006, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetColorIndex(rhs interface{})  {
-	retVal := this.PropPut(0x60020006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020006, []interface{}{rhs})
 }
 
 func (this *ChartFont) FontStyle() ole.Variant {
-	retVal := this.PropGet(0x60020008, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020008, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetFontStyle(rhs interface{})  {
-	retVal := this.PropPut(0x60020008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020008, []interface{}{rhs})
 }
 
 func (this *ChartFont) Italic() ole.Variant {
-	retVal := this.PropGet(0x6002000a, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x6002000a, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetItalic(rhs interface{})  {
-	retVal := this.PropPut(0x6002000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000a, []interface{}{rhs})
 }
 
 func (this *ChartFont) Name() ole.Variant {
-	retVal := this.PropGet(0x6002000c, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x6002000c, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetName(rhs interface{})  {
-	retVal := this.PropPut(0x6002000c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000c, []interface{}{rhs})
 }
 
 func (this *ChartFont) OutlineFont() ole.Variant {
-	retVal := this.PropGet(0x6002000e, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x6002000e, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetOutlineFont(rhs interface{})  {
-	retVal := this.PropPut(0x6002000e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002000e, []interface{}{rhs})
 }
 
 func (this *ChartFont) Shadow() ole.Variant {
-	retVal := this.PropGet(0x60020010, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020010, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetShadow(rhs interface{})  {
-	retVal := this.PropPut(0x60020010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020010, []interface{}{rhs})
 }
 
 func (this *ChartFont) Size() ole.Variant {
-	retVal := this.PropGet(0x60020012, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020012, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetSize(rhs interface{})  {
-	retVal := this.PropPut(0x60020012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020012, []interface{}{rhs})
 }
 
 func (this *ChartFont) StrikeThrough() ole.Variant {
-	retVal := this.PropGet(0x60020014, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020014, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetStrikeThrough(rhs interface{})  {
-	retVal := this.PropPut(0x60020014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020014, []interface{}{rhs})
 }
 
 func (this *ChartFont) Subscript() ole.Variant {
-	retVal := this.PropGet(0x60020016, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020016, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetSubscript(rhs interface{})  {
-	retVal := this.PropPut(0x60020016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020016, []interface{}{rhs})
 }
 
 func (this *ChartFont) Superscript() ole.Variant {
-	retVal := this.PropGet(0x60020018, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x60020018, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetSuperscript(rhs interface{})  {
-	retVal := this.PropPut(0x60020018, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x60020018, []interface{}{rhs})
 }
 
 func (this *ChartFont) Underline() ole.Variant {
-	retVal := this.PropGet(0x6002001a, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x6002001a, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartFont) SetUnderline(rhs interface{})  {
-	retVal := this.PropPut(0x6002001a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x6002001a, []interface{}{rhs})
 }
 
 func (this *ChartFont) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartFont) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartFont) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 

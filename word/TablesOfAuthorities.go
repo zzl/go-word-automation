@@ -17,6 +17,9 @@ type TablesOfAuthorities struct {
 }
 
 func NewTablesOfAuthorities(pDisp *win32.IDispatch, addRef bool, scoped bool) *TablesOfAuthorities {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TablesOfAuthorities{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTablesOfAuthorities(pDisp *win32.IDispatch, addRef bool, scoped bool) *T
 }
 
 func TablesOfAuthoritiesFromVar(v ole.Variant) *TablesOfAuthorities {
-	return NewTablesOfAuthorities(v.PdispValVal(), false, false)
+	return NewTablesOfAuthorities(v.IDispatch(), false, false)
 }
 
 func (this *TablesOfAuthorities) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *TablesOfAuthorities) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TablesOfAuthorities) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TablesOfAuthorities) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfAuthorities) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TablesOfAuthorities) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,23 +87,22 @@ func (this *TablesOfAuthorities) ForEach(action func(item *TableOfAuthorities) b
 }
 
 func (this *TablesOfAuthorities) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfAuthorities) Format() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfAuthorities) SetFormat(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *TablesOfAuthorities) Item(index int32) *TableOfAuthorities {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTableOfAuthorities(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTableOfAuthorities(retVal.IDispatch(), false, true)
 }
 
 var TablesOfAuthorities_Add_OptArgs= []string{
@@ -111,12 +113,12 @@ var TablesOfAuthorities_Add_OptArgs= []string{
 
 func (this *TablesOfAuthorities) Add(range_ *Range, optArgs ...interface{}) *TableOfAuthorities {
 	optArgs = ole.ProcessOptArgs(TablesOfAuthorities_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{range_}, optArgs...)
-	return NewTableOfAuthorities(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{range_}, optArgs...)
+	return NewTableOfAuthorities(retVal.IDispatch(), false, true)
 }
 
 func (this *TablesOfAuthorities) NextCitation(shortCitation string)  {
-	retVal := this.Call(0x00000067, []interface{}{shortCitation})
+	retVal, _ := this.Call(0x00000067, []interface{}{shortCitation})
 	_= retVal
 }
 
@@ -126,8 +128,8 @@ var TablesOfAuthorities_MarkCitation_OptArgs= []string{
 
 func (this *TablesOfAuthorities) MarkCitation(range_ *Range, shortCitation string, optArgs ...interface{}) *Field {
 	optArgs = ole.ProcessOptArgs(TablesOfAuthorities_MarkCitation_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{range_, shortCitation}, optArgs...)
-	return NewField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{range_, shortCitation}, optArgs...)
+	return NewField(retVal.IDispatch(), false, true)
 }
 
 var TablesOfAuthorities_MarkAllCitations_OptArgs= []string{
@@ -136,7 +138,7 @@ var TablesOfAuthorities_MarkAllCitations_OptArgs= []string{
 
 func (this *TablesOfAuthorities) MarkAllCitations(shortCitation string, optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(TablesOfAuthorities_MarkAllCitations_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, []interface{}{shortCitation}, optArgs...)
+	retVal, _ := this.Call(0x00000066, []interface{}{shortCitation}, optArgs...)
 	_= retVal
 }
 

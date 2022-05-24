@@ -17,6 +17,9 @@ type FontNames struct {
 }
 
 func NewFontNames(pDisp *win32.IDispatch, addRef bool, scoped bool) *FontNames {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FontNames{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewFontNames(pDisp *win32.IDispatch, addRef bool, scoped bool) *FontNames {
 }
 
 func FontNamesFromVar(v ole.Variant) *FontNames {
-	return NewFontNames(v.PdispValVal(), false, false)
+	return NewFontNames(v.IDispatch(), false, false)
 }
 
 func (this *FontNames) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *FontNames) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FontNames) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *FontNames) ForEach(action func(item string) bool) {
 }
 
 func (this *FontNames) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *FontNames) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FontNames) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FontNames) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FontNames) Item(index int32) string {
-	retVal := this.Call(0x00000000, []interface{}{index})
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

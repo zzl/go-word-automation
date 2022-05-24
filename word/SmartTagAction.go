@@ -16,6 +16,9 @@ type SmartTagAction struct {
 }
 
 func NewSmartTagAction(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTagAction {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTagAction{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSmartTagAction(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartT
 }
 
 func SmartTagActionFromVar(v ole.Variant) *SmartTagAction {
-	return NewSmartTagAction(v.PdispValVal(), false, false)
+	return NewSmartTagAction(v.IDispatch(), false, false)
 }
 
 func (this *SmartTagAction) IID() *syscall.GUID {
@@ -42,102 +45,96 @@ func (this *SmartTagAction) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTagAction) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTagAction) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagAction) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagAction) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTagAction) Execute()  {
-	retVal := this.Call(0x000003eb, nil)
+	retVal, _ := this.Call(0x000003eb, nil)
 	_= retVal
 }
 
 func (this *SmartTagAction) Type() int32 {
-	retVal := this.PropGet(0x000003ec, nil)
+	retVal, _ := this.PropGet(0x000003ec, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagAction) PresentInPane() bool {
-	retVal := this.PropGet(0x000003ed, nil)
+	retVal, _ := this.PropGet(0x000003ed, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *SmartTagAction) ExpandHelp() bool {
-	retVal := this.PropGet(0x000003ee, nil)
+	retVal, _ := this.PropGet(0x000003ee, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *SmartTagAction) SetExpandHelp(rhs bool)  {
-	retVal := this.PropPut(0x000003ee, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003ee, []interface{}{rhs})
 }
 
 func (this *SmartTagAction) CheckboxState() bool {
-	retVal := this.PropGet(0x000003ef, nil)
+	retVal, _ := this.PropGet(0x000003ef, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *SmartTagAction) SetCheckboxState(rhs bool)  {
-	retVal := this.PropPut(0x000003ef, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003ef, []interface{}{rhs})
 }
 
 func (this *SmartTagAction) TextboxText() string {
-	retVal := this.PropGet(0x000003f0, nil)
+	retVal, _ := this.PropGet(0x000003f0, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTagAction) SetTextboxText(rhs string)  {
-	retVal := this.PropPut(0x000003f0, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003f0, []interface{}{rhs})
 }
 
 func (this *SmartTagAction) ListSelection() int32 {
-	retVal := this.PropGet(0x000003f1, nil)
+	retVal, _ := this.PropGet(0x000003f1, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagAction) SetListSelection(rhs int32)  {
-	retVal := this.PropPut(0x000003f1, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003f1, []interface{}{rhs})
 }
 
 func (this *SmartTagAction) RadioGroupSelection() int32 {
-	retVal := this.PropGet(0x000003f2, nil)
+	retVal, _ := this.PropGet(0x000003f2, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagAction) SetRadioGroupSelection(rhs int32)  {
-	retVal := this.PropPut(0x000003f2, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003f2, []interface{}{rhs})
 }
 
 func (this *SmartTagAction) ExpandDocumentFragment() bool {
-	retVal := this.PropGet(0x000003f3, nil)
+	retVal, _ := this.PropGet(0x000003f3, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *SmartTagAction) SetExpandDocumentFragment(rhs bool)  {
-	retVal := this.PropPut(0x000003f3, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003f3, []interface{}{rhs})
 }
 
 func (this *SmartTagAction) ActiveXControl() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003f4, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003f4, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 

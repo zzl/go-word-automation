@@ -17,6 +17,9 @@ type XMLNamespaces struct {
 }
 
 func NewXMLNamespaces(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLNamespaces {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLNamespaces{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewXMLNamespaces(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLName
 }
 
 func XMLNamespacesFromVar(v ole.Variant) *XMLNamespaces {
-	return NewXMLNamespaces(v.PdispValVal(), false, false)
+	return NewXMLNamespaces(v.IDispatch(), false, false)
 }
 
 func (this *XMLNamespaces) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *XMLNamespaces) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLNamespaces) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,37 +72,47 @@ func (this *XMLNamespaces) ForEach(action func(item *XMLNamespace) bool) {
 }
 
 func (this *XMLNamespaces) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNamespaces) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLNamespaces) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLNamespaces) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLNamespaces) Item(index *ole.Variant) *XMLNamespace {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewXMLNamespace(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewXMLNamespace(retVal.IDispatch(), false, true)
 }
 
-func (this *XMLNamespaces) Add(path string, namespaceURI *ole.Variant, alias *ole.Variant, installForAllUsers bool) *XMLNamespace {
-	retVal := this.Call(0x00000065, []interface{}{path, namespaceURI, alias, installForAllUsers})
-	return NewXMLNamespace(retVal.PdispValVal(), false, true)
+var XMLNamespaces_Add_OptArgs= []string{
+	"NamespaceURI", "Alias", "InstallForAllUsers", 
 }
 
-func (this *XMLNamespaces) InstallManifest(path string, installForAllUsers bool)  {
-	retVal := this.Call(0x00000066, []interface{}{path, installForAllUsers})
+func (this *XMLNamespaces) Add(path string, optArgs ...interface{}) *XMLNamespace {
+	optArgs = ole.ProcessOptArgs(XMLNamespaces_Add_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000065, []interface{}{path}, optArgs...)
+	return NewXMLNamespace(retVal.IDispatch(), false, true)
+}
+
+var XMLNamespaces_InstallManifest_OptArgs= []string{
+	"InstallForAllUsers", 
+}
+
+func (this *XMLNamespaces) InstallManifest(path string, optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(XMLNamespaces_InstallManifest_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000066, []interface{}{path}, optArgs...)
 	_= retVal
 }
 

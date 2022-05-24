@@ -16,6 +16,9 @@ type Email struct {
 }
 
 func NewEmail(pDisp *win32.IDispatch, addRef bool, scoped bool) *Email {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Email{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewEmail(pDisp *win32.IDispatch, addRef bool, scoped bool) *Email {
 }
 
 func EmailFromVar(v ole.Variant) *Email {
-	return NewEmail(v.PdispValVal(), false, false)
+	return NewEmail(v.IDispatch(), false, false)
 }
 
 func (this *Email) IID() *syscall.GUID {
@@ -42,22 +45,22 @@ func (this *Email) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Email) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Email) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *Email) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Email) CurrentEmailAuthor() *EmailAuthor {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewEmailAuthor(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewEmailAuthor(retVal.IDispatch(), false, true)
 }
 

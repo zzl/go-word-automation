@@ -17,6 +17,9 @@ type ListGalleries struct {
 }
 
 func NewListGalleries(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListGalleries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListGalleries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewListGalleries(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListGal
 }
 
 func ListGalleriesFromVar(v ole.Variant) *ListGalleries {
-	return NewListGalleries(v.PdispValVal(), false, false)
+	return NewListGalleries(v.IDispatch(), false, false)
 }
 
 func (this *ListGalleries) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *ListGalleries) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListGalleries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *ListGalleries) ForEach(action func(item *ListGallery) bool) {
 }
 
 func (this *ListGalleries) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListGalleries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListGalleries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListGalleries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListGalleries) Item(index int32) *ListGallery {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewListGallery(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewListGallery(retVal.IDispatch(), false, true)
 }
 

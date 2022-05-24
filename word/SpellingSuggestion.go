@@ -16,6 +16,9 @@ type SpellingSuggestion struct {
 }
 
 func NewSpellingSuggestion(pDisp *win32.IDispatch, addRef bool, scoped bool) *SpellingSuggestion {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SpellingSuggestion{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSpellingSuggestion(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sp
 }
 
 func SpellingSuggestionFromVar(v ole.Variant) *SpellingSuggestion {
-	return NewSpellingSuggestion(v.PdispValVal(), false, false)
+	return NewSpellingSuggestion(v.IDispatch(), false, false)
 }
 
 func (this *SpellingSuggestion) IID() *syscall.GUID {
@@ -42,22 +45,22 @@ func (this *SpellingSuggestion) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SpellingSuggestion) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SpellingSuggestion) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SpellingSuggestion) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SpellingSuggestion) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

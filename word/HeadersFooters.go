@@ -17,6 +17,9 @@ type HeadersFooters struct {
 }
 
 func NewHeadersFooters(pDisp *win32.IDispatch, addRef bool, scoped bool) *HeadersFooters {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HeadersFooters{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewHeadersFooters(pDisp *win32.IDispatch, addRef bool, scoped bool) *Header
 }
 
 func HeadersFootersFromVar(v ole.Variant) *HeadersFooters {
-	return NewHeadersFooters(v.PdispValVal(), false, false)
+	return NewHeadersFooters(v.IDispatch(), false, false)
 }
 
 func (this *HeadersFooters) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *HeadersFooters) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HeadersFooters) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HeadersFooters) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeadersFooters) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HeadersFooters) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,12 +87,12 @@ func (this *HeadersFooters) ForEach(action func(item *HeaderFooter) bool) {
 }
 
 func (this *HeadersFooters) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *HeadersFooters) Item(index int32) *HeaderFooter {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewHeaderFooter(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewHeaderFooter(retVal.IDispatch(), false, true)
 }
 

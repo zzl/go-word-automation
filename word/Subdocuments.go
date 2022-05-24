@@ -17,6 +17,9 @@ type Subdocuments struct {
 }
 
 func NewSubdocuments(pDisp *win32.IDispatch, addRef bool, scoped bool) *Subdocuments {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Subdocuments{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSubdocuments(pDisp *win32.IDispatch, addRef bool, scoped bool) *Subdocum
 }
 
 func SubdocumentsFromVar(v ole.Variant) *Subdocuments {
-	return NewSubdocuments(v.PdispValVal(), false, false)
+	return NewSubdocuments(v.IDispatch(), false, false)
 }
 
 func (this *Subdocuments) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *Subdocuments) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Subdocuments) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Subdocuments) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Subdocuments) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Subdocuments) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Subdocuments) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,18 +92,17 @@ func (this *Subdocuments) ForEach(action func(item *Subdocument) bool) {
 }
 
 func (this *Subdocuments) Expanded() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Subdocuments) SetExpanded(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *Subdocuments) Item(index int32) *Subdocument {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewSubdocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewSubdocument(retVal.IDispatch(), false, true)
 }
 
 var Subdocuments_AddFromFile_OptArgs= []string{
@@ -110,13 +112,13 @@ var Subdocuments_AddFromFile_OptArgs= []string{
 
 func (this *Subdocuments) AddFromFile(name *ole.Variant, optArgs ...interface{}) *Subdocument {
 	optArgs = ole.ProcessOptArgs(Subdocuments_AddFromFile_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{name}, optArgs...)
-	return NewSubdocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{name}, optArgs...)
+	return NewSubdocument(retVal.IDispatch(), false, true)
 }
 
 func (this *Subdocuments) AddFromRange(range_ *Range) *Subdocument {
-	retVal := this.Call(0x00000065, []interface{}{range_})
-	return NewSubdocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{range_})
+	return NewSubdocument(retVal.IDispatch(), false, true)
 }
 
 var Subdocuments_Merge_OptArgs= []string{
@@ -125,17 +127,17 @@ var Subdocuments_Merge_OptArgs= []string{
 
 func (this *Subdocuments) Merge(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Subdocuments_Merge_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, nil, optArgs...)
+	retVal, _ := this.Call(0x00000066, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Subdocuments) Delete()  {
-	retVal := this.Call(0x00000067, nil)
+	retVal, _ := this.Call(0x00000067, nil)
 	_= retVal
 }
 
 func (this *Subdocuments) Select()  {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	_= retVal
 }
 

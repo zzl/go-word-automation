@@ -16,6 +16,9 @@ type Dialog struct {
 }
 
 func NewDialog(pDisp *win32.IDispatch, addRef bool, scoped bool) *Dialog {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Dialog{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewDialog(pDisp *win32.IDispatch, addRef bool, scoped bool) *Dialog {
 }
 
 func DialogFromVar(v ole.Variant) *Dialog {
-	return NewDialog(v.PdispValVal(), false, false)
+	return NewDialog(v.IDispatch(), false, false)
 }
 
 func (this *Dialog) IID() *syscall.GUID {
@@ -42,32 +45,31 @@ func (this *Dialog) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Dialog) Application() *Application {
-	retVal := this.PropGet(0x00007d03, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00007d03, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Dialog) Creator() int32 {
-	retVal := this.PropGet(0x00007d04, nil)
+	retVal, _ := this.PropGet(0x00007d04, nil)
 	return retVal.LValVal()
 }
 
 func (this *Dialog) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00007d05, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00007d05, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Dialog) DefaultTab() int32 {
-	retVal := this.PropGet(0x00007d02, nil)
+	retVal, _ := this.PropGet(0x00007d02, nil)
 	return retVal.LValVal()
 }
 
 func (this *Dialog) SetDefaultTab(rhs int32)  {
-	retVal := this.PropPut(0x00007d02, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00007d02, []interface{}{rhs})
 }
 
 func (this *Dialog) Type() int32 {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.LValVal()
 }
 
@@ -77,7 +79,7 @@ var Dialog_Show_OptArgs= []string{
 
 func (this *Dialog) Show(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Dialog_Show_OptArgs, optArgs)
-	retVal := this.Call(0x00000150, nil, optArgs...)
+	retVal, _ := this.Call(0x00000150, nil, optArgs...)
 	return retVal.LValVal()
 }
 
@@ -87,27 +89,27 @@ var Dialog_Display_OptArgs= []string{
 
 func (this *Dialog) Display(optArgs ...interface{}) int32 {
 	optArgs = ole.ProcessOptArgs(Dialog_Display_OptArgs, optArgs)
-	retVal := this.Call(0x00000152, nil, optArgs...)
+	retVal, _ := this.Call(0x00000152, nil, optArgs...)
 	return retVal.LValVal()
 }
 
 func (this *Dialog) Execute()  {
-	retVal := this.Call(0x00007d01, nil)
+	retVal, _ := this.Call(0x00007d01, nil)
 	_= retVal
 }
 
 func (this *Dialog) Update()  {
-	retVal := this.Call(0x0000012e, nil)
+	retVal, _ := this.Call(0x0000012e, nil)
 	_= retVal
 }
 
 func (this *Dialog) CommandName() string {
-	retVal := this.PropGet(0x00007d06, nil)
+	retVal, _ := this.PropGet(0x00007d06, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Dialog) CommandBarId() int32 {
-	retVal := this.PropGet(0x00007d07, nil)
+	retVal, _ := this.PropGet(0x00007d07, nil)
 	return retVal.LValVal()
 }
 

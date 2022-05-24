@@ -17,6 +17,9 @@ type Frameset struct {
 }
 
 func NewFrameset(pDisp *win32.IDispatch, addRef bool, scoped bool) *Frameset {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Frameset{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewFrameset(pDisp *win32.IDispatch, addRef bool, scoped bool) *Frameset {
 }
 
 func FramesetFromVar(v ole.Variant) *Frameset {
-	return NewFrameset(v.PdispValVal(), false, false)
+	return NewFrameset(v.IDispatch(), false, false)
 }
 
 func (this *Frameset) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Frameset) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Frameset) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Frameset) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Frameset) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -83,152 +86,140 @@ func (this *Frameset) ForEach(action func(item int32) bool) {
 }
 
 func (this *Frameset) ParentFrameset() *Frameset {
-	retVal := this.PropGet(0x000003eb, nil)
-	return NewFrameset(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003eb, nil)
+	return NewFrameset(retVal.IDispatch(), false, true)
 }
 
 func (this *Frameset) Type() int32 {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) WidthType() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) SetWidthType(rhs int32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *Frameset) HeightType() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) SetHeightType(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *Frameset) Width() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) SetWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Frameset) Height() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) SetHeight(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *Frameset) ChildFramesetCount() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) ChildFramesetItem(index int32) *Frameset {
-	retVal := this.PropGet(0x00000006, []interface{}{index})
-	return NewFrameset(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000006, []interface{}{index})
+	return NewFrameset(retVal.IDispatch(), false, true)
 }
 
 func (this *Frameset) FramesetBorderWidth() float32 {
-	retVal := this.PropGet(0x00000014, nil)
+	retVal, _ := this.PropGet(0x00000014, nil)
 	return retVal.FltValVal()
 }
 
 func (this *Frameset) SetFramesetBorderWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000014, []interface{}{rhs})
 }
 
 func (this *Frameset) FramesetBorderColor() int32 {
-	retVal := this.PropGet(0x00000015, nil)
+	retVal, _ := this.PropGet(0x00000015, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) SetFramesetBorderColor(rhs int32)  {
-	retVal := this.PropPut(0x00000015, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000015, []interface{}{rhs})
 }
 
 func (this *Frameset) FrameScrollbarType() int32 {
-	retVal := this.PropGet(0x0000001e, nil)
+	retVal, _ := this.PropGet(0x0000001e, nil)
 	return retVal.LValVal()
 }
 
 func (this *Frameset) SetFrameScrollbarType(rhs int32)  {
-	retVal := this.PropPut(0x0000001e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001e, []interface{}{rhs})
 }
 
 func (this *Frameset) FrameResizable() bool {
-	retVal := this.PropGet(0x0000001f, nil)
+	retVal, _ := this.PropGet(0x0000001f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Frameset) SetFrameResizable(rhs bool)  {
-	retVal := this.PropPut(0x0000001f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001f, []interface{}{rhs})
 }
 
 func (this *Frameset) FrameName() string {
-	retVal := this.PropGet(0x00000022, nil)
+	retVal, _ := this.PropGet(0x00000022, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Frameset) SetFrameName(rhs string)  {
-	retVal := this.PropPut(0x00000022, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000022, []interface{}{rhs})
 }
 
 func (this *Frameset) FrameDisplayBorders() bool {
-	retVal := this.PropGet(0x00000023, nil)
+	retVal, _ := this.PropGet(0x00000023, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Frameset) SetFrameDisplayBorders(rhs bool)  {
-	retVal := this.PropPut(0x00000023, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000023, []interface{}{rhs})
 }
 
 func (this *Frameset) FrameDefaultURL() string {
-	retVal := this.PropGet(0x00000024, nil)
+	retVal, _ := this.PropGet(0x00000024, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Frameset) SetFrameDefaultURL(rhs string)  {
-	retVal := this.PropPut(0x00000024, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000024, []interface{}{rhs})
 }
 
 func (this *Frameset) FrameLinkToFile() bool {
-	retVal := this.PropGet(0x00000025, nil)
+	retVal, _ := this.PropGet(0x00000025, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Frameset) SetFrameLinkToFile(rhs bool)  {
-	retVal := this.PropPut(0x00000025, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000025, []interface{}{rhs})
 }
 
 func (this *Frameset) AddNewFrame(where int32) *Frameset {
-	retVal := this.Call(0x00000032, []interface{}{where})
-	return NewFrameset(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000032, []interface{}{where})
+	return NewFrameset(retVal.IDispatch(), false, true)
 }
 
 func (this *Frameset) Delete()  {
-	retVal := this.Call(0x00000033, nil)
+	retVal, _ := this.Call(0x00000033, nil)
 	_= retVal
 }
 

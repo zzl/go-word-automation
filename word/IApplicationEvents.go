@@ -16,6 +16,9 @@ type IApplicationEvents struct {
 }
 
 func NewIApplicationEvents(pDisp *win32.IDispatch, addRef bool, scoped bool) *IApplicationEvents {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &IApplicationEvents{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewIApplicationEvents(pDisp *win32.IDispatch, addRef bool, scoped bool) *IA
 }
 
 func IApplicationEventsFromVar(v ole.Variant) *IApplicationEvents {
-	return NewIApplicationEvents(v.PdispValVal(), false, false)
+	return NewIApplicationEvents(v.IDispatch(), false, false)
 }
 
 func (this *IApplicationEvents) IID() *syscall.GUID {
@@ -42,17 +45,17 @@ func (this *IApplicationEvents) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *IApplicationEvents) Startup()  {
-	retVal := this.Call(0x00000001, nil)
+	retVal, _ := this.Call(0x00000001, nil)
 	_= retVal
 }
 
 func (this *IApplicationEvents) Quit()  {
-	retVal := this.Call(0x00000002, nil)
+	retVal, _ := this.Call(0x00000002, nil)
 	_= retVal
 }
 
 func (this *IApplicationEvents) DocumentChange()  {
-	retVal := this.Call(0x00000003, nil)
+	retVal, _ := this.Call(0x00000003, nil)
 	_= retVal
 }
 

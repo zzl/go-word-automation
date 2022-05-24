@@ -16,6 +16,9 @@ type UndoRecord struct {
 }
 
 func NewUndoRecord(pDisp *win32.IDispatch, addRef bool, scoped bool) *UndoRecord {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &UndoRecord{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewUndoRecord(pDisp *win32.IDispatch, addRef bool, scoped bool) *UndoRecord
 }
 
 func UndoRecordFromVar(v ole.Variant) *UndoRecord {
-	return NewUndoRecord(v.PdispValVal(), false, false)
+	return NewUndoRecord(v.IDispatch(), false, false)
 }
 
 func (this *UndoRecord) IID() *syscall.GUID {
@@ -42,42 +45,47 @@ func (this *UndoRecord) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *UndoRecord) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *UndoRecord) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *UndoRecord) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
-func (this *UndoRecord) StartCustomRecord(name string)  {
-	retVal := this.Call(0x00000001, []interface{}{name})
+var UndoRecord_StartCustomRecord_OptArgs= []string{
+	"Name", 
+}
+
+func (this *UndoRecord) StartCustomRecord(optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(UndoRecord_StartCustomRecord_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000001, nil, optArgs...)
 	_= retVal
 }
 
 func (this *UndoRecord) EndCustomRecord()  {
-	retVal := this.Call(0x00000002, nil)
+	retVal, _ := this.Call(0x00000002, nil)
 	_= retVal
 }
 
 func (this *UndoRecord) IsRecordingCustomRecord() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *UndoRecord) CustomRecordName() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *UndoRecord) CustomRecordLevel() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 

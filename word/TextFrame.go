@@ -16,6 +16,9 @@ type TextFrame struct {
 }
 
 func NewTextFrame(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextFrame {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TextFrame{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTextFrame(pDisp *win32.IDispatch, addRef bool, scoped bool) *TextFrame {
 }
 
 func TextFrameFromVar(v ole.Variant) *TextFrame {
-	return NewTextFrame(v.PdispValVal(), false, false)
+	return NewTextFrame(v.IDispatch(), false, false)
 }
 
 func (this *TextFrame) IID() *syscall.GUID {
@@ -42,202 +45,188 @@ func (this *TextFrame) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TextFrame) Application() *Application {
-	retVal := this.PropGet(0x00001f40, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00001f40, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) Creator() int32 {
-	retVal := this.PropGet(0x00001f41, nil)
+	retVal, _ := this.PropGet(0x00001f41, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) Parent() *Shape {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) MarginBottom() float32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TextFrame) SetMarginBottom(rhs float32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *TextFrame) MarginLeft() float32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TextFrame) SetMarginLeft(rhs float32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *TextFrame) MarginRight() float32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TextFrame) SetMarginRight(rhs float32)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *TextFrame) MarginTop() float32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TextFrame) SetMarginTop(rhs float32)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *TextFrame) Orientation() int32 {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetOrientation(rhs int32)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *TextFrame) TextRange() *Range {
-	retVal := this.PropGet(0x000003e9, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e9, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) ContainingRange() *Range {
-	retVal := this.PropGet(0x000003ea, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) Next() *TextFrame {
-	retVal := this.PropGet(0x00001389, nil)
-	return NewTextFrame(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00001389, nil)
+	return NewTextFrame(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) SetNext(rhs *TextFrame)  {
-	retVal := this.PropPut(0x00001389, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001389, []interface{}{rhs})
 }
 
 func (this *TextFrame) Previous() *TextFrame {
-	retVal := this.PropGet(0x0000138a, nil)
-	return NewTextFrame(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000138a, nil)
+	return NewTextFrame(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) SetPrevious(rhs *TextFrame)  {
-	retVal := this.PropPut(0x0000138a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000138a, []interface{}{rhs})
 }
 
 func (this *TextFrame) Overflowing() bool {
-	retVal := this.PropGet(0x0000138b, nil)
+	retVal, _ := this.PropGet(0x0000138b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TextFrame) HasText() int32 {
-	retVal := this.PropGet(0x00001390, nil)
+	retVal, _ := this.PropGet(0x00001390, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) BreakForwardLink()  {
-	retVal := this.Call(0x0000138c, nil)
+	retVal, _ := this.Call(0x0000138c, nil)
 	_= retVal
 }
 
 func (this *TextFrame) ValidLinkTarget(targetTextFrame *TextFrame) bool {
-	retVal := this.Call(0x0000138e, []interface{}{targetTextFrame})
+	retVal, _ := this.Call(0x0000138e, []interface{}{targetTextFrame})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TextFrame) AutoSize() int32 {
-	retVal := this.PropGet(0x00001391, nil)
+	retVal, _ := this.PropGet(0x00001391, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetAutoSize(rhs int32)  {
-	retVal := this.PropPut(0x00001391, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001391, []interface{}{rhs})
 }
 
 func (this *TextFrame) WordWrap() int32 {
-	retVal := this.PropGet(0x00001392, nil)
+	retVal, _ := this.PropGet(0x00001392, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetWordWrap(rhs int32)  {
-	retVal := this.PropPut(0x00001392, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001392, []interface{}{rhs})
 }
 
 func (this *TextFrame) VerticalAnchor() int32 {
-	retVal := this.PropGet(0x00001393, nil)
+	retVal, _ := this.PropGet(0x00001393, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetVerticalAnchor(rhs int32)  {
-	retVal := this.PropPut(0x00001393, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001393, []interface{}{rhs})
 }
 
 func (this *TextFrame) HorizontalAnchor() int32 {
-	retVal := this.PropGet(0x00001394, nil)
+	retVal, _ := this.PropGet(0x00001394, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetHorizontalAnchor(rhs int32)  {
-	retVal := this.PropPut(0x00001394, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001394, []interface{}{rhs})
 }
 
 func (this *TextFrame) PathFormat() int32 {
-	retVal := this.PropGet(0x00001395, nil)
+	retVal, _ := this.PropGet(0x00001395, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetPathFormat(rhs int32)  {
-	retVal := this.PropPut(0x00001395, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001395, []interface{}{rhs})
 }
 
 func (this *TextFrame) WarpFormat() int32 {
-	retVal := this.PropGet(0x00001396, nil)
+	retVal, _ := this.PropGet(0x00001396, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetWarpFormat(rhs int32)  {
-	retVal := this.PropPut(0x00001396, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001396, []interface{}{rhs})
 }
 
 func (this *TextFrame) Column() *ole.DispatchClass {
-	retVal := this.PropGet(0x00001397, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00001397, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TextFrame) ThreeD() *ThreeDFormat {
-	retVal := this.PropGet(0x00001398, nil)
-	return NewThreeDFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00001398, nil)
+	return NewThreeDFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *TextFrame) NoTextRotation() int32 {
-	retVal := this.PropGet(0x00001399, nil)
+	retVal, _ := this.PropGet(0x00001399, nil)
 	return retVal.LValVal()
 }
 
 func (this *TextFrame) SetNoTextRotation(rhs int32)  {
-	retVal := this.PropPut(0x00001399, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00001399, []interface{}{rhs})
 }
 
 func (this *TextFrame) DeleteText()  {
-	retVal := this.Call(0x0000139a, nil)
+	retVal, _ := this.Call(0x0000139a, nil)
 	_= retVal
 }
 

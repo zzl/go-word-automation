@@ -16,6 +16,9 @@ type OMathNary struct {
 }
 
 func NewOMathNary(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathNary {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathNary{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathNary(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathNary {
 }
 
 func OMathNaryFromVar(v ole.Variant) *OMathNary {
-	return NewOMathNary(v.PdispValVal(), false, false)
+	return NewOMathNary(v.IDispatch(), false, false)
 }
 
 func (this *OMathNary) IID() *syscall.GUID {
@@ -42,82 +45,77 @@ func (this *OMathNary) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathNary) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathNary) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathNary) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathNary) Sub() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathNary) Sup() *OMath {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathNary) E() *OMath {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathNary) Char() int16 {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.IValVal()
 }
 
 func (this *OMathNary) SetChar(rhs int16)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *OMathNary) Grow() bool {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathNary) SetGrow(rhs bool)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 
 func (this *OMathNary) SubSupLim() bool {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathNary) SetSubSupLim(rhs bool)  {
-	retVal := this.PropPut(0x0000006c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006c, []interface{}{rhs})
 }
 
 func (this *OMathNary) HideSub() bool {
-	retVal := this.PropGet(0x0000006d, nil)
+	retVal, _ := this.PropGet(0x0000006d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathNary) SetHideSub(rhs bool)  {
-	retVal := this.PropPut(0x0000006d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006d, []interface{}{rhs})
 }
 
 func (this *OMathNary) HideSup() bool {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathNary) SetHideSup(rhs bool)  {
-	retVal := this.PropPut(0x0000006e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006e, []interface{}{rhs})
 }
 

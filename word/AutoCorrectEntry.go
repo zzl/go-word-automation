@@ -16,6 +16,9 @@ type AutoCorrectEntry struct {
 }
 
 func NewAutoCorrectEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCorrectEntry {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoCorrectEntry{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewAutoCorrectEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *Auto
 }
 
 func AutoCorrectEntryFromVar(v ole.Variant) *AutoCorrectEntry {
-	return NewAutoCorrectEntry(v.PdispValVal(), false, false)
+	return NewAutoCorrectEntry(v.IDispatch(), false, false)
 }
 
 func (this *AutoCorrectEntry) IID() *syscall.GUID {
@@ -42,57 +45,55 @@ func (this *AutoCorrectEntry) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoCorrectEntry) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrectEntry) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCorrectEntry) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoCorrectEntry) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCorrectEntry) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *AutoCorrectEntry) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *AutoCorrectEntry) Value() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *AutoCorrectEntry) SetValue(rhs string)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *AutoCorrectEntry) RichText() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCorrectEntry) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *AutoCorrectEntry) Apply(range_ *Range)  {
-	retVal := this.Call(0x00000066, []interface{}{range_})
+	retVal, _ := this.Call(0x00000066, []interface{}{range_})
 	_= retVal
 }
 

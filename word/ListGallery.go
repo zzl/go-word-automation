@@ -16,6 +16,9 @@ type ListGallery struct {
 }
 
 func NewListGallery(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListGallery {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListGallery{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewListGallery(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListGalle
 }
 
 func ListGalleryFromVar(v ole.Variant) *ListGallery {
-	return NewListGallery(v.PdispValVal(), false, false)
+	return NewListGallery(v.IDispatch(), false, false)
 }
 
 func (this *ListGallery) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *ListGallery) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListGallery) ListTemplates() *ListTemplates {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewListTemplates(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewListTemplates(retVal.IDispatch(), false, true)
 }
 
 func (this *ListGallery) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListGallery) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListGallery) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListGallery) Modified(index int32) bool {
-	retVal := this.PropGet(0x00000065, []interface{}{index})
+	retVal, _ := this.PropGet(0x00000065, []interface{}{index})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ListGallery) Reset(index int32)  {
-	retVal := this.Call(0x00000064, []interface{}{index})
+	retVal, _ := this.Call(0x00000064, []interface{}{index})
 	_= retVal
 }
 

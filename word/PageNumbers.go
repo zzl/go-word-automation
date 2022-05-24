@@ -17,6 +17,9 @@ type PageNumbers struct {
 }
 
 func NewPageNumbers(pDisp *win32.IDispatch, addRef bool, scoped bool) *PageNumbers {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &PageNumbers{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewPageNumbers(pDisp *win32.IDispatch, addRef bool, scoped bool) *PageNumbe
 }
 
 func PageNumbersFromVar(v ole.Variant) *PageNumbers {
-	return NewPageNumbers(v.PdispValVal(), false, false)
+	return NewPageNumbers(v.IDispatch(), false, false)
 }
 
 func (this *PageNumbers) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *PageNumbers) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *PageNumbers) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *PageNumbers) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumbers) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *PageNumbers) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,83 +87,76 @@ func (this *PageNumbers) ForEach(action func(item *PageNumber) bool) {
 }
 
 func (this *PageNumbers) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumbers) NumberStyle() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumbers) SetNumberStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *PageNumbers) IncludeChapterNumber() bool {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageNumbers) SetIncludeChapterNumber(rhs bool)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *PageNumbers) HeadingLevelForChapter() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumbers) SetHeadingLevelForChapter(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *PageNumbers) ChapterPageSeparator() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumbers) SetChapterPageSeparator(rhs int32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *PageNumbers) RestartNumberingAtSection() bool {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageNumbers) SetRestartNumberingAtSection(rhs bool)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *PageNumbers) StartingNumber() int32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageNumbers) SetStartingNumber(rhs int32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *PageNumbers) ShowFirstPageNumber() bool {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageNumbers) SetShowFirstPageNumber(rhs bool)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *PageNumbers) Item(index int32) *PageNumber {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewPageNumber(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewPageNumber(retVal.IDispatch(), false, true)
 }
 
 var PageNumbers_Add_OptArgs= []string{
@@ -169,17 +165,16 @@ var PageNumbers_Add_OptArgs= []string{
 
 func (this *PageNumbers) Add(optArgs ...interface{}) *PageNumber {
 	optArgs = ole.ProcessOptArgs(PageNumbers_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, nil, optArgs...)
-	return NewPageNumber(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
+	return NewPageNumber(retVal.IDispatch(), false, true)
 }
 
 func (this *PageNumbers) DoubleQuote() bool {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageNumbers) SetDoubleQuote(rhs bool)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 

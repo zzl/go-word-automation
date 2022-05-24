@@ -17,6 +17,9 @@ type KeysBoundTo struct {
 }
 
 func NewKeysBoundTo(pDisp *win32.IDispatch, addRef bool, scoped bool) *KeysBoundTo {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &KeysBoundTo{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewKeysBoundTo(pDisp *win32.IDispatch, addRef bool, scoped bool) *KeysBound
 }
 
 func KeysBoundToFromVar(v ole.Variant) *KeysBoundTo {
-	return NewKeysBoundTo(v.PdispValVal(), false, false)
+	return NewKeysBoundTo(v.IDispatch(), false, false)
 }
 
 func (this *KeysBoundTo) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *KeysBoundTo) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *KeysBoundTo) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *KeysBoundTo) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *KeysBoundTo) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *KeysBoundTo) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,33 +87,33 @@ func (this *KeysBoundTo) ForEach(action func(item *KeyBinding) bool) {
 }
 
 func (this *KeysBoundTo) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *KeysBoundTo) KeyCategory() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *KeysBoundTo) Command() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *KeysBoundTo) CommandParameter() string {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *KeysBoundTo) Context() *ole.DispatchClass {
-	retVal := this.PropGet(0x0000000a, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *KeysBoundTo) Item(index int32) *KeyBinding {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewKeyBinding(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewKeyBinding(retVal.IDispatch(), false, true)
 }
 
 var KeysBoundTo_Key_OptArgs= []string{
@@ -119,7 +122,7 @@ var KeysBoundTo_Key_OptArgs= []string{
 
 func (this *KeysBoundTo) Key(keyCode int32, optArgs ...interface{}) *KeyBinding {
 	optArgs = ole.ProcessOptArgs(KeysBoundTo_Key_OptArgs, optArgs)
-	retVal := this.Call(0x00000001, []interface{}{keyCode}, optArgs...)
-	return NewKeyBinding(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000001, []interface{}{keyCode}, optArgs...)
+	return NewKeyBinding(retVal.IDispatch(), false, true)
 }
 

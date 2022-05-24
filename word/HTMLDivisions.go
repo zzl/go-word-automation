@@ -17,6 +17,9 @@ type HTMLDivisions struct {
 }
 
 func NewHTMLDivisions(pDisp *win32.IDispatch, addRef bool, scoped bool) *HTMLDivisions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HTMLDivisions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewHTMLDivisions(pDisp *win32.IDispatch, addRef bool, scoped bool) *HTMLDiv
 }
 
 func HTMLDivisionsFromVar(v ole.Variant) *HTMLDivisions {
-	return NewHTMLDivisions(v.PdispValVal(), false, false)
+	return NewHTMLDivisions(v.IDispatch(), false, false)
 }
 
 func (this *HTMLDivisions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *HTMLDivisions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HTMLDivisions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HTMLDivisions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HTMLDivisions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HTMLDivisions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,12 +87,12 @@ func (this *HTMLDivisions) ForEach(action func(item *HTMLDivision) bool) {
 }
 
 func (this *HTMLDivisions) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *HTMLDivisions) NestingLevel() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
@@ -99,12 +102,12 @@ var HTMLDivisions_Add_OptArgs= []string{
 
 func (this *HTMLDivisions) Add(optArgs ...interface{}) *HTMLDivision {
 	optArgs = ole.ProcessOptArgs(HTMLDivisions_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, nil, optArgs...)
-	return NewHTMLDivision(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
+	return NewHTMLDivision(retVal.IDispatch(), false, true)
 }
 
 func (this *HTMLDivisions) Item(index int32) *HTMLDivision {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewHTMLDivision(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewHTMLDivision(retVal.IDispatch(), false, true)
 }
 

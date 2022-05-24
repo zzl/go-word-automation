@@ -16,6 +16,9 @@ type XSLTransform struct {
 }
 
 func NewXSLTransform(pDisp *win32.IDispatch, addRef bool, scoped bool) *XSLTransform {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XSLTransform{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewXSLTransform(pDisp *win32.IDispatch, addRef bool, scoped bool) *XSLTrans
 }
 
 func XSLTransformFromVar(v ole.Variant) *XSLTransform {
-	return NewXSLTransform(v.PdispValVal(), false, false)
+	return NewXSLTransform(v.IDispatch(), false, false)
 }
 
 func (this *XSLTransform) IID() *syscall.GUID {
@@ -42,47 +45,65 @@ func (this *XSLTransform) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XSLTransform) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XSLTransform) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XSLTransform) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
-func (this *XSLTransform) Alias(allUsers bool) string {
-	retVal := this.PropGet(0x00000002, []interface{}{allUsers})
+var XSLTransform_Alias_OptArgs= []string{
+	"AllUsers", 
+}
+
+func (this *XSLTransform) Alias(optArgs ...interface{}) string {
+	optArgs = ole.ProcessOptArgs(XSLTransform_Alias_OptArgs, optArgs)
+	retVal, _ := this.PropGet(0x00000002, nil, optArgs...)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
-func (this *XSLTransform) SetAlias(allUsers bool, rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{allUsers, rhs})
-	_= retVal
+var XSLTransform_SetAlias_OptArgs= []string{
+	"AllUsers", 
 }
 
-func (this *XSLTransform) Location(allUsers bool) string {
-	retVal := this.PropGet(0x00000003, []interface{}{allUsers})
+func (this *XSLTransform) SetAlias(optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(XSLTransform_SetAlias_OptArgs, optArgs)
+	_ = this.PropPut(0x00000002, nil, optArgs...)
+}
+
+var XSLTransform_Location_OptArgs= []string{
+	"AllUsers", 
+}
+
+func (this *XSLTransform) Location(optArgs ...interface{}) string {
+	optArgs = ole.ProcessOptArgs(XSLTransform_Location_OptArgs, optArgs)
+	retVal, _ := this.PropGet(0x00000003, nil, optArgs...)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
-func (this *XSLTransform) SetLocation(allUsers bool, rhs string)  {
-	retVal := this.PropPut(0x00000003, []interface{}{allUsers, rhs})
-	_= retVal
+var XSLTransform_SetLocation_OptArgs= []string{
+	"AllUsers", 
+}
+
+func (this *XSLTransform) SetLocation(optArgs ...interface{})  {
+	optArgs = ole.ProcessOptArgs(XSLTransform_SetLocation_OptArgs, optArgs)
+	_ = this.PropPut(0x00000003, nil, optArgs...)
 }
 
 func (this *XSLTransform) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *XSLTransform) ID() string {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

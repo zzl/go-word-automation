@@ -17,6 +17,9 @@ type AddIns struct {
 }
 
 func NewAddIns(pDisp *win32.IDispatch, addRef bool, scoped bool) *AddIns {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AddIns{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewAddIns(pDisp *win32.IDispatch, addRef bool, scoped bool) *AddIns {
 }
 
 func AddInsFromVar(v ole.Variant) *AddIns {
-	return NewAddIns(v.PdispValVal(), false, false)
+	return NewAddIns(v.IDispatch(), false, false)
 }
 
 func (this *AddIns) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *AddIns) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AddIns) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AddIns) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AddIns) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AddIns) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,13 +87,13 @@ func (this *AddIns) ForEach(action func(item *AddIn) bool) {
 }
 
 func (this *AddIns) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *AddIns) Item(index *ole.Variant) *AddIn {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewAddIn(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewAddIn(retVal.IDispatch(), false, true)
 }
 
 var AddIns_Add_OptArgs= []string{
@@ -99,12 +102,12 @@ var AddIns_Add_OptArgs= []string{
 
 func (this *AddIns) Add(fileName string, optArgs ...interface{}) *AddIn {
 	optArgs = ole.ProcessOptArgs(AddIns_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000002, []interface{}{fileName}, optArgs...)
-	return NewAddIn(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000002, []interface{}{fileName}, optArgs...)
+	return NewAddIn(retVal.IDispatch(), false, true)
 }
 
 func (this *AddIns) Unload(removeFromList bool)  {
-	retVal := this.Call(0x00000003, []interface{}{removeFromList})
+	retVal, _ := this.Call(0x00000003, []interface{}{removeFromList})
 	_= retVal
 }
 

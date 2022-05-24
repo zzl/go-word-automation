@@ -17,6 +17,9 @@ type GroupShapes struct {
 }
 
 func NewGroupShapes(pDisp *win32.IDispatch, addRef bool, scoped bool) *GroupShapes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &GroupShapes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewGroupShapes(pDisp *win32.IDispatch, addRef bool, scoped bool) *GroupShap
 }
 
 func GroupShapesFromVar(v ole.Variant) *GroupShapes {
-	return NewGroupShapes(v.PdispValVal(), false, false)
+	return NewGroupShapes(v.IDispatch(), false, false)
 }
 
 func (this *GroupShapes) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *GroupShapes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *GroupShapes) Application() *Application {
-	retVal := this.PropGet(0x00001f40, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00001f40, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *GroupShapes) Creator() int32 {
-	retVal := this.PropGet(0x00001f41, nil)
+	retVal, _ := this.PropGet(0x00001f41, nil)
 	return retVal.LValVal()
 }
 
 func (this *GroupShapes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000001, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *GroupShapes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *GroupShapes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,12 +92,12 @@ func (this *GroupShapes) ForEach(action func(item *Shape) bool) {
 }
 
 func (this *GroupShapes) Item(index *ole.Variant) *Shape {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *GroupShapes) Range(index *ole.Variant) *ShapeRange {
-	retVal := this.Call(0x0000000a, []interface{}{index})
-	return NewShapeRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000a, []interface{}{index})
+	return NewShapeRange(retVal.IDispatch(), false, true)
 }
 

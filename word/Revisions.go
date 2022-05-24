@@ -17,6 +17,9 @@ type Revisions struct {
 }
 
 func NewRevisions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Revisions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Revisions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewRevisions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Revisions {
 }
 
 func RevisionsFromVar(v ole.Variant) *Revisions {
-	return NewRevisions(v.PdispValVal(), false, false)
+	return NewRevisions(v.IDispatch(), false, false)
 }
 
 func (this *Revisions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Revisions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Revisions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Revisions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Revisions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Revisions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,22 +87,22 @@ func (this *Revisions) ForEach(action func(item *Revision) bool) {
 }
 
 func (this *Revisions) Count() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Revisions) Item(index int32) *Revision {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRevision(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRevision(retVal.IDispatch(), false, true)
 }
 
 func (this *Revisions) AcceptAll()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *Revisions) RejectAll()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

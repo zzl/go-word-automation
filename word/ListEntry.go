@@ -16,6 +16,9 @@ type ListEntry struct {
 }
 
 func NewListEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListEntry {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListEntry{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewListEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListEntry {
 }
 
 func ListEntryFromVar(v ole.Variant) *ListEntry {
-	return NewListEntry(v.PdispValVal(), false, false)
+	return NewListEntry(v.IDispatch(), false, false)
 }
 
 func (this *ListEntry) IID() *syscall.GUID {
@@ -42,37 +45,36 @@ func (this *ListEntry) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListEntry) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListEntry) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListEntry) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListEntry) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListEntry) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ListEntry) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *ListEntry) Delete()  {
-	retVal := this.Call(0x0000000b, nil)
+	retVal, _ := this.Call(0x0000000b, nil)
 	_= retVal
 }
 

@@ -16,6 +16,9 @@ type PageSetup struct {
 }
 
 func NewPageSetup(pDisp *win32.IDispatch, addRef bool, scoped bool) *PageSetup {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &PageSetup{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewPageSetup(pDisp *win32.IDispatch, addRef bool, scoped bool) *PageSetup {
 }
 
 func PageSetupFromVar(v ole.Variant) *PageSetup {
-	return NewPageSetup(v.PdispValVal(), false, false)
+	return NewPageSetup(v.IDispatch(), false, false)
 }
 
 func (this *PageSetup) IID() *syscall.GUID {
@@ -42,357 +45,324 @@ func (this *PageSetup) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *PageSetup) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *PageSetup) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *PageSetup) TopMargin() float32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetTopMargin(rhs float32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *PageSetup) BottomMargin() float32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetBottomMargin(rhs float32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *PageSetup) LeftMargin() float32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetLeftMargin(rhs float32)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *PageSetup) RightMargin() float32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetRightMargin(rhs float32)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *PageSetup) Gutter() float32 {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetGutter(rhs float32)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *PageSetup) PageWidth() float32 {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetPageWidth(rhs float32)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *PageSetup) PageHeight() float32 {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetPageHeight(rhs float32)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *PageSetup) Orientation() int32 {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetOrientation(rhs int32)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 
 func (this *PageSetup) FirstPageTray() int32 {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetFirstPageTray(rhs int32)  {
-	retVal := this.PropPut(0x0000006c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006c, []interface{}{rhs})
 }
 
 func (this *PageSetup) OtherPagesTray() int32 {
-	retVal := this.PropGet(0x0000006d, nil)
+	retVal, _ := this.PropGet(0x0000006d, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetOtherPagesTray(rhs int32)  {
-	retVal := this.PropPut(0x0000006d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006d, []interface{}{rhs})
 }
 
 func (this *PageSetup) VerticalAlignment() int32 {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetVerticalAlignment(rhs int32)  {
-	retVal := this.PropPut(0x0000006e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006e, []interface{}{rhs})
 }
 
 func (this *PageSetup) MirrorMargins() int32 {
-	retVal := this.PropGet(0x0000006f, nil)
+	retVal, _ := this.PropGet(0x0000006f, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetMirrorMargins(rhs int32)  {
-	retVal := this.PropPut(0x0000006f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006f, []interface{}{rhs})
 }
 
 func (this *PageSetup) HeaderDistance() float32 {
-	retVal := this.PropGet(0x00000070, nil)
+	retVal, _ := this.PropGet(0x00000070, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetHeaderDistance(rhs float32)  {
-	retVal := this.PropPut(0x00000070, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000070, []interface{}{rhs})
 }
 
 func (this *PageSetup) FooterDistance() float32 {
-	retVal := this.PropGet(0x00000071, nil)
+	retVal, _ := this.PropGet(0x00000071, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetFooterDistance(rhs float32)  {
-	retVal := this.PropPut(0x00000071, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000071, []interface{}{rhs})
 }
 
 func (this *PageSetup) SectionStart() int32 {
-	retVal := this.PropGet(0x00000072, nil)
+	retVal, _ := this.PropGet(0x00000072, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetSectionStart(rhs int32)  {
-	retVal := this.PropPut(0x00000072, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000072, []interface{}{rhs})
 }
 
 func (this *PageSetup) OddAndEvenPagesHeaderFooter() int32 {
-	retVal := this.PropGet(0x00000073, nil)
+	retVal, _ := this.PropGet(0x00000073, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetOddAndEvenPagesHeaderFooter(rhs int32)  {
-	retVal := this.PropPut(0x00000073, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000073, []interface{}{rhs})
 }
 
 func (this *PageSetup) DifferentFirstPageHeaderFooter() int32 {
-	retVal := this.PropGet(0x00000074, nil)
+	retVal, _ := this.PropGet(0x00000074, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetDifferentFirstPageHeaderFooter(rhs int32)  {
-	retVal := this.PropPut(0x00000074, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000074, []interface{}{rhs})
 }
 
 func (this *PageSetup) SuppressEndnotes() int32 {
-	retVal := this.PropGet(0x00000075, nil)
+	retVal, _ := this.PropGet(0x00000075, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetSuppressEndnotes(rhs int32)  {
-	retVal := this.PropPut(0x00000075, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000075, []interface{}{rhs})
 }
 
 func (this *PageSetup) LineNumbering() *LineNumbering {
-	retVal := this.PropGet(0x00000076, nil)
-	return NewLineNumbering(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000076, nil)
+	return NewLineNumbering(retVal.IDispatch(), false, true)
 }
 
 func (this *PageSetup) SetLineNumbering(rhs *LineNumbering)  {
-	retVal := this.PropPut(0x00000076, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000076, []interface{}{rhs})
 }
 
 func (this *PageSetup) TextColumns() *TextColumns {
-	retVal := this.PropGet(0x00000077, nil)
-	return NewTextColumns(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000077, nil)
+	return NewTextColumns(retVal.IDispatch(), false, true)
 }
 
 func (this *PageSetup) SetTextColumns(rhs *TextColumns)  {
-	retVal := this.PropPut(0x00000077, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000077, []interface{}{rhs})
 }
 
 func (this *PageSetup) PaperSize() int32 {
-	retVal := this.PropGet(0x00000078, nil)
+	retVal, _ := this.PropGet(0x00000078, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetPaperSize(rhs int32)  {
-	retVal := this.PropPut(0x00000078, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000078, []interface{}{rhs})
 }
 
 func (this *PageSetup) TwoPagesOnOne() bool {
-	retVal := this.PropGet(0x00000079, nil)
+	retVal, _ := this.PropGet(0x00000079, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageSetup) SetTwoPagesOnOne(rhs bool)  {
-	retVal := this.PropPut(0x00000079, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000079, []interface{}{rhs})
 }
 
 func (this *PageSetup) GutterOnTop() bool {
-	retVal := this.PropGet(0x0000007a, nil)
+	retVal, _ := this.PropGet(0x0000007a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageSetup) SetGutterOnTop(rhs bool)  {
-	retVal := this.PropPut(0x0000007a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000007a, []interface{}{rhs})
 }
 
 func (this *PageSetup) CharsLine() float32 {
-	retVal := this.PropGet(0x0000007b, nil)
+	retVal, _ := this.PropGet(0x0000007b, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetCharsLine(rhs float32)  {
-	retVal := this.PropPut(0x0000007b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000007b, []interface{}{rhs})
 }
 
 func (this *PageSetup) LinesPage() float32 {
-	retVal := this.PropGet(0x0000007c, nil)
+	retVal, _ := this.PropGet(0x0000007c, nil)
 	return retVal.FltValVal()
 }
 
 func (this *PageSetup) SetLinesPage(rhs float32)  {
-	retVal := this.PropPut(0x0000007c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000007c, []interface{}{rhs})
 }
 
 func (this *PageSetup) ShowGrid() bool {
-	retVal := this.PropGet(0x00000080, nil)
+	retVal, _ := this.PropGet(0x00000080, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageSetup) SetShowGrid(rhs bool)  {
-	retVal := this.PropPut(0x00000080, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000080, []interface{}{rhs})
 }
 
 func (this *PageSetup) TogglePortrait()  {
-	retVal := this.Call(0x000000c9, nil)
+	retVal, _ := this.Call(0x000000c9, nil)
 	_= retVal
 }
 
 func (this *PageSetup) SetAsTemplateDefault()  {
-	retVal := this.Call(0x000000ca, nil)
+	retVal, _ := this.Call(0x000000ca, nil)
 	_= retVal
 }
 
 func (this *PageSetup) GutterStyle() int32 {
-	retVal := this.PropGet(0x00000081, nil)
+	retVal, _ := this.PropGet(0x00000081, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetGutterStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000081, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000081, []interface{}{rhs})
 }
 
 func (this *PageSetup) SectionDirection() int32 {
-	retVal := this.PropGet(0x00000082, nil)
+	retVal, _ := this.PropGet(0x00000082, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetSectionDirection(rhs int32)  {
-	retVal := this.PropPut(0x00000082, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000082, []interface{}{rhs})
 }
 
 func (this *PageSetup) LayoutMode() int32 {
-	retVal := this.PropGet(0x00000083, nil)
+	retVal, _ := this.PropGet(0x00000083, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetLayoutMode(rhs int32)  {
-	retVal := this.PropPut(0x00000083, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000083, []interface{}{rhs})
 }
 
 func (this *PageSetup) GutterPos() int32 {
-	retVal := this.PropGet(0x000004c6, nil)
+	retVal, _ := this.PropGet(0x000004c6, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetGutterPos(rhs int32)  {
-	retVal := this.PropPut(0x000004c6, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000004c6, []interface{}{rhs})
 }
 
 func (this *PageSetup) BookFoldPrinting() bool {
-	retVal := this.PropGet(0x000004c7, nil)
+	retVal, _ := this.PropGet(0x000004c7, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageSetup) SetBookFoldPrinting(rhs bool)  {
-	retVal := this.PropPut(0x000004c7, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000004c7, []interface{}{rhs})
 }
 
 func (this *PageSetup) BookFoldRevPrinting() bool {
-	retVal := this.PropGet(0x000004c8, nil)
+	retVal, _ := this.PropGet(0x000004c8, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *PageSetup) SetBookFoldRevPrinting(rhs bool)  {
-	retVal := this.PropPut(0x000004c8, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000004c8, []interface{}{rhs})
 }
 
 func (this *PageSetup) BookFoldPrintingSheets() int32 {
-	retVal := this.PropGet(0x000004c9, nil)
+	retVal, _ := this.PropGet(0x000004c9, nil)
 	return retVal.LValVal()
 }
 
 func (this *PageSetup) SetBookFoldPrintingSheets(rhs int32)  {
-	retVal := this.PropPut(0x000004c9, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000004c9, []interface{}{rhs})
 }
 

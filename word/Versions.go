@@ -17,6 +17,9 @@ type Versions struct {
 }
 
 func NewVersions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Versions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Versions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewVersions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Versions {
 }
 
 func VersionsFromVar(v ole.Variant) *Versions {
-	return NewVersions(v.PdispValVal(), false, false)
+	return NewVersions(v.IDispatch(), false, false)
 }
 
 func (this *Versions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Versions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Versions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Versions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Versions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Versions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,23 +87,22 @@ func (this *Versions) ForEach(action func(item *Version) bool) {
 }
 
 func (this *Versions) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Versions) AutoVersion() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Versions) SetAutoVersion(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Versions) Item(index int32) *Version {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewVersion(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewVersion(retVal.IDispatch(), false, true)
 }
 
 var Versions_Save_OptArgs= []string{
@@ -109,7 +111,7 @@ var Versions_Save_OptArgs= []string{
 
 func (this *Versions) Save(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Versions_Save_OptArgs, optArgs)
-	retVal := this.Call(0x0000000b, nil, optArgs...)
+	retVal, _ := this.Call(0x0000000b, nil, optArgs...)
 	_= retVal
 }
 

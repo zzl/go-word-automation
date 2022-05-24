@@ -17,6 +17,9 @@ type Lines struct {
 }
 
 func NewLines(pDisp *win32.IDispatch, addRef bool, scoped bool) *Lines {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Lines{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewLines(pDisp *win32.IDispatch, addRef bool, scoped bool) *Lines {
 }
 
 func LinesFromVar(v ole.Variant) *Lines {
-	return NewLines(v.PdispValVal(), false, false)
+	return NewLines(v.IDispatch(), false, false)
 }
 
 func (this *Lines) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Lines) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Lines) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *Lines) ForEach(action func(item *Line) bool) {
 }
 
 func (this *Lines) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Lines) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Lines) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Lines) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Lines) Item(index int32) *Line {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewLine(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewLine(retVal.IDispatch(), false, true)
 }
 

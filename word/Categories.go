@@ -16,6 +16,9 @@ type Categories struct {
 }
 
 func NewCategories(pDisp *win32.IDispatch, addRef bool, scoped bool) *Categories {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Categories{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCategories(pDisp *win32.IDispatch, addRef bool, scoped bool) *Categories
 }
 
 func CategoriesFromVar(v ole.Variant) *Categories {
-	return NewCategories(v.PdispValVal(), false, false)
+	return NewCategories(v.IDispatch(), false, false)
 }
 
 func (this *Categories) IID() *syscall.GUID {
@@ -42,27 +45,27 @@ func (this *Categories) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Categories) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Categories) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Categories) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Categories) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Categories) Item(index *ole.Variant) *Category {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCategory(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCategory(retVal.IDispatch(), false, true)
 }
 

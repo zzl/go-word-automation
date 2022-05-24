@@ -17,6 +17,9 @@ type Windows struct {
 }
 
 func NewWindows(pDisp *win32.IDispatch, addRef bool, scoped bool) *Windows {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Windows{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewWindows(pDisp *win32.IDispatch, addRef bool, scoped bool) *Windows {
 }
 
 func WindowsFromVar(v ole.Variant) *Windows {
-	return NewWindows(v.PdispValVal(), false, false)
+	return NewWindows(v.IDispatch(), false, false)
 }
 
 func (this *Windows) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Windows) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Windows) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *Windows) ForEach(action func(item *Window) bool) {
 }
 
 func (this *Windows) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Windows) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Windows) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Windows) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Windows) Item(index *ole.Variant) *Window {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewWindow(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewWindow(retVal.IDispatch(), false, true)
 }
 
 var Windows_Add_OptArgs= []string{
@@ -99,8 +102,8 @@ var Windows_Add_OptArgs= []string{
 
 func (this *Windows) Add(optArgs ...interface{}) *Window {
 	optArgs = ole.ProcessOptArgs(Windows_Add_OptArgs, optArgs)
-	retVal := this.Call(0x0000000a, nil, optArgs...)
-	return NewWindow(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000a, nil, optArgs...)
+	return NewWindow(retVal.IDispatch(), false, true)
 }
 
 var Windows_Arrange_OptArgs= []string{
@@ -109,32 +112,31 @@ var Windows_Arrange_OptArgs= []string{
 
 func (this *Windows) Arrange(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Windows_Arrange_OptArgs, optArgs)
-	retVal := this.Call(0x0000000b, nil, optArgs...)
+	retVal, _ := this.Call(0x0000000b, nil, optArgs...)
 	_= retVal
 }
 
 func (this *Windows) CompareSideBySideWith(document *ole.Variant) bool {
-	retVal := this.Call(0x0000000c, []interface{}{document})
+	retVal, _ := this.Call(0x0000000c, []interface{}{document})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Windows) BreakSideBySide() bool {
-	retVal := this.Call(0x0000000d, nil)
+	retVal, _ := this.Call(0x0000000d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Windows) ResetPositionsSideBySide()  {
-	retVal := this.Call(0x0000000e, nil)
+	retVal, _ := this.Call(0x0000000e, nil)
 	_= retVal
 }
 
 func (this *Windows) SyncScrollingSideBySide() bool {
-	retVal := this.PropGet(0x000003eb, nil)
+	retVal, _ := this.PropGet(0x000003eb, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Windows) SetSyncScrollingSideBySide(rhs bool)  {
-	retVal := this.PropPut(0x000003eb, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003eb, []interface{}{rhs})
 }
 

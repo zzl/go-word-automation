@@ -17,6 +17,9 @@ type Mailer struct {
 }
 
 func NewMailer(pDisp *win32.IDispatch, addRef bool, scoped bool) *Mailer {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Mailer{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewMailer(pDisp *win32.IDispatch, addRef bool, scoped bool) *Mailer {
 }
 
 func MailerFromVar(v ole.Variant) *Mailer {
-	return NewMailer(v.PdispValVal(), false, false)
+	return NewMailer(v.IDispatch(), false, false)
 }
 
 func (this *Mailer) IID() *syscall.GUID {
@@ -43,86 +46,81 @@ func (this *Mailer) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Mailer) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Mailer) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Mailer) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Mailer) BCCRecipients() ole.Variant {
-	retVal := this.PropGet(0x00000064, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000064, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Mailer) SetBCCRecipients(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *Mailer) CCRecipients() ole.Variant {
-	retVal := this.PropGet(0x00000065, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000065, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Mailer) SetCCRecipients(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *Mailer) Recipients() ole.Variant {
-	retVal := this.PropGet(0x00000066, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000066, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Mailer) SetRecipients(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *Mailer) Enclosures() ole.Variant {
-	retVal := this.PropGet(0x00000067, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000067, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Mailer) SetEnclosures(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *Mailer) Sender() string {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Mailer) SendDateTime() time.Time {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return ole.Date(retVal.DateVal()).ToGoTime()
 }
 
 func (this *Mailer) Received() bool {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Mailer) Subject() string {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Mailer) SetSubject(rhs string)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 

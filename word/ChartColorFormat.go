@@ -16,6 +16,9 @@ type ChartColorFormat struct {
 }
 
 func NewChartColorFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartColorFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ChartColorFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewChartColorFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *Char
 }
 
 func ChartColorFormatFromVar(v ole.Variant) *ChartColorFormat {
-	return NewChartColorFormat(v.PdispValVal(), false, false)
+	return NewChartColorFormat(v.IDispatch(), false, false)
 }
 
 func (this *ChartColorFormat) IID() *syscall.GUID {
@@ -42,42 +45,41 @@ func (this *ChartColorFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ChartColorFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartColorFormat) SchemeColor() int32 {
-	retVal := this.PropGet(0x0000066e, nil)
+	retVal, _ := this.PropGet(0x0000066e, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartColorFormat) SetSchemeColor(rhs int32)  {
-	retVal := this.PropPut(0x0000066e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000066e, []interface{}{rhs})
 }
 
 func (this *ChartColorFormat) RGB() int32 {
-	retVal := this.PropGet(0x0000041f, nil)
+	retVal, _ := this.PropGet(0x0000041f, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartColorFormat) Default_() int32 {
-	retVal := this.PropGet(0x60020005, nil)
+	retVal, _ := this.PropGet(0x60020005, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartColorFormat) Type() int32 {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartColorFormat) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartColorFormat) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

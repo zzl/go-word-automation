@@ -17,6 +17,9 @@ type AutoCorrectEntries struct {
 }
 
 func NewAutoCorrectEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCorrectEntries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoCorrectEntries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewAutoCorrectEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *Au
 }
 
 func AutoCorrectEntriesFromVar(v ole.Variant) *AutoCorrectEntries {
-	return NewAutoCorrectEntries(v.PdispValVal(), false, false)
+	return NewAutoCorrectEntries(v.IDispatch(), false, false)
 }
 
 func (this *AutoCorrectEntries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *AutoCorrectEntries) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoCorrectEntries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrectEntries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCorrectEntries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoCorrectEntries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,22 +87,22 @@ func (this *AutoCorrectEntries) ForEach(action func(item *AutoCorrectEntry) bool
 }
 
 func (this *AutoCorrectEntries) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCorrectEntries) Item(index *ole.Variant) *AutoCorrectEntry {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewAutoCorrectEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewAutoCorrectEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrectEntries) Add(name string, value string) *AutoCorrectEntry {
-	retVal := this.Call(0x00000065, []interface{}{name, value})
-	return NewAutoCorrectEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name, value})
+	return NewAutoCorrectEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCorrectEntries) AddRichText(name string, range_ *Range) *AutoCorrectEntry {
-	retVal := this.Call(0x00000066, []interface{}{name, range_})
-	return NewAutoCorrectEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, []interface{}{name, range_})
+	return NewAutoCorrectEntry(retVal.IDispatch(), false, true)
 }
 

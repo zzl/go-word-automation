@@ -17,6 +17,9 @@ type Borders struct {
 }
 
 func NewBorders(pDisp *win32.IDispatch, addRef bool, scoped bool) *Borders {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Borders{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewBorders(pDisp *win32.IDispatch, addRef bool, scoped bool) *Borders {
 }
 
 func BordersFromVar(v ole.Variant) *Borders {
-	return NewBorders(v.PdispValVal(), false, false)
+	return NewBorders(v.IDispatch(), false, false)
 }
 
 func (this *Borders) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Borders) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Borders) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Borders) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Borders) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,237 +87,216 @@ func (this *Borders) ForEach(action func(item *Border) bool) {
 }
 
 func (this *Borders) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) Enable() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetEnable(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *Borders) DistanceFromTop() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetDistanceFromTop(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *Borders) Shadow() bool {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetShadow(rhs bool)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 
 func (this *Borders) InsideLineStyle() int32 {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetInsideLineStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000006, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000006, []interface{}{rhs})
 }
 
 func (this *Borders) OutsideLineStyle() int32 {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetOutsideLineStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000007, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000007, []interface{}{rhs})
 }
 
 func (this *Borders) InsideLineWidth() int32 {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetInsideLineWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000008, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000008, []interface{}{rhs})
 }
 
 func (this *Borders) OutsideLineWidth() int32 {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetOutsideLineWidth(rhs int32)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 func (this *Borders) InsideColorIndex() int32 {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetInsideColorIndex(rhs int32)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *Borders) OutsideColorIndex() int32 {
-	retVal := this.PropGet(0x0000000b, nil)
+	retVal, _ := this.PropGet(0x0000000b, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetOutsideColorIndex(rhs int32)  {
-	retVal := this.PropPut(0x0000000b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000b, []interface{}{rhs})
 }
 
 func (this *Borders) DistanceFromLeft() int32 {
-	retVal := this.PropGet(0x00000014, nil)
+	retVal, _ := this.PropGet(0x00000014, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetDistanceFromLeft(rhs int32)  {
-	retVal := this.PropPut(0x00000014, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000014, []interface{}{rhs})
 }
 
 func (this *Borders) DistanceFromBottom() int32 {
-	retVal := this.PropGet(0x00000015, nil)
+	retVal, _ := this.PropGet(0x00000015, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetDistanceFromBottom(rhs int32)  {
-	retVal := this.PropPut(0x00000015, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000015, []interface{}{rhs})
 }
 
 func (this *Borders) DistanceFromRight() int32 {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetDistanceFromRight(rhs int32)  {
-	retVal := this.PropPut(0x00000016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000016, []interface{}{rhs})
 }
 
 func (this *Borders) AlwaysInFront() bool {
-	retVal := this.PropGet(0x00000017, nil)
+	retVal, _ := this.PropGet(0x00000017, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetAlwaysInFront(rhs bool)  {
-	retVal := this.PropPut(0x00000017, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000017, []interface{}{rhs})
 }
 
 func (this *Borders) SurroundHeader() bool {
-	retVal := this.PropGet(0x00000018, nil)
+	retVal, _ := this.PropGet(0x00000018, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetSurroundHeader(rhs bool)  {
-	retVal := this.PropPut(0x00000018, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000018, []interface{}{rhs})
 }
 
 func (this *Borders) SurroundFooter() bool {
-	retVal := this.PropGet(0x00000019, nil)
+	retVal, _ := this.PropGet(0x00000019, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetSurroundFooter(rhs bool)  {
-	retVal := this.PropPut(0x00000019, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000019, []interface{}{rhs})
 }
 
 func (this *Borders) JoinBorders() bool {
-	retVal := this.PropGet(0x0000001a, nil)
+	retVal, _ := this.PropGet(0x0000001a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetJoinBorders(rhs bool)  {
-	retVal := this.PropPut(0x0000001a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001a, []interface{}{rhs})
 }
 
 func (this *Borders) HasHorizontal() bool {
-	retVal := this.PropGet(0x0000001b, nil)
+	retVal, _ := this.PropGet(0x0000001b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) HasVertical() bool {
-	retVal := this.PropGet(0x0000001c, nil)
+	retVal, _ := this.PropGet(0x0000001c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) DistanceFrom() int32 {
-	retVal := this.PropGet(0x0000001d, nil)
+	retVal, _ := this.PropGet(0x0000001d, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetDistanceFrom(rhs int32)  {
-	retVal := this.PropPut(0x0000001d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001d, []interface{}{rhs})
 }
 
 func (this *Borders) EnableFirstPageInSection() bool {
-	retVal := this.PropGet(0x0000001e, nil)
+	retVal, _ := this.PropGet(0x0000001e, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetEnableFirstPageInSection(rhs bool)  {
-	retVal := this.PropPut(0x0000001e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001e, []interface{}{rhs})
 }
 
 func (this *Borders) EnableOtherPagesInSection() bool {
-	retVal := this.PropGet(0x0000001f, nil)
+	retVal, _ := this.PropGet(0x0000001f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Borders) SetEnableOtherPagesInSection(rhs bool)  {
-	retVal := this.PropPut(0x0000001f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001f, []interface{}{rhs})
 }
 
 func (this *Borders) Item(index int32) *Border {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *Borders) ApplyPageBordersToAllSections()  {
-	retVal := this.Call(0x000007d0, nil)
+	retVal, _ := this.Call(0x000007d0, nil)
 	_= retVal
 }
 
 func (this *Borders) InsideColor() int32 {
-	retVal := this.PropGet(0x00000020, nil)
+	retVal, _ := this.PropGet(0x00000020, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetInsideColor(rhs int32)  {
-	retVal := this.PropPut(0x00000020, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000020, []interface{}{rhs})
 }
 
 func (this *Borders) OutsideColor() int32 {
-	retVal := this.PropGet(0x00000021, nil)
+	retVal, _ := this.PropGet(0x00000021, nil)
 	return retVal.LValVal()
 }
 
 func (this *Borders) SetOutsideColor(rhs int32)  {
-	retVal := this.PropPut(0x00000021, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000021, []interface{}{rhs})
 }
 

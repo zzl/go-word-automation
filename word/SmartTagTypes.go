@@ -17,6 +17,9 @@ type SmartTagTypes struct {
 }
 
 func NewSmartTagTypes(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTagTypes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTagTypes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSmartTagTypes(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTa
 }
 
 func SmartTagTypesFromVar(v ole.Variant) *SmartTagTypes {
-	return NewSmartTagTypes(v.PdispValVal(), false, false)
+	return NewSmartTagTypes(v.IDispatch(), false, false)
 }
 
 func (this *SmartTagTypes) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *SmartTagTypes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTagTypes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,32 +72,32 @@ func (this *SmartTagTypes) ForEach(action func(item *SmartTagType) bool) {
 }
 
 func (this *SmartTagTypes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagTypes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagTypes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagTypes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTagTypes) Item(index *ole.Variant) *SmartTagType {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewSmartTagType(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewSmartTagType(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagTypes) ReloadAll()  {
-	retVal := this.Call(0x000003eb, nil)
+	retVal, _ := this.Call(0x000003eb, nil)
 	_= retVal
 }
 

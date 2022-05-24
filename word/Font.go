@@ -16,6 +16,9 @@ type Font struct {
 }
 
 func NewFont(pDisp *win32.IDispatch, addRef bool, scoped bool) *Font {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Font{Font_{ole.OleClient{pDisp}}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewFont(pDisp *win32.IDispatch, addRef bool, scoped bool) *Font {
 }
 
 func NewFontFromVar(v ole.Variant, addRef bool, scoped bool) *Font {
-	return NewFont(v.PdispValVal(), addRef, scoped)
+	return NewFont(v.IDispatch(), addRef, scoped)
 }
 
 func NewFontInstance(scoped bool) (*Font, error) {

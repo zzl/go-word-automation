@@ -17,6 +17,9 @@ type AutoCaptions struct {
 }
 
 func NewAutoCaptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCaptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoCaptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewAutoCaptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCapt
 }
 
 func AutoCaptionsFromVar(v ole.Variant) *AutoCaptions {
-	return NewAutoCaptions(v.PdispValVal(), false, false)
+	return NewAutoCaptions(v.IDispatch(), false, false)
 }
 
 func (this *AutoCaptions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *AutoCaptions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoCaptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCaptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCaptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoCaptions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *AutoCaptions) ForEach(action func(item *AutoCaption) bool) {
 }
 
 func (this *AutoCaptions) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCaptions) Item(index *ole.Variant) *AutoCaption {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewAutoCaption(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewAutoCaption(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCaptions) CancelAutoInsert()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 

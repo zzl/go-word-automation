@@ -16,6 +16,9 @@ type IApplicationEvents4 struct {
 }
 
 func NewIApplicationEvents4(pUnk *win32.IUnknown, addRef bool, scoped bool) *IApplicationEvents4 {
+	 if pUnk == nil {
+		return nil;
+	}
 	p := (*IApplicationEvents4)(unsafe.Pointer(pUnk))
 	if addRef {
 		pUnk.AddRef()

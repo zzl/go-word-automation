@@ -16,6 +16,9 @@ type ChartData struct {
 }
 
 func NewChartData(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartData {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ChartData{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewChartData(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartData {
 }
 
 func ChartDataFromVar(v ole.Variant) *ChartData {
-	return NewChartData(v.PdispValVal(), false, false)
+	return NewChartData(v.IDispatch(), false, false)
 }
 
 func (this *ChartData) IID() *syscall.GUID {
@@ -42,22 +45,22 @@ func (this *ChartData) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ChartData) Workbook() *ole.DispatchClass {
-	retVal := this.PropGet(0x60020000, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x60020000, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartData) Activate()  {
-	retVal := this.Call(0x60020001, nil)
+	retVal, _ := this.Call(0x60020001, nil)
 	_= retVal
 }
 
 func (this *ChartData) IsLinked() bool {
-	retVal := this.PropGet(0x60020002, nil)
+	retVal, _ := this.PropGet(0x60020002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *ChartData) BreakLink()  {
-	retVal := this.Call(0x60020003, nil)
+	retVal, _ := this.Call(0x60020003, nil)
 	_= retVal
 }
 

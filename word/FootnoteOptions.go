@@ -16,6 +16,9 @@ type FootnoteOptions struct {
 }
 
 func NewFootnoteOptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *FootnoteOptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FootnoteOptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewFootnoteOptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *Footn
 }
 
 func FootnoteOptionsFromVar(v ole.Variant) *FootnoteOptions {
-	return NewFootnoteOptions(v.PdispValVal(), false, false)
+	return NewFootnoteOptions(v.IDispatch(), false, false)
 }
 
 func (this *FootnoteOptions) IID() *syscall.GUID {
@@ -42,57 +45,53 @@ func (this *FootnoteOptions) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FootnoteOptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FootnoteOptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FootnoteOptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FootnoteOptions) Location() int32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.LValVal()
 }
 
 func (this *FootnoteOptions) SetLocation(rhs int32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *FootnoteOptions) NumberStyle() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *FootnoteOptions) SetNumberStyle(rhs int32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *FootnoteOptions) StartingNumber() int32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.LValVal()
 }
 
 func (this *FootnoteOptions) SetStartingNumber(rhs int32)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *FootnoteOptions) NumberingRule() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *FootnoteOptions) SetNumberingRule(rhs int32)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 

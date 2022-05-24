@@ -17,6 +17,9 @@ type Bookmarks struct {
 }
 
 func NewBookmarks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bookmarks {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Bookmarks{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewBookmarks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Bookmarks {
 }
 
 func BookmarksFromVar(v ole.Variant) *Bookmarks {
-	return NewBookmarks(v.PdispValVal(), false, false)
+	return NewBookmarks(v.IDispatch(), false, false)
 }
 
 func (this *Bookmarks) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Bookmarks) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Bookmarks) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,48 +72,46 @@ func (this *Bookmarks) ForEach(action func(item *Bookmark) bool) {
 }
 
 func (this *Bookmarks) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmarks) DefaultSorting() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmarks) SetDefaultSorting(rhs int32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *Bookmarks) ShowHidden() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Bookmarks) SetShowHidden(rhs bool)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *Bookmarks) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Bookmarks) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Bookmarks) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Bookmarks) Item(index *ole.Variant) *Bookmark {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewBookmark(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewBookmark(retVal.IDispatch(), false, true)
 }
 
 var Bookmarks_Add_OptArgs= []string{
@@ -119,12 +120,12 @@ var Bookmarks_Add_OptArgs= []string{
 
 func (this *Bookmarks) Add(name string, optArgs ...interface{}) *Bookmark {
 	optArgs = ole.ProcessOptArgs(Bookmarks_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000005, []interface{}{name}, optArgs...)
-	return NewBookmark(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000005, []interface{}{name}, optArgs...)
+	return NewBookmark(retVal.IDispatch(), false, true)
 }
 
 func (this *Bookmarks) Exists(name string) bool {
-	retVal := this.Call(0x00000006, []interface{}{name})
+	retVal, _ := this.Call(0x00000006, []interface{}{name})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 

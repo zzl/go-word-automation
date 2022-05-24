@@ -16,6 +16,9 @@ type Zooms struct {
 }
 
 func NewZooms(pDisp *win32.IDispatch, addRef bool, scoped bool) *Zooms {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Zooms{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewZooms(pDisp *win32.IDispatch, addRef bool, scoped bool) *Zooms {
 }
 
 func ZoomsFromVar(v ole.Variant) *Zooms {
-	return NewZooms(v.PdispValVal(), false, false)
+	return NewZooms(v.IDispatch(), false, false)
 }
 
 func (this *Zooms) IID() *syscall.GUID {
@@ -42,22 +45,22 @@ func (this *Zooms) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Zooms) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Zooms) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Zooms) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Zooms) Item(index int32) *Zoom {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewZoom(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewZoom(retVal.IDispatch(), false, true)
 }
 

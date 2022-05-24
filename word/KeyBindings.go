@@ -17,6 +17,9 @@ type KeyBindings struct {
 }
 
 func NewKeyBindings(pDisp *win32.IDispatch, addRef bool, scoped bool) *KeyBindings {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &KeyBindings{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewKeyBindings(pDisp *win32.IDispatch, addRef bool, scoped bool) *KeyBindin
 }
 
 func KeyBindingsFromVar(v ole.Variant) *KeyBindings {
-	return NewKeyBindings(v.PdispValVal(), false, false)
+	return NewKeyBindings(v.IDispatch(), false, false)
 }
 
 func (this *KeyBindings) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *KeyBindings) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *KeyBindings) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *KeyBindings) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *KeyBindings) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *KeyBindings) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,18 +87,18 @@ func (this *KeyBindings) ForEach(action func(item *KeyBinding) bool) {
 }
 
 func (this *KeyBindings) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *KeyBindings) Context() *ole.DispatchClass {
-	retVal := this.PropGet(0x0000000a, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *KeyBindings) Item(index int32) *KeyBinding {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewKeyBinding(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewKeyBinding(retVal.IDispatch(), false, true)
 }
 
 var KeyBindings_Add_OptArgs= []string{
@@ -104,12 +107,12 @@ var KeyBindings_Add_OptArgs= []string{
 
 func (this *KeyBindings) Add(keyCategory int32, command string, keyCode int32, optArgs ...interface{}) *KeyBinding {
 	optArgs = ole.ProcessOptArgs(KeyBindings_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{keyCategory, command, keyCode}, optArgs...)
-	return NewKeyBinding(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{keyCategory, command, keyCode}, optArgs...)
+	return NewKeyBinding(retVal.IDispatch(), false, true)
 }
 
 func (this *KeyBindings) ClearAll()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 
@@ -119,7 +122,7 @@ var KeyBindings_Key_OptArgs= []string{
 
 func (this *KeyBindings) Key(keyCode int32, optArgs ...interface{}) *KeyBinding {
 	optArgs = ole.ProcessOptArgs(KeyBindings_Key_OptArgs, optArgs)
-	retVal := this.Call(0x0000006e, []interface{}{keyCode}, optArgs...)
-	return NewKeyBinding(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006e, []interface{}{keyCode}, optArgs...)
+	return NewKeyBinding(retVal.IDispatch(), false, true)
 }
 

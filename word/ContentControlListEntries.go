@@ -17,6 +17,9 @@ type ContentControlListEntries struct {
 }
 
 func NewContentControlListEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *ContentControlListEntries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ContentControlListEntries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewContentControlListEntries(pDisp *win32.IDispatch, addRef bool, scoped bo
 }
 
 func ContentControlListEntriesFromVar(v ole.Variant) *ContentControlListEntries {
-	return NewContentControlListEntries(v.PdispValVal(), false, false)
+	return NewContentControlListEntries(v.IDispatch(), false, false)
 }
 
 func (this *ContentControlListEntries) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *ContentControlListEntries) GetIDispatch(addRef bool) *win32.IDispatc
 }
 
 func (this *ContentControlListEntries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,37 +72,42 @@ func (this *ContentControlListEntries) ForEach(action func(item *ContentControlL
 }
 
 func (this *ContentControlListEntries) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ContentControlListEntries) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControlListEntries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ContentControlListEntries) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *ContentControlListEntries) Clear()  {
-	retVal := this.Call(0x00000068, nil)
+	retVal, _ := this.Call(0x00000068, nil)
 	_= retVal
 }
 
 func (this *ContentControlListEntries) Item(index int32) *ContentControlListEntry {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewContentControlListEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewContentControlListEntry(retVal.IDispatch(), false, true)
 }
 
-func (this *ContentControlListEntries) Add(text string, value string, index int32) *ContentControlListEntry {
-	retVal := this.Call(0x0000006a, []interface{}{text, value, index})
-	return NewContentControlListEntry(retVal.PdispValVal(), false, true)
+var ContentControlListEntries_Add_OptArgs= []string{
+	"Value", "Index", 
+}
+
+func (this *ContentControlListEntries) Add(text string, optArgs ...interface{}) *ContentControlListEntry {
+	optArgs = ole.ProcessOptArgs(ContentControlListEntries_Add_OptArgs, optArgs)
+	retVal, _ := this.Call(0x0000006a, []interface{}{text}, optArgs...)
+	return NewContentControlListEntry(retVal.IDispatch(), false, true)
 }
 

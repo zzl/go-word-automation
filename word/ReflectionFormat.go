@@ -16,6 +16,9 @@ type ReflectionFormat struct {
 }
 
 func NewReflectionFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *ReflectionFormat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ReflectionFormat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewReflectionFormat(pDisp *win32.IDispatch, addRef bool, scoped bool) *Refl
 }
 
 func ReflectionFormatFromVar(v ole.Variant) *ReflectionFormat {
-	return NewReflectionFormat(v.PdispValVal(), false, false)
+	return NewReflectionFormat(v.IDispatch(), false, false)
 }
 
 func (this *ReflectionFormat) IID() *syscall.GUID {
@@ -42,67 +45,62 @@ func (this *ReflectionFormat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ReflectionFormat) Type() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *ReflectionFormat) SetType(rhs int32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *ReflectionFormat) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ReflectionFormat) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ReflectionFormat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ReflectionFormat) Transparency() float32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ReflectionFormat) SetTransparency(rhs float32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *ReflectionFormat) Size() float32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ReflectionFormat) SetSize(rhs float32)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 
 func (this *ReflectionFormat) Offset() float32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ReflectionFormat) SetOffset(rhs float32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *ReflectionFormat) Blur() float32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.FltValVal()
 }
 
 func (this *ReflectionFormat) SetBlur(rhs float32)  {
-	retVal := this.PropPut(0x00000005, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000005, []interface{}{rhs})
 }
 

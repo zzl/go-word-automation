@@ -16,6 +16,9 @@ type LetterContent struct {
 }
 
 func NewLetterContent(pDisp *win32.IDispatch, addRef bool, scoped bool) *LetterContent {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &LetterContent{LetterContent_{ole.OleClient{pDisp}}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewLetterContent(pDisp *win32.IDispatch, addRef bool, scoped bool) *LetterC
 }
 
 func NewLetterContentFromVar(v ole.Variant, addRef bool, scoped bool) *LetterContent {
-	return NewLetterContent(v.PdispValVal(), addRef, scoped)
+	return NewLetterContent(v.IDispatch(), addRef, scoped)
 }
 
 func NewLetterContentInstance(scoped bool) (*LetterContent, error) {

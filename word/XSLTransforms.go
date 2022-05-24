@@ -17,6 +17,9 @@ type XSLTransforms struct {
 }
 
 func NewXSLTransforms(pDisp *win32.IDispatch, addRef bool, scoped bool) *XSLTransforms {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XSLTransforms{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewXSLTransforms(pDisp *win32.IDispatch, addRef bool, scoped bool) *XSLTran
 }
 
 func XSLTransformsFromVar(v ole.Variant) *XSLTransforms {
-	return NewXSLTransforms(v.PdispValVal(), false, false)
+	return NewXSLTransforms(v.IDispatch(), false, false)
 }
 
 func (this *XSLTransforms) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *XSLTransforms) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XSLTransforms) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,32 +72,37 @@ func (this *XSLTransforms) ForEach(action func(item *XSLTransform) bool) {
 }
 
 func (this *XSLTransforms) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *XSLTransforms) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XSLTransforms) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XSLTransforms) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XSLTransforms) Item(index *ole.Variant) *XSLTransform {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewXSLTransform(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewXSLTransform(retVal.IDispatch(), false, true)
 }
 
-func (this *XSLTransforms) Add(location string, alias *ole.Variant, installForAllUsers bool) *XSLTransform {
-	retVal := this.Call(0x00000065, []interface{}{location, alias, installForAllUsers})
-	return NewXSLTransform(retVal.PdispValVal(), false, true)
+var XSLTransforms_Add_OptArgs= []string{
+	"Alias", "InstallForAllUsers", 
+}
+
+func (this *XSLTransforms) Add(location string, optArgs ...interface{}) *XSLTransform {
+	optArgs = ole.ProcessOptArgs(XSLTransforms_Add_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000065, []interface{}{location}, optArgs...)
+	return NewXSLTransform(retVal.IDispatch(), false, true)
 }
 

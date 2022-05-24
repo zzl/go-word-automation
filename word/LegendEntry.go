@@ -16,6 +16,9 @@ type LegendEntry struct {
 }
 
 func NewLegendEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *LegendEntry {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &LegendEntry{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewLegendEntry(pDisp *win32.IDispatch, addRef bool, scoped bool) *LegendEnt
 }
 
 func LegendEntryFromVar(v ole.Variant) *LegendEntry {
-	return NewLegendEntry(v.PdispValVal(), false, false)
+	return NewLegendEntry(v.IDispatch(), false, false)
 }
 
 func (this *LegendEntry) IID() *syscall.GUID {
@@ -42,80 +45,79 @@ func (this *LegendEntry) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *LegendEntry) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *LegendEntry) Delete() ole.Variant {
-	retVal := this.Call(0x00000075, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x00000075, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *LegendEntry) Font() *ChartFont {
-	retVal := this.PropGet(0x00000092, nil)
-	return NewChartFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000092, nil)
+	return NewChartFont(retVal.IDispatch(), false, true)
 }
 
 func (this *LegendEntry) Index() int32 {
-	retVal := this.PropGet(0x000001e6, nil)
+	retVal, _ := this.PropGet(0x000001e6, nil)
 	return retVal.LValVal()
 }
 
 func (this *LegendEntry) LegendKey() *LegendKey {
-	retVal := this.PropGet(0x000000ae, nil)
-	return NewLegendKey(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000000ae, nil)
+	return NewLegendKey(retVal.IDispatch(), false, true)
 }
 
 func (this *LegendEntry) Select() ole.Variant {
-	retVal := this.Call(0x000000eb, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x000000eb, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *LegendEntry) AutoScaleFont() ole.Variant {
-	retVal := this.PropGet(0x000005f5, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x000005f5, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *LegendEntry) SetAutoScaleFont(rhs interface{})  {
-	retVal := this.PropPut(0x000005f5, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000005f5, []interface{}{rhs})
 }
 
 func (this *LegendEntry) Left() float64 {
-	retVal := this.PropGet(0x0000007f, nil)
+	retVal, _ := this.PropGet(0x0000007f, nil)
 	return retVal.DblValVal()
 }
 
 func (this *LegendEntry) Top() float64 {
-	retVal := this.PropGet(0x0000007e, nil)
+	retVal, _ := this.PropGet(0x0000007e, nil)
 	return retVal.DblValVal()
 }
 
 func (this *LegendEntry) Width() float64 {
-	retVal := this.PropGet(0x0000007a, nil)
+	retVal, _ := this.PropGet(0x0000007a, nil)
 	return retVal.DblValVal()
 }
 
 func (this *LegendEntry) Height() float64 {
-	retVal := this.PropGet(0x0000007b, nil)
+	retVal, _ := this.PropGet(0x0000007b, nil)
 	return retVal.DblValVal()
 }
 
 func (this *LegendEntry) Format() *ChartFormat {
-	retVal := this.PropGet(0x6002000c, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x6002000c, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *LegendEntry) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *LegendEntry) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

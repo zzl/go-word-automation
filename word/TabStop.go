@@ -16,6 +16,9 @@ type TabStop struct {
 }
 
 func NewTabStop(pDisp *win32.IDispatch, addRef bool, scoped bool) *TabStop {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TabStop{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTabStop(pDisp *win32.IDispatch, addRef bool, scoped bool) *TabStop {
 }
 
 func TabStopFromVar(v ole.Variant) *TabStop {
-	return NewTabStop(v.PdispValVal(), false, false)
+	return NewTabStop(v.IDispatch(), false, false)
 }
 
 func (this *TabStop) IID() *syscall.GUID {
@@ -42,67 +45,64 @@ func (this *TabStop) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TabStop) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TabStop) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TabStop) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TabStop) Alignment() int32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.LValVal()
 }
 
 func (this *TabStop) SetAlignment(rhs int32)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *TabStop) Leader() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *TabStop) SetLeader(rhs int32)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *TabStop) Position() float32 {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.FltValVal()
 }
 
 func (this *TabStop) SetPosition(rhs float32)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *TabStop) CustomTab() bool {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *TabStop) Next() *TabStop {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewTabStop(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewTabStop(retVal.IDispatch(), false, true)
 }
 
 func (this *TabStop) Previous() *TabStop {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewTabStop(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewTabStop(retVal.IDispatch(), false, true)
 }
 
 func (this *TabStop) Clear()  {
-	retVal := this.Call(0x000000c8, nil)
+	retVal, _ := this.Call(0x000000c8, nil)
 	_= retVal
 }
 

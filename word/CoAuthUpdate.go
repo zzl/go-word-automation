@@ -16,6 +16,9 @@ type CoAuthUpdate struct {
 }
 
 func NewCoAuthUpdate(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthUpdate {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CoAuthUpdate{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCoAuthUpdate(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthUp
 }
 
 func CoAuthUpdateFromVar(v ole.Variant) *CoAuthUpdate {
-	return NewCoAuthUpdate(v.PdispValVal(), false, false)
+	return NewCoAuthUpdate(v.IDispatch(), false, false)
 }
 
 func (this *CoAuthUpdate) IID() *syscall.GUID {
@@ -42,22 +45,22 @@ func (this *CoAuthUpdate) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CoAuthUpdate) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthUpdate) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthUpdate) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CoAuthUpdate) Range() *Range {
-	retVal := this.PropGet(0x00000001, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

@@ -17,6 +17,9 @@ type InlineShapes struct {
 }
 
 func NewInlineShapes(pDisp *win32.IDispatch, addRef bool, scoped bool) *InlineShapes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &InlineShapes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewInlineShapes(pDisp *win32.IDispatch, addRef bool, scoped bool) *InlineSh
 }
 
 func InlineShapesFromVar(v ole.Variant) *InlineShapes {
-	return NewInlineShapes(v.PdispValVal(), false, false)
+	return NewInlineShapes(v.IDispatch(), false, false)
 }
 
 func (this *InlineShapes) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *InlineShapes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *InlineShapes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *InlineShapes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *InlineShapes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *InlineShapes) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *InlineShapes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,8 +92,8 @@ func (this *InlineShapes) ForEach(action func(item *InlineShape) bool) {
 }
 
 func (this *InlineShapes) Item(index int32) *InlineShape {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddPicture_OptArgs= []string{
@@ -99,8 +102,8 @@ var InlineShapes_AddPicture_OptArgs= []string{
 
 func (this *InlineShapes) AddPicture(fileName string, optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddPicture_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{fileName}, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{fileName}, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddOLEObject_OptArgs= []string{
@@ -110,8 +113,8 @@ var InlineShapes_AddOLEObject_OptArgs= []string{
 
 func (this *InlineShapes) AddOLEObject(optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddOLEObject_OptArgs, optArgs)
-	retVal := this.Call(0x00000018, nil, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000018, nil, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddOLEControl_OptArgs= []string{
@@ -120,13 +123,13 @@ var InlineShapes_AddOLEControl_OptArgs= []string{
 
 func (this *InlineShapes) AddOLEControl(optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddOLEControl_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, nil, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000066, nil, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 func (this *InlineShapes) New(range_ *Range) *InlineShape {
-	retVal := this.Call(0x000000c8, []interface{}{range_})
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, []interface{}{range_})
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddHorizontalLine_OptArgs= []string{
@@ -135,8 +138,8 @@ var InlineShapes_AddHorizontalLine_OptArgs= []string{
 
 func (this *InlineShapes) AddHorizontalLine(fileName string, optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddHorizontalLine_OptArgs, optArgs)
-	retVal := this.Call(0x00000068, []interface{}{fileName}, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000068, []interface{}{fileName}, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddHorizontalLineStandard_OptArgs= []string{
@@ -145,8 +148,8 @@ var InlineShapes_AddHorizontalLineStandard_OptArgs= []string{
 
 func (this *InlineShapes) AddHorizontalLineStandard(optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddHorizontalLineStandard_OptArgs, optArgs)
-	retVal := this.Call(0x00000069, nil, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000069, nil, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddPictureBullet_OptArgs= []string{
@@ -155,27 +158,27 @@ var InlineShapes_AddPictureBullet_OptArgs= []string{
 
 func (this *InlineShapes) AddPictureBullet(fileName string, optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddPictureBullet_OptArgs, optArgs)
-	retVal := this.Call(0x0000006a, []interface{}{fileName}, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006a, []interface{}{fileName}, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddChart_OptArgs= []string{
-	"Range", 
+	"Type", "Range", 
 }
 
-func (this *InlineShapes) AddChart(type_ int32, optArgs ...interface{}) *InlineShape {
+func (this *InlineShapes) AddChart(optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddChart_OptArgs, optArgs)
-	retVal := this.Call(0x0000006b, []interface{}{type_}, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006b, nil, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 
 var InlineShapes_AddSmartArt_OptArgs= []string{
 	"Range", 
 }
 
-func (this *InlineShapes) AddSmartArt(layout *ole.DispatchClass, optArgs ...interface{}) *InlineShape {
+func (this *InlineShapes) AddSmartArt(layout *win32.IDispatch, optArgs ...interface{}) *InlineShape {
 	optArgs = ole.ProcessOptArgs(InlineShapes_AddSmartArt_OptArgs, optArgs)
-	retVal := this.Call(0x0000006c, []interface{}{layout}, optArgs...)
-	return NewInlineShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006c, []interface{}{layout}, optArgs...)
+	return NewInlineShape(retVal.IDispatch(), false, true)
 }
 

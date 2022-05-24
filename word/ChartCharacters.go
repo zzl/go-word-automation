@@ -16,6 +16,9 @@ type ChartCharacters struct {
 }
 
 func NewChartCharacters(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartCharacters {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ChartCharacters{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewChartCharacters(pDisp *win32.IDispatch, addRef bool, scoped bool) *Chart
 }
 
 func ChartCharactersFromVar(v ole.Variant) *ChartCharacters {
-	return NewChartCharacters(v.PdispValVal(), false, false)
+	return NewChartCharacters(v.IDispatch(), false, false)
 }
 
 func (this *ChartCharacters) IID() *syscall.GUID {
@@ -42,69 +45,66 @@ func (this *ChartCharacters) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ChartCharacters) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartCharacters) Caption() string {
-	retVal := this.PropGet(0x0000008b, nil)
+	retVal, _ := this.PropGet(0x0000008b, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ChartCharacters) SetCaption(rhs string)  {
-	retVal := this.PropPut(0x0000008b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000008b, []interface{}{rhs})
 }
 
 func (this *ChartCharacters) Count() int32 {
-	retVal := this.PropGet(0x00000076, nil)
+	retVal, _ := this.PropGet(0x00000076, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartCharacters) Delete() ole.Variant {
-	retVal := this.Call(0x00000075, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x00000075, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartCharacters) Font() *ChartFont {
-	retVal := this.PropGet(0x00000092, nil)
-	return NewChartFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000092, nil)
+	return NewChartFont(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartCharacters) Insert(string string) ole.Variant {
-	retVal := this.Call(0x000000fc, []interface{}{string})
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.Call(0x000000fc, []interface{}{string})
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *ChartCharacters) Text() string {
-	retVal := this.PropGet(0x0000008a, nil)
+	retVal, _ := this.PropGet(0x0000008a, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ChartCharacters) SetText(rhs string)  {
-	retVal := this.PropPut(0x0000008a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000008a, []interface{}{rhs})
 }
 
 func (this *ChartCharacters) PhoneticCharacters() string {
-	retVal := this.PropGet(0x000005f2, nil)
+	retVal, _ := this.PropGet(0x000005f2, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ChartCharacters) SetPhoneticCharacters(rhs string)  {
-	retVal := this.PropPut(0x000005f2, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000005f2, []interface{}{rhs})
 }
 
 func (this *ChartCharacters) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartCharacters) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

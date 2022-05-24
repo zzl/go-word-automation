@@ -16,6 +16,9 @@ type Editors struct {
 }
 
 func NewEditors(pDisp *win32.IDispatch, addRef bool, scoped bool) *Editors {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Editors{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewEditors(pDisp *win32.IDispatch, addRef bool, scoped bool) *Editors {
 }
 
 func EditorsFromVar(v ole.Variant) *Editors {
-	return NewEditors(v.PdispValVal(), false, false)
+	return NewEditors(v.IDispatch(), false, false)
 }
 
 func (this *Editors) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *Editors) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Editors) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Editors) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Editors) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Editors) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Editors) Item(index *ole.Variant) *Editor {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewEditor(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewEditor(retVal.IDispatch(), false, true)
 }
 
 func (this *Editors) Add(editorID *ole.Variant) *Editor {
-	retVal := this.Call(0x000001f5, []interface{}{editorID})
-	return NewEditor(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000001f5, []interface{}{editorID})
+	return NewEditor(retVal.IDispatch(), false, true)
 }
 

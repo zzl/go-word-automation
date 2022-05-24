@@ -17,6 +17,9 @@ type ListTemplates struct {
 }
 
 func NewListTemplates(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListTemplates {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ListTemplates{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewListTemplates(pDisp *win32.IDispatch, addRef bool, scoped bool) *ListTem
 }
 
 func ListTemplatesFromVar(v ole.Variant) *ListTemplates {
-	return NewListTemplates(v.PdispValVal(), false, false)
+	return NewListTemplates(v.IDispatch(), false, false)
 }
 
 func (this *ListTemplates) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *ListTemplates) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ListTemplates) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *ListTemplates) ForEach(action func(item *ListTemplate) bool) {
 }
 
 func (this *ListTemplates) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListTemplates) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ListTemplates) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ListTemplates) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ListTemplates) Item(index *ole.Variant) *ListTemplate {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewListTemplate(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewListTemplate(retVal.IDispatch(), false, true)
 }
 
 var ListTemplates_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var ListTemplates_Add_OptArgs= []string{
 
 func (this *ListTemplates) Add(optArgs ...interface{}) *ListTemplate {
 	optArgs = ole.ProcessOptArgs(ListTemplates_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, nil, optArgs...)
-	return NewListTemplate(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, nil, optArgs...)
+	return NewListTemplate(retVal.IDispatch(), false, true)
 }
 

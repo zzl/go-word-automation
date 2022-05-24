@@ -17,6 +17,9 @@ type XMLChildNodeSuggestions struct {
 }
 
 func NewXMLChildNodeSuggestions(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLChildNodeSuggestions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLChildNodeSuggestions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewXMLChildNodeSuggestions(pDisp *win32.IDispatch, addRef bool, scoped bool
 }
 
 func XMLChildNodeSuggestionsFromVar(v ole.Variant) *XMLChildNodeSuggestions {
-	return NewXMLChildNodeSuggestions(v.PdispValVal(), false, false)
+	return NewXMLChildNodeSuggestions(v.IDispatch(), false, false)
 }
 
 func (this *XMLChildNodeSuggestions) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *XMLChildNodeSuggestions) GetIDispatch(addRef bool) *win32.IDispatch 
 }
 
 func (this *XMLChildNodeSuggestions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *XMLChildNodeSuggestions) ForEach(action func(item *XMLChildNodeSugge
 }
 
 func (this *XMLChildNodeSuggestions) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLChildNodeSuggestions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLChildNodeSuggestions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLChildNodeSuggestions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLChildNodeSuggestions) Item(index *ole.Variant) *XMLChildNodeSuggestion {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewXMLChildNodeSuggestion(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewXMLChildNodeSuggestion(retVal.IDispatch(), false, true)
 }
 

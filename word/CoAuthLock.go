@@ -16,6 +16,9 @@ type CoAuthLock struct {
 }
 
 func NewCoAuthLock(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthLock {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CoAuthLock{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCoAuthLock(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthLock
 }
 
 func CoAuthLockFromVar(v ole.Variant) *CoAuthLock {
-	return NewCoAuthLock(v.PdispValVal(), false, false)
+	return NewCoAuthLock(v.IDispatch(), false, false)
 }
 
 func (this *CoAuthLock) IID() *syscall.GUID {
@@ -42,42 +45,42 @@ func (this *CoAuthLock) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CoAuthLock) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthLock) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthLock) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CoAuthLock) Type() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthLock) Owner() *CoAuthor {
-	retVal := this.PropGet(0x00000002, nil)
-	return NewCoAuthor(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000002, nil)
+	return NewCoAuthor(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthLock) Range() *Range {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthLock) HeaderFooter() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *CoAuthLock) Unlock()  {
-	retVal := this.Call(0x00000006, nil)
+	retVal, _ := this.Call(0x00000006, nil)
 	_= retVal
 }
 

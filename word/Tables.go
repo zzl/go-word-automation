@@ -17,6 +17,9 @@ type Tables struct {
 }
 
 func NewTables(pDisp *win32.IDispatch, addRef bool, scoped bool) *Tables {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Tables{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTables(pDisp *win32.IDispatch, addRef bool, scoped bool) *Tables {
 }
 
 func TablesFromVar(v ole.Variant) *Tables {
-	return NewTables(v.PdispValVal(), false, false)
+	return NewTables(v.IDispatch(), false, false)
 }
 
 func (this *Tables) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Tables) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Tables) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,33 +72,33 @@ func (this *Tables) ForEach(action func(item *Table) bool) {
 }
 
 func (this *Tables) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Tables) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Tables) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Tables) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Tables) Item(index int32) *Table {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTable(retVal.IDispatch(), false, true)
 }
 
 func (this *Tables) AddOld(range_ *Range, numRows int32, numColumns int32) *Table {
-	retVal := this.Call(0x00000004, []interface{}{range_, numRows, numColumns})
-	return NewTable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000004, []interface{}{range_, numRows, numColumns})
+	return NewTable(retVal.IDispatch(), false, true)
 }
 
 var Tables_Add_OptArgs= []string{
@@ -104,12 +107,12 @@ var Tables_Add_OptArgs= []string{
 
 func (this *Tables) Add(range_ *Range, numRows int32, numColumns int32, optArgs ...interface{}) *Table {
 	optArgs = ole.ProcessOptArgs(Tables_Add_OptArgs, optArgs)
-	retVal := this.Call(0x000000c8, []interface{}{range_, numRows, numColumns}, optArgs...)
-	return NewTable(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, []interface{}{range_, numRows, numColumns}, optArgs...)
+	return NewTable(retVal.IDispatch(), false, true)
 }
 
 func (this *Tables) NestingLevel() int32 {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.LValVal()
 }
 

@@ -16,6 +16,9 @@ type OMathMat struct {
 }
 
 func NewOMathMat(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMat {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathMat{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathMat(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMat {
 }
 
 func OMathMatFromVar(v ole.Variant) *OMathMat {
-	return NewOMathMat(v.PdispValVal(), false, false)
+	return NewOMathMat(v.IDispatch(), false, false)
 }
 
 func (this *OMathMat) IID() *syscall.GUID {
@@ -42,102 +45,95 @@ func (this *OMathMat) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathMat) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMat) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathMat) Rows() *OMathMatRows {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMathMatRows(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMathMatRows(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMat) Cols() *OMathMatCols {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewOMathMatCols(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewOMathMatCols(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMat) Cell(row int32, col int32) *OMath {
-	retVal := this.PropGet(0x00000069, []interface{}{row, col})
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, []interface{}{row, col})
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMat) Align() int32 {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) SetAlign(rhs int32)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *OMathMat) PlcHoldHidden() bool {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathMat) SetPlcHoldHidden(rhs bool)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 
 func (this *OMathMat) RowSpacingRule() int32 {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) SetRowSpacingRule(rhs int32)  {
-	retVal := this.PropPut(0x0000006c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006c, []interface{}{rhs})
 }
 
 func (this *OMathMat) RowSpacing() int32 {
-	retVal := this.PropGet(0x0000006d, nil)
+	retVal, _ := this.PropGet(0x0000006d, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) SetRowSpacing(rhs int32)  {
-	retVal := this.PropPut(0x0000006d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006d, []interface{}{rhs})
 }
 
 func (this *OMathMat) ColSpacing() int32 {
-	retVal := this.PropGet(0x0000006e, nil)
+	retVal, _ := this.PropGet(0x0000006e, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) SetColSpacing(rhs int32)  {
-	retVal := this.PropPut(0x0000006e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006e, []interface{}{rhs})
 }
 
 func (this *OMathMat) ColGapRule() int32 {
-	retVal := this.PropGet(0x0000006f, nil)
+	retVal, _ := this.PropGet(0x0000006f, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) SetColGapRule(rhs int32)  {
-	retVal := this.PropPut(0x0000006f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006f, []interface{}{rhs})
 }
 
 func (this *OMathMat) ColGap() int32 {
-	retVal := this.PropGet(0x00000070, nil)
+	retVal, _ := this.PropGet(0x00000070, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMat) SetColGap(rhs int32)  {
-	retVal := this.PropPut(0x00000070, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000070, []interface{}{rhs})
 }
 

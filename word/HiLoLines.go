@@ -16,6 +16,9 @@ type HiLoLines struct {
 }
 
 func NewHiLoLines(pDisp *win32.IDispatch, addRef bool, scoped bool) *HiLoLines {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HiLoLines{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewHiLoLines(pDisp *win32.IDispatch, addRef bool, scoped bool) *HiLoLines {
 }
 
 func HiLoLinesFromVar(v ole.Variant) *HiLoLines {
-	return NewHiLoLines(v.PdispValVal(), false, false)
+	return NewHiLoLines(v.IDispatch(), false, false)
 }
 
 func (this *HiLoLines) IID() *syscall.GUID {
@@ -42,42 +45,42 @@ func (this *HiLoLines) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *HiLoLines) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x60020000, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x60020000, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HiLoLines) Name() string {
-	retVal := this.PropGet(0x60020001, nil)
+	retVal, _ := this.PropGet(0x60020001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *HiLoLines) Select()  {
-	retVal := this.Call(0x60020002, nil)
+	retVal, _ := this.Call(0x60020002, nil)
 	_= retVal
 }
 
 func (this *HiLoLines) Border() *ChartBorder {
-	retVal := this.PropGet(0x60020003, nil)
-	return NewChartBorder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020003, nil)
+	return NewChartBorder(retVal.IDispatch(), false, true)
 }
 
 func (this *HiLoLines) Delete()  {
-	retVal := this.Call(0x60020004, nil)
+	retVal, _ := this.Call(0x60020004, nil)
 	_= retVal
 }
 
 func (this *HiLoLines) Format() *ChartFormat {
-	retVal := this.PropGet(0x60020005, nil)
-	return NewChartFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x60020005, nil)
+	return NewChartFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *HiLoLines) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HiLoLines) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

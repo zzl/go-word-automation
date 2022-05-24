@@ -16,6 +16,9 @@ type Category struct {
 }
 
 func NewCategory(pDisp *win32.IDispatch, addRef bool, scoped bool) *Category {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Category{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewCategory(pDisp *win32.IDispatch, addRef bool, scoped bool) *Category {
 }
 
 func CategoryFromVar(v ole.Variant) *Category {
-	return NewCategory(v.PdispValVal(), false, false)
+	return NewCategory(v.IDispatch(), false, false)
 }
 
 func (this *Category) IID() *syscall.GUID {
@@ -42,37 +45,37 @@ func (this *Category) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Category) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Category) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Category) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Category) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Category) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Category) BuildingBlocks() *BuildingBlocks {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewBuildingBlocks(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewBuildingBlocks(retVal.IDispatch(), false, true)
 }
 
 func (this *Category) Type() *BuildingBlockType {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewBuildingBlockType(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewBuildingBlockType(retVal.IDispatch(), false, true)
 }
 

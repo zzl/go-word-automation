@@ -17,6 +17,9 @@ type CanvasShapes struct {
 }
 
 func NewCanvasShapes(pDisp *win32.IDispatch, addRef bool, scoped bool) *CanvasShapes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CanvasShapes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCanvasShapes(pDisp *win32.IDispatch, addRef bool, scoped bool) *CanvasSh
 }
 
 func CanvasShapesFromVar(v ole.Variant) *CanvasShapes {
-	return NewCanvasShapes(v.PdispValVal(), false, false)
+	return NewCanvasShapes(v.IDispatch(), false, false)
 }
 
 func (this *CanvasShapes) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *CanvasShapes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CanvasShapes) Application() *Application {
-	retVal := this.PropGet(0x00001f40, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00001f40, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) Creator() int32 {
-	retVal := this.PropGet(0x00001f41, nil)
+	retVal, _ := this.PropGet(0x00001f41, nil)
 	return retVal.LValVal()
 }
 
 func (this *CanvasShapes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000001, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CanvasShapes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *CanvasShapes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,33 +92,33 @@ func (this *CanvasShapes) ForEach(action func(item *Shape) bool) {
 }
 
 func (this *CanvasShapes) Item(index *ole.Variant) *Shape {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddCallout(type_ int32, left float32, top float32, width float32, height float32) *Shape {
-	retVal := this.Call(0x0000000a, []interface{}{type_, left, top, width, height})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000a, []interface{}{type_, left, top, width, height})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddConnector(type_ int32, beginX float32, beginY float32, endX float32, endY float32) *Shape {
-	retVal := this.Call(0x0000000b, []interface{}{type_, beginX, beginY, endX, endY})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000b, []interface{}{type_, beginX, beginY, endX, endY})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddCurve(safeArrayOfPoints *ole.Variant) *Shape {
-	retVal := this.Call(0x0000000c, []interface{}{safeArrayOfPoints})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000c, []interface{}{safeArrayOfPoints})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddLabel(orientation int32, left float32, top float32, width float32, height float32) *Shape {
-	retVal := this.Call(0x0000000d, []interface{}{orientation, left, top, width, height})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000d, []interface{}{orientation, left, top, width, height})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddLine(beginX float32, beginY float32, endX float32, endY float32) *Shape {
-	retVal := this.Call(0x0000000e, []interface{}{beginX, beginY, endX, endY})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000e, []interface{}{beginX, beginY, endX, endY})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 var CanvasShapes_AddPicture_OptArgs= []string{
@@ -125,42 +128,42 @@ var CanvasShapes_AddPicture_OptArgs= []string{
 
 func (this *CanvasShapes) AddPicture(fileName string, optArgs ...interface{}) *Shape {
 	optArgs = ole.ProcessOptArgs(CanvasShapes_AddPicture_OptArgs, optArgs)
-	retVal := this.Call(0x0000000f, []interface{}{fileName}, optArgs...)
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000f, []interface{}{fileName}, optArgs...)
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddPolyline(safeArrayOfPoints *ole.Variant) *Shape {
-	retVal := this.Call(0x00000010, []interface{}{safeArrayOfPoints})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000010, []interface{}{safeArrayOfPoints})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddShape(type_ int32, left float32, top float32, width float32, height float32) *Shape {
-	retVal := this.Call(0x00000011, []interface{}{type_, left, top, width, height})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000011, []interface{}{type_, left, top, width, height})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddTextEffect(presetTextEffect int32, text string, fontName string, fontSize float32, fontBold int32, fontItalic int32, left float32, top float32) *Shape {
-	retVal := this.Call(0x00000012, []interface{}{presetTextEffect, text, fontName, fontSize, fontBold, fontItalic, left, top})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000012, []interface{}{presetTextEffect, text, fontName, fontSize, fontBold, fontItalic, left, top})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) AddTextbox(orientation int32, left float32, top float32, width float32, height float32) *Shape {
-	retVal := this.Call(0x00000013, []interface{}{orientation, left, top, width, height})
-	return NewShape(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000013, []interface{}{orientation, left, top, width, height})
+	return NewShape(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) BuildFreeform(editingType int32, x1 float32, y1 float32) *FreeformBuilder {
-	retVal := this.Call(0x00000014, []interface{}{editingType, x1, y1})
-	return NewFreeformBuilder(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000014, []interface{}{editingType, x1, y1})
+	return NewFreeformBuilder(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) Range(index *ole.Variant) *ShapeRange {
-	retVal := this.Call(0x00000015, []interface{}{index})
-	return NewShapeRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000015, []interface{}{index})
+	return NewShapeRange(retVal.IDispatch(), false, true)
 }
 
 func (this *CanvasShapes) SelectAll()  {
-	retVal := this.Call(0x00000016, nil)
+	retVal, _ := this.Call(0x00000016, nil)
 	_= retVal
 }
 

@@ -16,6 +16,9 @@ type TableOfAuthoritiesCategory struct {
 }
 
 func NewTableOfAuthoritiesCategory(pDisp *win32.IDispatch, addRef bool, scoped bool) *TableOfAuthoritiesCategory {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TableOfAuthoritiesCategory{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewTableOfAuthoritiesCategory(pDisp *win32.IDispatch, addRef bool, scoped b
 }
 
 func TableOfAuthoritiesCategoryFromVar(v ole.Variant) *TableOfAuthoritiesCategory {
-	return NewTableOfAuthoritiesCategory(v.PdispValVal(), false, false)
+	return NewTableOfAuthoritiesCategory(v.IDispatch(), false, false)
 }
 
 func (this *TableOfAuthoritiesCategory) IID() *syscall.GUID {
@@ -42,32 +45,31 @@ func (this *TableOfAuthoritiesCategory) GetIDispatch(addRef bool) *win32.IDispat
 }
 
 func (this *TableOfAuthoritiesCategory) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TableOfAuthoritiesCategory) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TableOfAuthoritiesCategory) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TableOfAuthoritiesCategory) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *TableOfAuthoritiesCategory) SetName(rhs string)  {
-	retVal := this.PropPut(0x00000000, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000000, []interface{}{rhs})
 }
 
 func (this *TableOfAuthoritiesCategory) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 

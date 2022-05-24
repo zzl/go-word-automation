@@ -16,6 +16,9 @@ type MailingLabel struct {
 }
 
 func NewMailingLabel(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailingLabel {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MailingLabel{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewMailingLabel(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailingL
 }
 
 func MailingLabelFromVar(v ole.Variant) *MailingLabel {
-	return NewMailingLabel(v.PdispValVal(), false, false)
+	return NewMailingLabel(v.IDispatch(), false, false)
 }
 
 func (this *MailingLabel) IID() *syscall.GUID {
@@ -42,53 +45,50 @@ func (this *MailingLabel) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MailingLabel) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MailingLabel) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailingLabel) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MailingLabel) DefaultPrintBarCode() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *MailingLabel) SetDefaultPrintBarCode(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *MailingLabel) DefaultLaserTray() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailingLabel) SetDefaultLaserTray(rhs int32)  {
-	retVal := this.PropPut(0x00000004, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000004, []interface{}{rhs})
 }
 
 func (this *MailingLabel) CustomLabels() *CustomLabels {
-	retVal := this.PropGet(0x00000008, nil)
-	return NewCustomLabels(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000008, nil)
+	return NewCustomLabels(retVal.IDispatch(), false, true)
 }
 
 func (this *MailingLabel) DefaultLabelName() string {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *MailingLabel) SetDefaultLabelName(rhs string)  {
-	retVal := this.PropPut(0x00000009, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000009, []interface{}{rhs})
 }
 
 var MailingLabel_CreateNewDocument2000_OptArgs= []string{
@@ -97,8 +97,8 @@ var MailingLabel_CreateNewDocument2000_OptArgs= []string{
 
 func (this *MailingLabel) CreateNewDocument2000(optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(MailingLabel_CreateNewDocument2000_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, nil, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, nil, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var MailingLabel_PrintOut2000_OptArgs= []string{
@@ -108,12 +108,12 @@ var MailingLabel_PrintOut2000_OptArgs= []string{
 
 func (this *MailingLabel) PrintOut2000(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(MailingLabel_PrintOut2000_OptArgs, optArgs)
-	retVal := this.Call(0x00000066, nil, optArgs...)
+	retVal, _ := this.Call(0x00000066, nil, optArgs...)
 	_= retVal
 }
 
 func (this *MailingLabel) LabelOptions()  {
-	retVal := this.Call(0x00000067, nil)
+	retVal, _ := this.Call(0x00000067, nil)
 	_= retVal
 }
 
@@ -124,8 +124,8 @@ var MailingLabel_CreateNewDocument_OptArgs= []string{
 
 func (this *MailingLabel) CreateNewDocument(optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(MailingLabel_CreateNewDocument_OptArgs, optArgs)
-	retVal := this.Call(0x00000068, nil, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000068, nil, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var MailingLabel_PrintOut_OptArgs= []string{
@@ -135,18 +135,17 @@ var MailingLabel_PrintOut_OptArgs= []string{
 
 func (this *MailingLabel) PrintOut(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(MailingLabel_PrintOut_OptArgs, optArgs)
-	retVal := this.Call(0x00000069, nil, optArgs...)
+	retVal, _ := this.Call(0x00000069, nil, optArgs...)
 	_= retVal
 }
 
 func (this *MailingLabel) Vertical() bool {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *MailingLabel) SetVertical(rhs bool)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 var MailingLabel_CreateNewDocumentByID_OptArgs= []string{
@@ -156,8 +155,8 @@ var MailingLabel_CreateNewDocumentByID_OptArgs= []string{
 
 func (this *MailingLabel) CreateNewDocumentByID(optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(MailingLabel_CreateNewDocumentByID_OptArgs, optArgs)
-	retVal := this.Call(0x0000006a, nil, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000006a, nil, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var MailingLabel_PrintOutByID_OptArgs= []string{
@@ -167,7 +166,7 @@ var MailingLabel_PrintOutByID_OptArgs= []string{
 
 func (this *MailingLabel) PrintOutByID(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(MailingLabel_PrintOutByID_OptArgs, optArgs)
-	retVal := this.Call(0x0000006b, nil, optArgs...)
+	retVal, _ := this.Call(0x0000006b, nil, optArgs...)
 	_= retVal
 }
 

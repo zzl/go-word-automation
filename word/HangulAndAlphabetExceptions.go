@@ -17,6 +17,9 @@ type HangulAndAlphabetExceptions struct {
 }
 
 func NewHangulAndAlphabetExceptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *HangulAndAlphabetExceptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HangulAndAlphabetExceptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewHangulAndAlphabetExceptions(pDisp *win32.IDispatch, addRef bool, scoped 
 }
 
 func HangulAndAlphabetExceptionsFromVar(v ole.Variant) *HangulAndAlphabetExceptions {
-	return NewHangulAndAlphabetExceptions(v.PdispValVal(), false, false)
+	return NewHangulAndAlphabetExceptions(v.IDispatch(), false, false)
 }
 
 func (this *HangulAndAlphabetExceptions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *HangulAndAlphabetExceptions) GetIDispatch(addRef bool) *win32.IDispa
 }
 
 func (this *HangulAndAlphabetExceptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulAndAlphabetExceptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulAndAlphabetExceptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HangulAndAlphabetExceptions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *HangulAndAlphabetExceptions) ForEach(action func(item *HangulAndAlph
 }
 
 func (this *HangulAndAlphabetExceptions) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulAndAlphabetExceptions) Item(index *ole.Variant) *HangulAndAlphabetException {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewHangulAndAlphabetException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewHangulAndAlphabetException(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulAndAlphabetExceptions) Add(name string) *HangulAndAlphabetException {
-	retVal := this.Call(0x00000065, []interface{}{name})
-	return NewHangulAndAlphabetException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name})
+	return NewHangulAndAlphabetException(retVal.IDispatch(), false, true)
 }
 

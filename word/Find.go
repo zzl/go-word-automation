@@ -16,6 +16,9 @@ type Find struct {
 }
 
 func NewFind(pDisp *win32.IDispatch, addRef bool, scoped bool) *Find {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Find{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewFind(pDisp *win32.IDispatch, addRef bool, scoped bool) *Find {
 }
 
 func FindFromVar(v ole.Variant) *Find {
-	return NewFind(v.PdispValVal(), false, false)
+	return NewFind(v.IDispatch(), false, false)
 }
 
 func (this *Find) IID() *syscall.GUID {
@@ -42,224 +45,205 @@ func (this *Find) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Find) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Find) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Find) Forward() bool {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetForward(rhs bool)  {
-	retVal := this.PropPut(0x0000000a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000a, []interface{}{rhs})
 }
 
 func (this *Find) Font() *Font {
-	retVal := this.PropGet(0x0000000b, nil)
-	return NewFont(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000b, nil)
+	return NewFont(retVal.IDispatch(), false, true)
 }
 
 func (this *Find) SetFont(rhs *Font)  {
-	retVal := this.PropPut(0x0000000b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000b, []interface{}{rhs})
 }
 
 func (this *Find) Found() bool {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) MatchAllWordForms() bool {
-	retVal := this.PropGet(0x0000000d, nil)
+	retVal, _ := this.PropGet(0x0000000d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchAllWordForms(rhs bool)  {
-	retVal := this.PropPut(0x0000000d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000d, []interface{}{rhs})
 }
 
 func (this *Find) MatchCase() bool {
-	retVal := this.PropGet(0x0000000e, nil)
+	retVal, _ := this.PropGet(0x0000000e, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchCase(rhs bool)  {
-	retVal := this.PropPut(0x0000000e, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000e, []interface{}{rhs})
 }
 
 func (this *Find) MatchWildcards() bool {
-	retVal := this.PropGet(0x0000000f, nil)
+	retVal, _ := this.PropGet(0x0000000f, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchWildcards(rhs bool)  {
-	retVal := this.PropPut(0x0000000f, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000000f, []interface{}{rhs})
 }
 
 func (this *Find) MatchSoundsLike() bool {
-	retVal := this.PropGet(0x00000010, nil)
+	retVal, _ := this.PropGet(0x00000010, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchSoundsLike(rhs bool)  {
-	retVal := this.PropPut(0x00000010, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000010, []interface{}{rhs})
 }
 
 func (this *Find) MatchWholeWord() bool {
-	retVal := this.PropGet(0x00000011, nil)
+	retVal, _ := this.PropGet(0x00000011, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchWholeWord(rhs bool)  {
-	retVal := this.PropPut(0x00000011, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000011, []interface{}{rhs})
 }
 
 func (this *Find) MatchFuzzy() bool {
-	retVal := this.PropGet(0x00000028, nil)
+	retVal, _ := this.PropGet(0x00000028, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchFuzzy(rhs bool)  {
-	retVal := this.PropPut(0x00000028, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000028, []interface{}{rhs})
 }
 
 func (this *Find) MatchByte() bool {
-	retVal := this.PropGet(0x00000029, nil)
+	retVal, _ := this.PropGet(0x00000029, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchByte(rhs bool)  {
-	retVal := this.PropPut(0x00000029, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000029, []interface{}{rhs})
 }
 
 func (this *Find) ParagraphFormat() *ParagraphFormat {
-	retVal := this.PropGet(0x00000012, nil)
-	return NewParagraphFormat(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000012, nil)
+	return NewParagraphFormat(retVal.IDispatch(), false, true)
 }
 
 func (this *Find) SetParagraphFormat(rhs *ParagraphFormat)  {
-	retVal := this.PropPut(0x00000012, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000012, []interface{}{rhs})
 }
 
 func (this *Find) Style() ole.Variant {
-	retVal := this.PropGet(0x00000013, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000013, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Find) SetStyle(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000013, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000013, []interface{}{rhs})
 }
 
 func (this *Find) Text() string {
-	retVal := this.PropGet(0x00000016, nil)
+	retVal, _ := this.PropGet(0x00000016, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Find) SetText(rhs string)  {
-	retVal := this.PropPut(0x00000016, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000016, []interface{}{rhs})
 }
 
 func (this *Find) LanguageID() int32 {
-	retVal := this.PropGet(0x00000017, nil)
+	retVal, _ := this.PropGet(0x00000017, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) SetLanguageID(rhs int32)  {
-	retVal := this.PropPut(0x00000017, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000017, []interface{}{rhs})
 }
 
 func (this *Find) Highlight() int32 {
-	retVal := this.PropGet(0x00000018, nil)
+	retVal, _ := this.PropGet(0x00000018, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) SetHighlight(rhs int32)  {
-	retVal := this.PropPut(0x00000018, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000018, []interface{}{rhs})
 }
 
 func (this *Find) Replacement() *Replacement {
-	retVal := this.PropGet(0x00000019, nil)
-	return NewReplacement(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000019, nil)
+	return NewReplacement(retVal.IDispatch(), false, true)
 }
 
 func (this *Find) Frame() *Frame {
-	retVal := this.PropGet(0x0000001a, nil)
-	return NewFrame(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000001a, nil)
+	return NewFrame(retVal.IDispatch(), false, true)
 }
 
 func (this *Find) Wrap() int32 {
-	retVal := this.PropGet(0x0000001b, nil)
+	retVal, _ := this.PropGet(0x0000001b, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) SetWrap(rhs int32)  {
-	retVal := this.PropPut(0x0000001b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001b, []interface{}{rhs})
 }
 
 func (this *Find) Format() bool {
-	retVal := this.PropGet(0x0000001c, nil)
+	retVal, _ := this.PropGet(0x0000001c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetFormat(rhs bool)  {
-	retVal := this.PropPut(0x0000001c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001c, []interface{}{rhs})
 }
 
 func (this *Find) LanguageIDFarEast() int32 {
-	retVal := this.PropGet(0x0000001d, nil)
+	retVal, _ := this.PropGet(0x0000001d, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) SetLanguageIDFarEast(rhs int32)  {
-	retVal := this.PropPut(0x0000001d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000001d, []interface{}{rhs})
 }
 
 func (this *Find) LanguageIDOther() int32 {
-	retVal := this.PropGet(0x0000003c, nil)
+	retVal, _ := this.PropGet(0x0000003c, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) SetLanguageIDOther(rhs int32)  {
-	retVal := this.PropPut(0x0000003c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000003c, []interface{}{rhs})
 }
 
 func (this *Find) CorrectHangulEndings() bool {
-	retVal := this.PropGet(0x0000003d, nil)
+	retVal, _ := this.PropGet(0x0000003d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetCorrectHangulEndings(rhs bool)  {
-	retVal := this.PropPut(0x0000003d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000003d, []interface{}{rhs})
 }
 
 var Find_ExecuteOld_OptArgs= []string{
@@ -270,22 +254,22 @@ var Find_ExecuteOld_OptArgs= []string{
 
 func (this *Find) ExecuteOld(optArgs ...interface{}) bool {
 	optArgs = ole.ProcessOptArgs(Find_ExecuteOld_OptArgs, optArgs)
-	retVal := this.Call(0x0000001e, nil, optArgs...)
+	retVal, _ := this.Call(0x0000001e, nil, optArgs...)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) ClearFormatting()  {
-	retVal := this.Call(0x0000001f, nil)
+	retVal, _ := this.Call(0x0000001f, nil)
 	_= retVal
 }
 
 func (this *Find) SetAllFuzzyOptions()  {
-	retVal := this.Call(0x00000020, nil)
+	retVal, _ := this.Call(0x00000020, nil)
 	_= retVal
 }
 
 func (this *Find) ClearAllFuzzyOptions()  {
-	retVal := this.Call(0x00000021, nil)
+	retVal, _ := this.Call(0x00000021, nil)
 	_= retVal
 }
 
@@ -298,108 +282,98 @@ var Find_Execute_OptArgs= []string{
 
 func (this *Find) Execute(optArgs ...interface{}) bool {
 	optArgs = ole.ProcessOptArgs(Find_Execute_OptArgs, optArgs)
-	retVal := this.Call(0x000001bc, nil, optArgs...)
+	retVal, _ := this.Call(0x000001bc, nil, optArgs...)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) NoProofing() int32 {
-	retVal := this.PropGet(0x00000022, nil)
+	retVal, _ := this.PropGet(0x00000022, nil)
 	return retVal.LValVal()
 }
 
 func (this *Find) SetNoProofing(rhs int32)  {
-	retVal := this.PropPut(0x00000022, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000022, []interface{}{rhs})
 }
 
 func (this *Find) MatchKashida() bool {
-	retVal := this.PropGet(0x00000064, nil)
+	retVal, _ := this.PropGet(0x00000064, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchKashida(rhs bool)  {
-	retVal := this.PropPut(0x00000064, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000064, []interface{}{rhs})
 }
 
 func (this *Find) MatchDiacritics() bool {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchDiacritics(rhs bool)  {
-	retVal := this.PropPut(0x00000065, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000065, []interface{}{rhs})
 }
 
 func (this *Find) MatchAlefHamza() bool {
-	retVal := this.PropGet(0x00000066, nil)
+	retVal, _ := this.PropGet(0x00000066, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchAlefHamza(rhs bool)  {
-	retVal := this.PropPut(0x00000066, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000066, []interface{}{rhs})
 }
 
 func (this *Find) MatchControl() bool {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchControl(rhs bool)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *Find) MatchPhrase() bool {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchPhrase(rhs bool)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *Find) MatchPrefix() bool {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchPrefix(rhs bool)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *Find) MatchSuffix() bool {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetMatchSuffix(rhs bool)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *Find) IgnoreSpace() bool {
-	retVal := this.PropGet(0x0000006b, nil)
+	retVal, _ := this.PropGet(0x0000006b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetIgnoreSpace(rhs bool)  {
-	retVal := this.PropPut(0x0000006b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006b, []interface{}{rhs})
 }
 
 func (this *Find) IgnorePunct() bool {
-	retVal := this.PropGet(0x0000006c, nil)
+	retVal, _ := this.PropGet(0x0000006c, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetIgnorePunct(rhs bool)  {
-	retVal := this.PropPut(0x0000006c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006c, []interface{}{rhs})
 }
 
 var Find_HitHighlight_OptArgs= []string{
@@ -412,12 +386,12 @@ var Find_HitHighlight_OptArgs= []string{
 
 func (this *Find) HitHighlight(findText *ole.Variant, optArgs ...interface{}) bool {
 	optArgs = ole.ProcessOptArgs(Find_HitHighlight_OptArgs, optArgs)
-	retVal := this.Call(0x000001bd, []interface{}{findText}, optArgs...)
+	retVal, _ := this.Call(0x000001bd, []interface{}{findText}, optArgs...)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) ClearHitHighlight() bool {
-	retVal := this.Call(0x000001be, nil)
+	retVal, _ := this.Call(0x000001be, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
@@ -431,17 +405,16 @@ var Find_Execute2007_OptArgs= []string{
 
 func (this *Find) Execute2007(optArgs ...interface{}) bool {
 	optArgs = ole.ProcessOptArgs(Find_Execute2007_OptArgs, optArgs)
-	retVal := this.Call(0x000001bf, nil, optArgs...)
+	retVal, _ := this.Call(0x000001bf, nil, optArgs...)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) HanjaPhoneticHangul() bool {
-	retVal := this.PropGet(0x0000006d, nil)
+	retVal, _ := this.PropGet(0x0000006d, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Find) SetHanjaPhoneticHangul(rhs bool)  {
-	retVal := this.PropPut(0x0000006d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006d, []interface{}{rhs})
 }
 

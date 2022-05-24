@@ -17,6 +17,9 @@ type FormFields struct {
 }
 
 func NewFormFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *FormFields {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FormFields{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewFormFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *FormFields
 }
 
 func FormFieldsFromVar(v ole.Variant) *FormFields {
-	return NewFormFields(v.PdispValVal(), false, false)
+	return NewFormFields(v.IDispatch(), false, false)
 }
 
 func (this *FormFields) IID() *syscall.GUID {
@@ -43,37 +46,36 @@ func (this *FormFields) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FormFields) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FormFields) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FormFields) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FormFields) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *FormFields) Shaded() bool {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *FormFields) SetShaded(rhs bool)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *FormFields) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -99,12 +101,12 @@ func (this *FormFields) ForEach(action func(item *FormField) bool) {
 }
 
 func (this *FormFields) Item(index *ole.Variant) *FormField {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewFormField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewFormField(retVal.IDispatch(), false, true)
 }
 
 func (this *FormFields) Add(range_ *Range, type_ int32) *FormField {
-	retVal := this.Call(0x00000065, []interface{}{range_, type_})
-	return NewFormField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{range_, type_})
+	return NewFormField(retVal.IDispatch(), false, true)
 }
 

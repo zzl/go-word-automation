@@ -17,6 +17,9 @@ type Panes struct {
 }
 
 func NewPanes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Panes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Panes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewPanes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Panes {
 }
 
 func PanesFromVar(v ole.Variant) *Panes {
-	return NewPanes(v.PdispValVal(), false, false)
+	return NewPanes(v.IDispatch(), false, false)
 }
 
 func (this *Panes) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Panes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Panes) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *Panes) ForEach(action func(item *Pane) bool) {
 }
 
 func (this *Panes) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Panes) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Panes) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Panes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Panes) Item(index int32) *Pane {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewPane(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewPane(retVal.IDispatch(), false, true)
 }
 
 var Panes_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var Panes_Add_OptArgs= []string{
 
 func (this *Panes) Add(optArgs ...interface{}) *Pane {
 	optArgs = ole.ProcessOptArgs(Panes_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000003, nil, optArgs...)
-	return NewPane(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000003, nil, optArgs...)
+	return NewPane(retVal.IDispatch(), false, true)
 }
 

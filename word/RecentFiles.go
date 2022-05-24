@@ -17,6 +17,9 @@ type RecentFiles struct {
 }
 
 func NewRecentFiles(pDisp *win32.IDispatch, addRef bool, scoped bool) *RecentFiles {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &RecentFiles{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewRecentFiles(pDisp *win32.IDispatch, addRef bool, scoped bool) *RecentFil
 }
 
 func RecentFilesFromVar(v ole.Variant) *RecentFiles {
-	return NewRecentFiles(v.PdispValVal(), false, false)
+	return NewRecentFiles(v.IDispatch(), false, false)
 }
 
 func (this *RecentFiles) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *RecentFiles) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *RecentFiles) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *RecentFiles) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *RecentFiles) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *RecentFiles) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,23 +87,22 @@ func (this *RecentFiles) ForEach(action func(item *RecentFile) bool) {
 }
 
 func (this *RecentFiles) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *RecentFiles) Maximum() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *RecentFiles) SetMaximum(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *RecentFiles) Item(index int32) *RecentFile {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRecentFile(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRecentFile(retVal.IDispatch(), false, true)
 }
 
 var RecentFiles_Add_OptArgs= []string{
@@ -109,7 +111,7 @@ var RecentFiles_Add_OptArgs= []string{
 
 func (this *RecentFiles) Add(document *ole.Variant, optArgs ...interface{}) *RecentFile {
 	optArgs = ole.ProcessOptArgs(RecentFiles_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000003, []interface{}{document}, optArgs...)
-	return NewRecentFile(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000003, []interface{}{document}, optArgs...)
+	return NewRecentFile(retVal.IDispatch(), false, true)
 }
 

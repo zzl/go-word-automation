@@ -17,6 +17,9 @@ type OMathMatRows struct {
 }
 
 func NewOMathMatRows(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMatRows {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathMatRows{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOMathMatRows(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMat
 }
 
 func OMathMatRowsFromVar(v ole.Variant) *OMathMatRows {
-	return NewOMathMatRows(v.PdispValVal(), false, false)
+	return NewOMathMatRows(v.IDispatch(), false, false)
 }
 
 func (this *OMathMatRows) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *OMathMatRows) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathMatRows) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *OMathMatRows) ForEach(action func(item *OMathMatRow) bool) {
 }
 
 func (this *OMathMatRows) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMatRows) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatRows) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathMatRows) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatRows) Item(index int32) *OMathMatRow {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOMathMatRow(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOMathMatRow(retVal.IDispatch(), false, true)
 }
 
 var OMathMatRows_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var OMathMatRows_Add_OptArgs= []string{
 
 func (this *OMathMatRows) Add(optArgs ...interface{}) *OMathMatRow {
 	optArgs = ole.ProcessOptArgs(OMathMatRows_Add_OptArgs, optArgs)
-	retVal := this.Call(0x000000c8, nil, optArgs...)
-	return NewOMathMatRow(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, nil, optArgs...)
+	return NewOMathMatRow(retVal.IDispatch(), false, true)
 }
 

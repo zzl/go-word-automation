@@ -16,6 +16,9 @@ type SmartTag struct {
 }
 
 func NewSmartTag(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTag {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTag{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSmartTag(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTag {
 }
 
 func SmartTagFromVar(v ole.Variant) *SmartTag {
-	return NewSmartTag(v.PdispValVal(), false, false)
+	return NewSmartTag(v.IDispatch(), false, false)
 }
 
 func (this *SmartTag) IID() *syscall.GUID {
@@ -42,62 +45,62 @@ func (this *SmartTag) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTag) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTag) XML() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTag) Range() *Range {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTag) DownloadURL() string {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTag) Properties() *CustomProperties {
-	retVal := this.PropGet(0x00000005, nil)
-	return NewCustomProperties(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000005, nil)
+	return NewCustomProperties(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTag) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTag) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTag) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTag) Select()  {
-	retVal := this.Call(0x0000ffff, nil)
+	retVal, _ := this.Call(0x0000ffff, nil)
 	_= retVal
 }
 
 func (this *SmartTag) Delete()  {
-	retVal := this.Call(0x0000000b, nil)
+	retVal, _ := this.Call(0x0000000b, nil)
 	_= retVal
 }
 
 func (this *SmartTag) SmartTagActions() *SmartTagActions {
-	retVal := this.PropGet(0x000003eb, nil)
-	return NewSmartTagActions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003eb, nil)
+	return NewSmartTagActions(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTag) XMLNode() *XMLNode {
-	retVal := this.PropGet(0x000003ec, nil)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003ec, nil)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 

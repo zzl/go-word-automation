@@ -16,6 +16,9 @@ type XMLChildNodeSuggestion struct {
 }
 
 func NewXMLChildNodeSuggestion(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLChildNodeSuggestion {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLChildNodeSuggestion{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewXMLChildNodeSuggestion(pDisp *win32.IDispatch, addRef bool, scoped bool)
 }
 
 func XMLChildNodeSuggestionFromVar(v ole.Variant) *XMLChildNodeSuggestion {
-	return NewXMLChildNodeSuggestion(v.PdispValVal(), false, false)
+	return NewXMLChildNodeSuggestion(v.IDispatch(), false, false)
 }
 
 func (this *XMLChildNodeSuggestion) IID() *syscall.GUID {
@@ -42,33 +45,33 @@ func (this *XMLChildNodeSuggestion) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLChildNodeSuggestion) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLChildNodeSuggestion) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLChildNodeSuggestion) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLChildNodeSuggestion) BaseName() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLChildNodeSuggestion) NamespaceURI() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLChildNodeSuggestion) XMLSchemaReference() *XMLSchemaReference {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewXMLSchemaReference(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewXMLSchemaReference(retVal.IDispatch(), false, true)
 }
 
 var XMLChildNodeSuggestion_Insert_OptArgs= []string{
@@ -77,7 +80,7 @@ var XMLChildNodeSuggestion_Insert_OptArgs= []string{
 
 func (this *XMLChildNodeSuggestion) Insert(optArgs ...interface{}) *XMLNode {
 	optArgs = ole.ProcessOptArgs(XMLChildNodeSuggestion_Insert_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, nil, optArgs...)
-	return NewXMLNode(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, nil, optArgs...)
+	return NewXMLNode(retVal.IDispatch(), false, true)
 }
 

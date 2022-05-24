@@ -16,6 +16,9 @@ type SmartTagRecognizer struct {
 }
 
 func NewSmartTagRecognizer(pDisp *win32.IDispatch, addRef bool, scoped bool) *SmartTagRecognizer {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &SmartTagRecognizer{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSmartTagRecognizer(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sm
 }
 
 func SmartTagRecognizerFromVar(v ole.Variant) *SmartTagRecognizer {
-	return NewSmartTagRecognizer(v.PdispValVal(), false, false)
+	return NewSmartTagRecognizer(v.IDispatch(), false, false)
 }
 
 func (this *SmartTagRecognizer) IID() *syscall.GUID {
@@ -42,42 +45,41 @@ func (this *SmartTagRecognizer) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *SmartTagRecognizer) FullName() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTagRecognizer) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *SmartTagRecognizer) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *SmartTagRecognizer) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *SmartTagRecognizer) Enabled() bool {
-	retVal := this.PropGet(0x000003eb, nil)
+	retVal, _ := this.PropGet(0x000003eb, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *SmartTagRecognizer) SetEnabled(rhs bool)  {
-	retVal := this.PropPut(0x000003eb, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x000003eb, []interface{}{rhs})
 }
 
 func (this *SmartTagRecognizer) ProgID() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *SmartTagRecognizer) Caption() string {
-	retVal := this.PropGet(0x000003ec, nil)
+	retVal, _ := this.PropGet(0x000003ec, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

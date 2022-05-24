@@ -16,6 +16,9 @@ type OMathAutoCorrect struct {
 }
 
 func NewOMathAutoCorrect(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathAutoCorrect {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathAutoCorrect{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathAutoCorrect(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMat
 }
 
 func OMathAutoCorrectFromVar(v ole.Variant) *OMathAutoCorrect {
-	return NewOMathAutoCorrect(v.PdispValVal(), false, false)
+	return NewOMathAutoCorrect(v.IDispatch(), false, false)
 }
 
 func (this *OMathAutoCorrect) IID() *syscall.GUID {
@@ -42,47 +45,45 @@ func (this *OMathAutoCorrect) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathAutoCorrect) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathAutoCorrect) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathAutoCorrect) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathAutoCorrect) ReplaceText() bool {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathAutoCorrect) SetReplaceText(rhs bool)  {
-	retVal := this.PropPut(0x00000067, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000067, []interface{}{rhs})
 }
 
 func (this *OMathAutoCorrect) UseOutsideOMath() bool {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathAutoCorrect) SetUseOutsideOMath(rhs bool)  {
-	retVal := this.PropPut(0x00000068, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000068, []interface{}{rhs})
 }
 
 func (this *OMathAutoCorrect) Entries() *OMathAutoCorrectEntries {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewOMathAutoCorrectEntries(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewOMathAutoCorrectEntries(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathAutoCorrect) Functions() *OMathRecognizedFunctions {
-	retVal := this.PropGet(0x0000006a, nil)
-	return NewOMathRecognizedFunctions(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000006a, nil)
+	return NewOMathRecognizedFunctions(retVal.IDispatch(), false, true)
 }
 

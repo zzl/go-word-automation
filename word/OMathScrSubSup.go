@@ -16,6 +16,9 @@ type OMathScrSubSup struct {
 }
 
 func NewOMathScrSubSup(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathScrSubSup {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathScrSubSup{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathScrSubSup(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathS
 }
 
 func OMathScrSubSupFromVar(v ole.Variant) *OMathScrSubSup {
-	return NewOMathScrSubSup(v.PdispValVal(), false, false)
+	return NewOMathScrSubSup(v.IDispatch(), false, false)
 }
 
 func (this *OMathScrSubSup) IID() *syscall.GUID {
@@ -42,57 +45,56 @@ func (this *OMathScrSubSup) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathScrSubSup) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathScrSubSup) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathScrSubSup) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathScrSubSup) E() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathScrSubSup) Sub() *OMath {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathScrSubSup) Sup() *OMath {
-	retVal := this.PropGet(0x00000069, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000069, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathScrSubSup) AlignScripts() bool {
-	retVal := this.PropGet(0x0000006a, nil)
+	retVal, _ := this.PropGet(0x0000006a, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *OMathScrSubSup) SetAlignScripts(rhs bool)  {
-	retVal := this.PropPut(0x0000006a, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000006a, []interface{}{rhs})
 }
 
 func (this *OMathScrSubSup) RemoveSub() *OMathFunction {
-	retVal := this.Call(0x000000c8, nil)
-	return NewOMathFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, nil)
+	return NewOMathFunction(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathScrSubSup) RemoveSup() *OMathFunction {
-	retVal := this.Call(0x000000c9, nil)
-	return NewOMathFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c9, nil)
+	return NewOMathFunction(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathScrSubSup) ToScrPre() *OMathFunction {
-	retVal := this.Call(0x000000ca, nil)
-	return NewOMathFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000ca, nil)
+	return NewOMathFunction(retVal.IDispatch(), false, true)
 }
 

@@ -17,6 +17,9 @@ type Sentences struct {
 }
 
 func NewSentences(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sentences {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Sentences{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewSentences(pDisp *win32.IDispatch, addRef bool, scoped bool) *Sentences {
 }
 
 func SentencesFromVar(v ole.Variant) *Sentences {
-	return NewSentences(v.PdispValVal(), false, false)
+	return NewSentences(v.IDispatch(), false, false)
 }
 
 func (this *Sentences) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Sentences) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Sentences) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,37 +72,37 @@ func (this *Sentences) ForEach(action func(item *Range) bool) {
 }
 
 func (this *Sentences) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Sentences) First() *Range {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Sentences) Last() *Range {
-	retVal := this.PropGet(0x00000004, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000004, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Sentences) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Sentences) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Sentences) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Sentences) Item(index int32) *Range {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewRange(retVal.IDispatch(), false, true)
 }
 

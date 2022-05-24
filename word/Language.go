@@ -16,6 +16,9 @@ type Language struct {
 }
 
 func NewLanguage(pDisp *win32.IDispatch, addRef bool, scoped bool) *Language {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Language{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewLanguage(pDisp *win32.IDispatch, addRef bool, scoped bool) *Language {
 }
 
 func LanguageFromVar(v ole.Variant) *Language {
-	return NewLanguage(v.PdispValVal(), false, false)
+	return NewLanguage(v.IDispatch(), false, false)
 }
 
 func (this *Language) IID() *syscall.GUID {
@@ -42,78 +45,76 @@ func (this *Language) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Language) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Language) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Language) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Language) ID() int32 {
-	retVal := this.PropGet(0x0000000a, nil)
+	retVal, _ := this.PropGet(0x0000000a, nil)
 	return retVal.LValVal()
 }
 
 func (this *Language) NameLocal() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Language) Name() string {
-	retVal := this.PropGet(0x0000000c, nil)
+	retVal, _ := this.PropGet(0x0000000c, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Language) ActiveGrammarDictionary() *Dictionary {
-	retVal := this.PropGet(0x0000000d, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000d, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Language) ActiveHyphenationDictionary() *Dictionary {
-	retVal := this.PropGet(0x0000000e, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000e, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Language) ActiveSpellingDictionary() *Dictionary {
-	retVal := this.PropGet(0x0000000f, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000f, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Language) ActiveThesaurusDictionary() *Dictionary {
-	retVal := this.PropGet(0x00000010, nil)
-	return NewDictionary(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000010, nil)
+	return NewDictionary(retVal.IDispatch(), false, true)
 }
 
 func (this *Language) DefaultWritingStyle() string {
-	retVal := this.PropGet(0x00000011, nil)
+	retVal, _ := this.PropGet(0x00000011, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Language) SetDefaultWritingStyle(rhs string)  {
-	retVal := this.PropPut(0x00000011, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000011, []interface{}{rhs})
 }
 
 func (this *Language) WritingStyleList() ole.Variant {
-	retVal := this.PropGet(0x00000012, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000012, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *Language) SpellingDictionaryType() int32 {
-	retVal := this.PropGet(0x00000013, nil)
+	retVal, _ := this.PropGet(0x00000013, nil)
 	return retVal.LValVal()
 }
 
 func (this *Language) SetSpellingDictionaryType(rhs int32)  {
-	retVal := this.PropPut(0x00000013, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000013, []interface{}{rhs})
 }
 

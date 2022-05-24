@@ -17,6 +17,9 @@ type Breaks struct {
 }
 
 func NewBreaks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Breaks {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Breaks{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewBreaks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Breaks {
 }
 
 func BreaksFromVar(v ole.Variant) *Breaks {
-	return NewBreaks(v.PdispValVal(), false, false)
+	return NewBreaks(v.IDispatch(), false, false)
 }
 
 func (this *Breaks) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Breaks) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Breaks) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,27 +72,27 @@ func (this *Breaks) ForEach(action func(item *Break) bool) {
 }
 
 func (this *Breaks) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Breaks) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Breaks) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Breaks) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Breaks) Item(index int32) *Break {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewBreak(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewBreak(retVal.IDispatch(), false, true)
 }
 

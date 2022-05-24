@@ -16,6 +16,9 @@ type ReadabilityStatistic struct {
 }
 
 func NewReadabilityStatistic(pDisp *win32.IDispatch, addRef bool, scoped bool) *ReadabilityStatistic {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ReadabilityStatistic{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewReadabilityStatistic(pDisp *win32.IDispatch, addRef bool, scoped bool) *
 }
 
 func ReadabilityStatisticFromVar(v ole.Variant) *ReadabilityStatistic {
-	return NewReadabilityStatistic(v.PdispValVal(), false, false)
+	return NewReadabilityStatistic(v.IDispatch(), false, false)
 }
 
 func (this *ReadabilityStatistic) IID() *syscall.GUID {
@@ -42,27 +45,27 @@ func (this *ReadabilityStatistic) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ReadabilityStatistic) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *ReadabilityStatistic) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *ReadabilityStatistic) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ReadabilityStatistic) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *ReadabilityStatistic) Value() float32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.FltValVal()
 }
 

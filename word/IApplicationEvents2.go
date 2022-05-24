@@ -16,6 +16,9 @@ type IApplicationEvents2 struct {
 }
 
 func NewIApplicationEvents2(pDisp *win32.IDispatch, addRef bool, scoped bool) *IApplicationEvents2 {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &IApplicationEvents2{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewIApplicationEvents2(pDisp *win32.IDispatch, addRef bool, scoped bool) *I
 }
 
 func IApplicationEvents2FromVar(v ole.Variant) *IApplicationEvents2 {
-	return NewIApplicationEvents2(v.PdispValVal(), false, false)
+	return NewIApplicationEvents2(v.IDispatch(), false, false)
 }
 
 func (this *IApplicationEvents2) IID() *syscall.GUID {
@@ -42,67 +45,67 @@ func (this *IApplicationEvents2) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *IApplicationEvents2) Startup()  {
-	retVal := this.Call(0x00000001, nil)
+	retVal, _ := this.Call(0x00000001, nil)
 	_= retVal
 }
 
 func (this *IApplicationEvents2) Quit()  {
-	retVal := this.Call(0x00000002, nil)
+	retVal, _ := this.Call(0x00000002, nil)
 	_= retVal
 }
 
 func (this *IApplicationEvents2) DocumentChange()  {
-	retVal := this.Call(0x00000003, nil)
+	retVal, _ := this.Call(0x00000003, nil)
 	_= retVal
 }
 
 func (this *IApplicationEvents2) DocumentOpen(doc *Document)  {
-	retVal := this.Call(0x00000004, []interface{}{doc})
+	retVal, _ := this.Call(0x00000004, []interface{}{doc})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) DocumentBeforeClose(doc *Document, cancel *win32.VARIANT_BOOL)  {
-	retVal := this.Call(0x00000006, []interface{}{doc, cancel})
+	retVal, _ := this.Call(0x00000006, []interface{}{doc, cancel})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) DocumentBeforePrint(doc *Document, cancel *win32.VARIANT_BOOL)  {
-	retVal := this.Call(0x00000007, []interface{}{doc, cancel})
+	retVal, _ := this.Call(0x00000007, []interface{}{doc, cancel})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) DocumentBeforeSave(doc *Document, saveAsUI *win32.VARIANT_BOOL, cancel *win32.VARIANT_BOOL)  {
-	retVal := this.Call(0x00000008, []interface{}{doc, saveAsUI, cancel})
+	retVal, _ := this.Call(0x00000008, []interface{}{doc, saveAsUI, cancel})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) NewDocument(doc *Document)  {
-	retVal := this.Call(0x00000009, []interface{}{doc})
+	retVal, _ := this.Call(0x00000009, []interface{}{doc})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) WindowActivate(doc *Document, wn *Window)  {
-	retVal := this.Call(0x0000000a, []interface{}{doc, wn})
+	retVal, _ := this.Call(0x0000000a, []interface{}{doc, wn})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) WindowDeactivate(doc *Document, wn *Window)  {
-	retVal := this.Call(0x0000000b, []interface{}{doc, wn})
+	retVal, _ := this.Call(0x0000000b, []interface{}{doc, wn})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) WindowSelectionChange(sel *Selection)  {
-	retVal := this.Call(0x0000000c, []interface{}{sel})
+	retVal, _ := this.Call(0x0000000c, []interface{}{sel})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) WindowBeforeRightClick(sel *Selection, cancel *win32.VARIANT_BOOL)  {
-	retVal := this.Call(0x0000000d, []interface{}{sel, cancel})
+	retVal, _ := this.Call(0x0000000d, []interface{}{sel, cancel})
 	_= retVal
 }
 
 func (this *IApplicationEvents2) WindowBeforeDoubleClick(sel *Selection, cancel *win32.VARIANT_BOOL)  {
-	retVal := this.Call(0x0000000e, []interface{}{sel, cancel})
+	retVal, _ := this.Call(0x0000000e, []interface{}{sel, cancel})
 	_= retVal
 }
 

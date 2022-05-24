@@ -16,6 +16,9 @@ type HangulAndAlphabetException struct {
 }
 
 func NewHangulAndAlphabetException(pDisp *win32.IDispatch, addRef bool, scoped bool) *HangulAndAlphabetException {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &HangulAndAlphabetException{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewHangulAndAlphabetException(pDisp *win32.IDispatch, addRef bool, scoped b
 }
 
 func HangulAndAlphabetExceptionFromVar(v ole.Variant) *HangulAndAlphabetException {
-	return NewHangulAndAlphabetException(v.PdispValVal(), false, false)
+	return NewHangulAndAlphabetException(v.IDispatch(), false, false)
 }
 
 func (this *HangulAndAlphabetException) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *HangulAndAlphabetException) GetIDispatch(addRef bool) *win32.IDispat
 }
 
 func (this *HangulAndAlphabetException) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *HangulAndAlphabetException) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulAndAlphabetException) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *HangulAndAlphabetException) Index() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *HangulAndAlphabetException) Name() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *HangulAndAlphabetException) Delete()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

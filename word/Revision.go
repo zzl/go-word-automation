@@ -17,6 +17,9 @@ type Revision struct {
 }
 
 func NewRevision(pDisp *win32.IDispatch, addRef bool, scoped bool) *Revision {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Revision{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewRevision(pDisp *win32.IDispatch, addRef bool, scoped bool) *Revision {
 }
 
 func RevisionFromVar(v ole.Variant) *Revision {
-	return NewRevision(v.PdispValVal(), false, false)
+	return NewRevision(v.IDispatch(), false, false)
 }
 
 func (this *Revision) IID() *syscall.GUID {
@@ -43,72 +46,72 @@ func (this *Revision) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Revision) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Revision) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Revision) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Revision) Author() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Revision) Date() time.Time {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return ole.Date(retVal.DateVal()).ToGoTime()
 }
 
 func (this *Revision) Range() *Range {
-	retVal := this.PropGet(0x00000003, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000003, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Revision) Type() int32 {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.LValVal()
 }
 
 func (this *Revision) Index() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Revision) Accept()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *Revision) Reject()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 
 func (this *Revision) Style() *Style {
-	retVal := this.PropGet(0x00000008, nil)
-	return NewStyle(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000008, nil)
+	return NewStyle(retVal.IDispatch(), false, true)
 }
 
 func (this *Revision) FormatDescription() string {
-	retVal := this.PropGet(0x00000009, nil)
+	retVal, _ := this.PropGet(0x00000009, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *Revision) MovedRange() *Range {
-	retVal := this.PropGet(0x0000000a, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000a, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Revision) Cells() *Cells {
-	retVal := this.PropGet(0x0000000b, nil)
-	return NewCells(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000000b, nil)
+	return NewCells(retVal.IDispatch(), false, true)
 }
 

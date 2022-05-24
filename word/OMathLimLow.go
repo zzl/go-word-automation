@@ -16,6 +16,9 @@ type OMathLimLow struct {
 }
 
 func NewOMathLimLow(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathLimLow {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathLimLow{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathLimLow(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathLimL
 }
 
 func OMathLimLowFromVar(v ole.Variant) *OMathLimLow {
-	return NewOMathLimLow(v.PdispValVal(), false, false)
+	return NewOMathLimLow(v.IDispatch(), false, false)
 }
 
 func (this *OMathLimLow) IID() *syscall.GUID {
@@ -42,32 +45,32 @@ func (this *OMathLimLow) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathLimLow) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathLimLow) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathLimLow) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathLimLow) E() *OMath {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathLimLow) Lim() *OMath {
-	retVal := this.PropGet(0x00000068, nil)
-	return NewOMath(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000068, nil)
+	return NewOMath(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathLimLow) ToLimUpp() *OMathFunction {
-	retVal := this.Call(0x000000c9, nil)
-	return NewOMathFunction(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c9, nil)
+	return NewOMathFunction(retVal.IDispatch(), false, true)
 }
 

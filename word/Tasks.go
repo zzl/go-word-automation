@@ -17,6 +17,9 @@ type Tasks struct {
 }
 
 func NewTasks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Tasks {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Tasks{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTasks(pDisp *win32.IDispatch, addRef bool, scoped bool) *Tasks {
 }
 
 func TasksFromVar(v ole.Variant) *Tasks {
-	return NewTasks(v.PdispValVal(), false, false)
+	return NewTasks(v.IDispatch(), false, false)
 }
 
 func (this *Tasks) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Tasks) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Tasks) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Tasks) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Tasks) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Tasks) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,22 +87,22 @@ func (this *Tasks) ForEach(action func(item *Task) bool) {
 }
 
 func (this *Tasks) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Tasks) Item(index *ole.Variant) *Task {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTask(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTask(retVal.IDispatch(), false, true)
 }
 
 func (this *Tasks) Exists(name string) bool {
-	retVal := this.Call(0x00000002, []interface{}{name})
+	retVal, _ := this.Call(0x00000002, []interface{}{name})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Tasks) ExitWindows()  {
-	retVal := this.Call(0x00000003, nil)
+	retVal, _ := this.Call(0x00000003, nil)
 	_= retVal
 }
 

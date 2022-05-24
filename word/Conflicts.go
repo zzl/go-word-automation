@@ -17,6 +17,9 @@ type Conflicts struct {
 }
 
 func NewConflicts(pDisp *win32.IDispatch, addRef bool, scoped bool) *Conflicts {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Conflicts{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewConflicts(pDisp *win32.IDispatch, addRef bool, scoped bool) *Conflicts {
 }
 
 func ConflictsFromVar(v ole.Variant) *Conflicts {
-	return NewConflicts(v.PdispValVal(), false, false)
+	return NewConflicts(v.IDispatch(), false, false)
 }
 
 func (this *Conflicts) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *Conflicts) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Conflicts) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Conflicts) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Conflicts) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Conflicts) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,22 +87,22 @@ func (this *Conflicts) ForEach(action func(item *Conflict) bool) {
 }
 
 func (this *Conflicts) Count() int32 {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.LValVal()
 }
 
 func (this *Conflicts) Item(index int32) *Conflict {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewConflict(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewConflict(retVal.IDispatch(), false, true)
 }
 
 func (this *Conflicts) AcceptAll()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *Conflicts) RejectAll()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

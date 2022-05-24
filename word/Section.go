@@ -16,6 +16,9 @@ type Section struct {
 }
 
 func NewSection(pDisp *win32.IDispatch, addRef bool, scoped bool) *Section {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Section{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewSection(pDisp *win32.IDispatch, addRef bool, scoped bool) *Section {
 }
 
 func SectionFromVar(v ole.Variant) *Section {
-	return NewSection(v.PdispValVal(), false, false)
+	return NewSection(v.IDispatch(), false, false)
 }
 
 func (this *Section) IID() *syscall.GUID {
@@ -42,67 +45,64 @@ func (this *Section) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Section) Range() *Range {
-	retVal := this.PropGet(0x00000000, nil)
-	return NewRange(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000000, nil)
+	return NewRange(retVal.IDispatch(), false, true)
 }
 
 func (this *Section) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Section) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Section) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Section) PageSetup() *PageSetup {
-	retVal := this.PropGet(0x0000044d, nil)
-	return NewPageSetup(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044d, nil)
+	return NewPageSetup(retVal.IDispatch(), false, true)
 }
 
 func (this *Section) SetPageSetup(rhs *PageSetup)  {
-	retVal := this.PropPut(0x0000044d, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044d, []interface{}{rhs})
 }
 
 func (this *Section) Headers() *HeadersFooters {
-	retVal := this.PropGet(0x00000079, nil)
-	return NewHeadersFooters(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000079, nil)
+	return NewHeadersFooters(retVal.IDispatch(), false, true)
 }
 
 func (this *Section) Footers() *HeadersFooters {
-	retVal := this.PropGet(0x0000007a, nil)
-	return NewHeadersFooters(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000007a, nil)
+	return NewHeadersFooters(retVal.IDispatch(), false, true)
 }
 
 func (this *Section) ProtectedForForms() bool {
-	retVal := this.PropGet(0x0000007b, nil)
+	retVal, _ := this.PropGet(0x0000007b, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *Section) SetProtectedForForms(rhs bool)  {
-	retVal := this.PropPut(0x0000007b, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000007b, []interface{}{rhs})
 }
 
 func (this *Section) Index() int32 {
-	retVal := this.PropGet(0x0000007c, nil)
+	retVal, _ := this.PropGet(0x0000007c, nil)
 	return retVal.LValVal()
 }
 
 func (this *Section) Borders() *Borders {
-	retVal := this.PropGet(0x0000044c, nil)
-	return NewBorders(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x0000044c, nil)
+	return NewBorders(retVal.IDispatch(), false, true)
 }
 
 func (this *Section) SetBorders(rhs *Borders)  {
-	retVal := this.PropPut(0x0000044c, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x0000044c, []interface{}{rhs})
 }
 

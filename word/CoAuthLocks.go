@@ -17,6 +17,9 @@ type CoAuthLocks struct {
 }
 
 func NewCoAuthLocks(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthLocks {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CoAuthLocks{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCoAuthLocks(pDisp *win32.IDispatch, addRef bool, scoped bool) *CoAuthLoc
 }
 
 func CoAuthLocksFromVar(v ole.Variant) *CoAuthLocks {
-	return NewCoAuthLocks(v.PdispValVal(), false, false)
+	return NewCoAuthLocks(v.IDispatch(), false, false)
 }
 
 func (this *CoAuthLocks) IID() *syscall.GUID {
@@ -43,27 +46,27 @@ func (this *CoAuthLocks) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CoAuthLocks) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthLocks) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthLocks) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CoAuthLocks) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *CoAuthLocks) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -89,17 +92,22 @@ func (this *CoAuthLocks) ForEach(action func(item *CoAuthLock) bool) {
 }
 
 func (this *CoAuthLocks) Item(index int32) *CoAuthLock {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCoAuthLock(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCoAuthLock(retVal.IDispatch(), false, true)
 }
 
-func (this *CoAuthLocks) Add(range_ interface{}, type_ int32) *CoAuthLock {
-	retVal := this.Call(0x00000002, []interface{}{range_, type_})
-	return NewCoAuthLock(retVal.PdispValVal(), false, true)
+var CoAuthLocks_Add_OptArgs= []string{
+	"Range", "Type", 
+}
+
+func (this *CoAuthLocks) Add(optArgs ...interface{}) *CoAuthLock {
+	optArgs = ole.ProcessOptArgs(CoAuthLocks_Add_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000002, nil, optArgs...)
+	return NewCoAuthLock(retVal.IDispatch(), false, true)
 }
 
 func (this *CoAuthLocks) RemoveEphemeralLocks()  {
-	retVal := this.Call(0x00000003, nil)
+	retVal, _ := this.Call(0x00000003, nil)
 	_= retVal
 }
 

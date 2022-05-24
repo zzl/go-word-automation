@@ -17,6 +17,9 @@ type OtherCorrectionsExceptions struct {
 }
 
 func NewOtherCorrectionsExceptions(pDisp *win32.IDispatch, addRef bool, scoped bool) *OtherCorrectionsExceptions {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OtherCorrectionsExceptions{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOtherCorrectionsExceptions(pDisp *win32.IDispatch, addRef bool, scoped b
 }
 
 func OtherCorrectionsExceptionsFromVar(v ole.Variant) *OtherCorrectionsExceptions {
-	return NewOtherCorrectionsExceptions(v.PdispValVal(), false, false)
+	return NewOtherCorrectionsExceptions(v.IDispatch(), false, false)
 }
 
 func (this *OtherCorrectionsExceptions) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *OtherCorrectionsExceptions) GetIDispatch(addRef bool) *win32.IDispat
 }
 
 func (this *OtherCorrectionsExceptions) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OtherCorrectionsExceptions) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *OtherCorrectionsExceptions) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OtherCorrectionsExceptions) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *OtherCorrectionsExceptions) ForEach(action func(item *OtherCorrectio
 }
 
 func (this *OtherCorrectionsExceptions) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *OtherCorrectionsExceptions) Item(index *ole.Variant) *OtherCorrectionsException {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOtherCorrectionsException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOtherCorrectionsException(retVal.IDispatch(), false, true)
 }
 
 func (this *OtherCorrectionsExceptions) Add(name string) *OtherCorrectionsException {
-	retVal := this.Call(0x00000065, []interface{}{name})
-	return NewOtherCorrectionsException(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name})
+	return NewOtherCorrectionsException(retVal.IDispatch(), false, true)
 }
 

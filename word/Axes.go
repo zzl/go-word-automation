@@ -17,6 +17,9 @@ type Axes struct {
 }
 
 func NewAxes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Axes {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Axes{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewAxes(pDisp *win32.IDispatch, addRef bool, scoped bool) *Axes {
 }
 
 func AxesFromVar(v ole.Variant) *Axes {
-	return NewAxes(v.PdispValVal(), false, false)
+	return NewAxes(v.IDispatch(), false, false)
 }
 
 func (this *Axes) IID() *syscall.GUID {
@@ -43,17 +46,22 @@ func (this *Axes) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Axes) Count() int32 {
-	retVal := this.PropGet(0x60020000, nil)
+	retVal, _ := this.PropGet(0x60020000, nil)
 	return retVal.LValVal()
 }
 
-func (this *Axes) Item(type_ int32, axisGroup int32) *Axis {
-	retVal := this.Call(0x00000000, []interface{}{type_, axisGroup})
-	return NewAxis(retVal.PdispValVal(), false, true)
+var Axes_Item_OptArgs= []string{
+	"AxisGroup", 
+}
+
+func (this *Axes) Item(type_ int32, optArgs ...interface{}) *Axis {
+	optArgs = ole.ProcessOptArgs(Axes_Item_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000000, []interface{}{type_}, optArgs...)
+	return NewAxis(retVal.IDispatch(), false, true)
 }
 
 func (this *Axes) NewEnum_() *com.UnknownClass {
-	retVal := this.Call(-4, nil)
+	retVal, _ := this.Call(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -79,22 +87,27 @@ func (this *Axes) ForEach(action func(item *Axis) bool) {
 }
 
 func (this *Axes) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Axes) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 
-func (this *Axes) Default_(type_ int32, axisGroup int32) *Axis {
-	retVal := this.Call(0x60020005, []interface{}{type_, axisGroup})
-	return NewAxis(retVal.PdispValVal(), false, true)
+var Axes_Default__OptArgs= []string{
+	"AxisGroup", 
+}
+
+func (this *Axes) Default_(type_ int32, optArgs ...interface{}) *Axis {
+	optArgs = ole.ProcessOptArgs(Axes_Default__OptArgs, optArgs)
+	retVal, _ := this.Call(0x60020005, []interface{}{type_}, optArgs...)
+	return NewAxis(retVal.IDispatch(), false, true)
 }
 
 func (this *Axes) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 

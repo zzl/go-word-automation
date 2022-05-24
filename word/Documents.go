@@ -17,6 +17,9 @@ type Documents struct {
 }
 
 func NewDocuments(pDisp *win32.IDispatch, addRef bool, scoped bool) *Documents {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Documents{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewDocuments(pDisp *win32.IDispatch, addRef bool, scoped bool) *Documents {
 }
 
 func DocumentsFromVar(v ole.Variant) *Documents {
-	return NewDocuments(v.PdispValVal(), false, false)
+	return NewDocuments(v.IDispatch(), false, false)
 }
 
 func (this *Documents) IID() *syscall.GUID {
@@ -43,7 +46,7 @@ func (this *Documents) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Documents) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -69,28 +72,28 @@ func (this *Documents) ForEach(action func(item *Document) bool) {
 }
 
 func (this *Documents) Count() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *Documents) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Documents) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Documents) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Documents) Item(index *ole.Variant) *Document {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var Documents_Close_OptArgs= []string{
@@ -99,7 +102,7 @@ var Documents_Close_OptArgs= []string{
 
 func (this *Documents) Close(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Documents_Close_OptArgs, optArgs)
-	retVal := this.Call(0x00000451, nil, optArgs...)
+	retVal, _ := this.Call(0x00000451, nil, optArgs...)
 	_= retVal
 }
 
@@ -109,8 +112,8 @@ var Documents_AddOld_OptArgs= []string{
 
 func (this *Documents) AddOld(optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_AddOld_OptArgs, optArgs)
-	retVal := this.Call(0x0000000b, nil, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000b, nil, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var Documents_OpenOld_OptArgs= []string{
@@ -120,8 +123,8 @@ var Documents_OpenOld_OptArgs= []string{
 
 func (this *Documents) OpenOld(fileName *ole.Variant, optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_OpenOld_OptArgs, optArgs)
-	retVal := this.Call(0x0000000c, []interface{}{fileName}, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000c, []interface{}{fileName}, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var Documents_Save_OptArgs= []string{
@@ -130,7 +133,7 @@ var Documents_Save_OptArgs= []string{
 
 func (this *Documents) Save(optArgs ...interface{})  {
 	optArgs = ole.ProcessOptArgs(Documents_Save_OptArgs, optArgs)
-	retVal := this.Call(0x0000000d, nil, optArgs...)
+	retVal, _ := this.Call(0x0000000d, nil, optArgs...)
 	_= retVal
 }
 
@@ -140,8 +143,8 @@ var Documents_Add_OptArgs= []string{
 
 func (this *Documents) Add(optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_Add_OptArgs, optArgs)
-	retVal := this.Call(0x0000000e, nil, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000e, nil, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var Documents_Open2000_OptArgs= []string{
@@ -152,17 +155,17 @@ var Documents_Open2000_OptArgs= []string{
 
 func (this *Documents) Open2000(fileName *ole.Variant, optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_Open2000_OptArgs, optArgs)
-	retVal := this.Call(0x0000000f, []interface{}{fileName}, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x0000000f, []interface{}{fileName}, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 func (this *Documents) CheckOut(fileName string)  {
-	retVal := this.Call(0x00000010, []interface{}{fileName})
+	retVal, _ := this.Call(0x00000010, []interface{}{fileName})
 	_= retVal
 }
 
 func (this *Documents) CanCheckOut(fileName string) bool {
-	retVal := this.Call(0x00000011, []interface{}{fileName})
+	retVal, _ := this.Call(0x00000011, []interface{}{fileName})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
@@ -175,8 +178,8 @@ var Documents_Open2002_OptArgs= []string{
 
 func (this *Documents) Open2002(fileName *ole.Variant, optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_Open2002_OptArgs, optArgs)
-	retVal := this.Call(0x00000012, []interface{}{fileName}, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000012, []interface{}{fileName}, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var Documents_Open_OptArgs= []string{
@@ -188,8 +191,8 @@ var Documents_Open_OptArgs= []string{
 
 func (this *Documents) Open(fileName *ole.Variant, optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_Open_OptArgs, optArgs)
-	retVal := this.Call(0x00000013, []interface{}{fileName}, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000013, []interface{}{fileName}, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
 var Documents_OpenNoRepairDialog_OptArgs= []string{
@@ -201,12 +204,17 @@ var Documents_OpenNoRepairDialog_OptArgs= []string{
 
 func (this *Documents) OpenNoRepairDialog(fileName *ole.Variant, optArgs ...interface{}) *Document {
 	optArgs = ole.ProcessOptArgs(Documents_OpenNoRepairDialog_OptArgs, optArgs)
-	retVal := this.Call(0x00000014, []interface{}{fileName}, optArgs...)
-	return NewDocument(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000014, []interface{}{fileName}, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 
-func (this *Documents) AddBlogDocument(providerID string, postURL string, blogName string, postID string) *Document {
-	retVal := this.Call(0x00000015, []interface{}{providerID, postURL, blogName, postID})
-	return NewDocument(retVal.PdispValVal(), false, true)
+var Documents_AddBlogDocument_OptArgs= []string{
+	"PostID", 
+}
+
+func (this *Documents) AddBlogDocument(providerID string, postURL string, blogName string, optArgs ...interface{}) *Document {
+	optArgs = ole.ProcessOptArgs(Documents_AddBlogDocument_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000015, []interface{}{providerID, postURL, blogName}, optArgs...)
+	return NewDocument(retVal.IDispatch(), false, true)
 }
 

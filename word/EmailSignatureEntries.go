@@ -17,6 +17,9 @@ type EmailSignatureEntries struct {
 }
 
 func NewEmailSignatureEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *EmailSignatureEntries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &EmailSignatureEntries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewEmailSignatureEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) 
 }
 
 func EmailSignatureEntriesFromVar(v ole.Variant) *EmailSignatureEntries {
-	return NewEmailSignatureEntries(v.PdispValVal(), false, false)
+	return NewEmailSignatureEntries(v.IDispatch(), false, false)
 }
 
 func (this *EmailSignatureEntries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *EmailSignatureEntries) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *EmailSignatureEntries) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *EmailSignatureEntries) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *EmailSignatureEntries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *EmailSignatureEntries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *EmailSignatureEntries) ForEach(action func(item *EmailSignatureEntry
 }
 
 func (this *EmailSignatureEntries) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *EmailSignatureEntries) Item(index *ole.Variant) *EmailSignatureEntry {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewEmailSignatureEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewEmailSignatureEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *EmailSignatureEntries) Add(name string, range_ *Range) *EmailSignatureEntry {
-	retVal := this.Call(0x00000065, []interface{}{name, range_})
-	return NewEmailSignatureEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name, range_})
+	return NewEmailSignatureEntry(retVal.IDispatch(), false, true)
 }
 

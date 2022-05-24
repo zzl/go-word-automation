@@ -16,6 +16,9 @@ type AutoCaption struct {
 }
 
 func NewAutoCaption(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCaption {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &AutoCaption{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewAutoCaption(pDisp *win32.IDispatch, addRef bool, scoped bool) *AutoCapti
 }
 
 func AutoCaptionFromVar(v ole.Variant) *AutoCaption {
-	return NewAutoCaption(v.PdispValVal(), false, false)
+	return NewAutoCaption(v.IDispatch(), false, false)
 }
 
 func (this *AutoCaption) IID() *syscall.GUID {
@@ -42,48 +45,46 @@ func (this *AutoCaption) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *AutoCaption) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *AutoCaption) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCaption) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *AutoCaption) Name() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *AutoCaption) AutoInsert() bool {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *AutoCaption) SetAutoInsert(rhs bool)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *AutoCaption) Index() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *AutoCaption) CaptionLabel() ole.Variant {
-	retVal := this.PropGet(0x00000003, nil)
-	com.CurrentScope.AddVarIfNeeded((*win32.VARIANT)(retVal))
+	retVal, _ := this.PropGet(0x00000003, nil)
+	com.AddToScope(retVal)
 	return *retVal
 }
 
 func (this *AutoCaption) SetCaptionLabel(rhs *ole.Variant)  {
-	retVal := this.PropPut(0x00000003, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000003, []interface{}{rhs})
 }
 

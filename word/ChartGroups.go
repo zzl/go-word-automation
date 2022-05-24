@@ -17,6 +17,9 @@ type ChartGroups struct {
 }
 
 func NewChartGroups(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartGroups {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &ChartGroups{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewChartGroups(pDisp *win32.IDispatch, addRef bool, scoped bool) *ChartGrou
 }
 
 func ChartGroupsFromVar(v ole.Variant) *ChartGroups {
-	return NewChartGroups(v.PdispValVal(), false, false)
+	return NewChartGroups(v.IDispatch(), false, false)
 }
 
 func (this *ChartGroups) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *ChartGroups) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *ChartGroups) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000096, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000096, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartGroups) Count() int32 {
-	retVal := this.PropGet(0x00000076, nil)
+	retVal, _ := this.PropGet(0x00000076, nil)
 	return retVal.LValVal()
 }
 
 func (this *ChartGroups) Item(index interface{}) *ChartGroup {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewChartGroup(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewChartGroup(retVal.IDispatch(), false, true)
 }
 
 func (this *ChartGroups) NewEnum_() *com.UnknownClass {
-	retVal := this.Call(-4, nil)
+	retVal, _ := this.Call(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,12 +87,12 @@ func (this *ChartGroups) ForEach(action func(item *ChartGroup) bool) {
 }
 
 func (this *ChartGroups) Application() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000094, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000094, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *ChartGroups) Creator() int32 {
-	retVal := this.PropGet(0x00000095, nil)
+	retVal, _ := this.PropGet(0x00000095, nil)
 	return retVal.LValVal()
 }
 

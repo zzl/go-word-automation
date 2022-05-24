@@ -17,6 +17,9 @@ type MailMergeDataFields struct {
 }
 
 func NewMailMergeDataFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *MailMergeDataFields {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &MailMergeDataFields{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewMailMergeDataFields(pDisp *win32.IDispatch, addRef bool, scoped bool) *M
 }
 
 func MailMergeDataFieldsFromVar(v ole.Variant) *MailMergeDataFields {
-	return NewMailMergeDataFields(v.PdispValVal(), false, false)
+	return NewMailMergeDataFields(v.IDispatch(), false, false)
 }
 
 func (this *MailMergeDataFields) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *MailMergeDataFields) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *MailMergeDataFields) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *MailMergeDataFields) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeDataFields) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *MailMergeDataFields) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,12 +87,12 @@ func (this *MailMergeDataFields) ForEach(action func(item *MailMergeDataField) b
 }
 
 func (this *MailMergeDataFields) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *MailMergeDataFields) Item(index *ole.Variant) *MailMergeDataField {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewMailMergeDataField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewMailMergeDataField(retVal.IDispatch(), false, true)
 }
 

@@ -16,6 +16,9 @@ type OMathMatCol struct {
 }
 
 func NewOMathMatCol(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMatCol {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathMatCol{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewOMathMatCol(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathMatC
 }
 
 func OMathMatColFromVar(v ole.Variant) *OMathMatCol {
-	return NewOMathMatCol(v.PdispValVal(), false, false)
+	return NewOMathMatCol(v.IDispatch(), false, false)
 }
 
 func (this *OMathMatCol) IID() *syscall.GUID {
@@ -42,42 +45,41 @@ func (this *OMathMatCol) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *OMathMatCol) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMatCol) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatCol) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathMatCol) Args() *OMathArgs {
-	retVal := this.PropGet(0x00000067, nil)
-	return NewOMathArgs(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000067, nil)
+	return NewOMathArgs(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathMatCol) ColIndex() int32 {
-	retVal := this.PropGet(0x00000068, nil)
+	retVal, _ := this.PropGet(0x00000068, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatCol) Align() int32 {
-	retVal := this.PropGet(0x00000069, nil)
+	retVal, _ := this.PropGet(0x00000069, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathMatCol) SetAlign(rhs int32)  {
-	retVal := this.PropPut(0x00000069, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000069, []interface{}{rhs})
 }
 
 func (this *OMathMatCol) Delete()  {
-	retVal := this.Call(0x000000c8, nil)
+	retVal, _ := this.Call(0x000000c8, nil)
 	_= retVal
 }
 

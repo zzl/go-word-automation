@@ -16,6 +16,9 @@ type FileConverter struct {
 }
 
 func NewFileConverter(pDisp *win32.IDispatch, addRef bool, scoped bool) *FileConverter {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &FileConverter{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewFileConverter(pDisp *win32.IDispatch, addRef bool, scoped bool) *FileCon
 }
 
 func FileConverterFromVar(v ole.Variant) *FileConverter {
-	return NewFileConverter(v.PdispValVal(), false, false)
+	return NewFileConverter(v.IDispatch(), false, false)
 }
 
 func (this *FileConverter) IID() *syscall.GUID {
@@ -42,62 +45,62 @@ func (this *FileConverter) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *FileConverter) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *FileConverter) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *FileConverter) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *FileConverter) FormatName() string {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *FileConverter) ClassName() string {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *FileConverter) SaveFormat() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *FileConverter) OpenFormat() int32 {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return retVal.LValVal()
 }
 
 func (this *FileConverter) CanSave() bool {
-	retVal := this.PropGet(0x00000004, nil)
+	retVal, _ := this.PropGet(0x00000004, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *FileConverter) CanOpen() bool {
-	retVal := this.PropGet(0x00000005, nil)
+	retVal, _ := this.PropGet(0x00000005, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *FileConverter) Path() string {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *FileConverter) Name() string {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *FileConverter) Extensions() string {
-	retVal := this.PropGet(0x00000008, nil)
+	retVal, _ := this.PropGet(0x00000008, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 

@@ -17,6 +17,9 @@ type OMathAutoCorrectEntries struct {
 }
 
 func NewOMathAutoCorrectEntries(pDisp *win32.IDispatch, addRef bool, scoped bool) *OMathAutoCorrectEntries {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &OMathAutoCorrectEntries{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewOMathAutoCorrectEntries(pDisp *win32.IDispatch, addRef bool, scoped bool
 }
 
 func OMathAutoCorrectEntriesFromVar(v ole.Variant) *OMathAutoCorrectEntries {
-	return NewOMathAutoCorrectEntries(v.PdispValVal(), false, false)
+	return NewOMathAutoCorrectEntries(v.IDispatch(), false, false)
 }
 
 func (this *OMathAutoCorrectEntries) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *OMathAutoCorrectEntries) GetIDispatch(addRef bool) *win32.IDispatch 
 }
 
 func (this *OMathAutoCorrectEntries) Application() *Application {
-	retVal := this.PropGet(0x00000064, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x00000064, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathAutoCorrectEntries) Creator() int32 {
-	retVal := this.PropGet(0x00000065, nil)
+	retVal, _ := this.PropGet(0x00000065, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathAutoCorrectEntries) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000066, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000066, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *OMathAutoCorrectEntries) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *OMathAutoCorrectEntries) ForEach(action func(item *OMathAutoCorrectE
 }
 
 func (this *OMathAutoCorrectEntries) Count() int32 {
-	retVal := this.PropGet(0x00000067, nil)
+	retVal, _ := this.PropGet(0x00000067, nil)
 	return retVal.LValVal()
 }
 
 func (this *OMathAutoCorrectEntries) Item(index *ole.Variant) *OMathAutoCorrectEntry {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewOMathAutoCorrectEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewOMathAutoCorrectEntry(retVal.IDispatch(), false, true)
 }
 
 func (this *OMathAutoCorrectEntries) Add(name string, value string) *OMathAutoCorrectEntry {
-	retVal := this.Call(0x000000c8, []interface{}{name, value})
-	return NewOMathAutoCorrectEntry(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000000c8, []interface{}{name, value})
+	return NewOMathAutoCorrectEntry(retVal.IDispatch(), false, true)
 }
 

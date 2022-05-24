@@ -16,6 +16,9 @@ type Document struct {
 }
 
 func NewDocument(pDisp *win32.IDispatch, addRef bool, scoped bool) *Document {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Document{Document_{ole.OleClient{pDisp}}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewDocument(pDisp *win32.IDispatch, addRef bool, scoped bool) *Document {
 }
 
 func NewDocumentFromVar(v ole.Variant, addRef bool, scoped bool) *Document {
-	return NewDocument(v.PdispValVal(), addRef, scoped)
+	return NewDocument(v.IDispatch(), addRef, scoped)
 }
 
 func NewDocumentInstance(scoped bool) (*Document, error) {

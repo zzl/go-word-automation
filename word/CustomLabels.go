@@ -17,6 +17,9 @@ type CustomLabels struct {
 }
 
 func NewCustomLabels(pDisp *win32.IDispatch, addRef bool, scoped bool) *CustomLabels {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &CustomLabels{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewCustomLabels(pDisp *win32.IDispatch, addRef bool, scoped bool) *CustomLa
 }
 
 func CustomLabelsFromVar(v ole.Variant) *CustomLabels {
-	return NewCustomLabels(v.PdispValVal(), false, false)
+	return NewCustomLabels(v.IDispatch(), false, false)
 }
 
 func (this *CustomLabels) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *CustomLabels) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *CustomLabels) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *CustomLabels) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabels) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *CustomLabels) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,13 +87,13 @@ func (this *CustomLabels) ForEach(action func(item *CustomLabel) bool) {
 }
 
 func (this *CustomLabels) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *CustomLabels) Item(index *ole.Variant) *CustomLabel {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewCustomLabel(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewCustomLabel(retVal.IDispatch(), false, true)
 }
 
 var CustomLabels_Add_OptArgs= []string{
@@ -99,7 +102,7 @@ var CustomLabels_Add_OptArgs= []string{
 
 func (this *CustomLabels) Add(name string, optArgs ...interface{}) *CustomLabel {
 	optArgs = ole.ProcessOptArgs(CustomLabels_Add_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{name}, optArgs...)
-	return NewCustomLabel(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{name}, optArgs...)
+	return NewCustomLabel(retVal.IDispatch(), false, true)
 }
 

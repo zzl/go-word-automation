@@ -16,6 +16,9 @@ type XMLSchemaReference struct {
 }
 
 func NewXMLSchemaReference(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLSchemaReference {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLSchemaReference{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewXMLSchemaReference(pDisp *win32.IDispatch, addRef bool, scoped bool) *XM
 }
 
 func XMLSchemaReferenceFromVar(v ole.Variant) *XMLSchemaReference {
-	return NewXMLSchemaReference(v.PdispValVal(), false, false)
+	return NewXMLSchemaReference(v.IDispatch(), false, false)
 }
 
 func (this *XMLSchemaReference) IID() *syscall.GUID {
@@ -42,37 +45,37 @@ func (this *XMLSchemaReference) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLSchemaReference) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLSchemaReference) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLSchemaReference) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLSchemaReference) NamespaceURI() string {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLSchemaReference) Location() string {
-	retVal := this.PropGet(0x00000003, nil)
+	retVal, _ := this.PropGet(0x00000003, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLSchemaReference) Delete()  {
-	retVal := this.Call(0x00000064, nil)
+	retVal, _ := this.Call(0x00000064, nil)
 	_= retVal
 }
 
 func (this *XMLSchemaReference) Reload()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 

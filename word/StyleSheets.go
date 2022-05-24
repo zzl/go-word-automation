@@ -17,6 +17,9 @@ type StyleSheets struct {
 }
 
 func NewStyleSheets(pDisp *win32.IDispatch, addRef bool, scoped bool) *StyleSheets {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &StyleSheets{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewStyleSheets(pDisp *win32.IDispatch, addRef bool, scoped bool) *StyleShee
 }
 
 func StyleSheetsFromVar(v ole.Variant) *StyleSheets {
-	return NewStyleSheets(v.PdispValVal(), false, false)
+	return NewStyleSheets(v.IDispatch(), false, false)
 }
 
 func (this *StyleSheets) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *StyleSheets) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *StyleSheets) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *StyleSheets) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *StyleSheets) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *StyleSheets) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,17 +87,17 @@ func (this *StyleSheets) ForEach(action func(item *StyleSheet) bool) {
 }
 
 func (this *StyleSheets) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *StyleSheets) Item(index *ole.Variant) *StyleSheet {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewStyleSheet(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewStyleSheet(retVal.IDispatch(), false, true)
 }
 
 func (this *StyleSheets) Add(fileName string, linkType int32, title string, precedence int32) *StyleSheet {
-	retVal := this.Call(0x00000002, []interface{}{fileName, linkType, title, precedence})
-	return NewStyleSheet(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000002, []interface{}{fileName, linkType, title, precedence})
+	return NewStyleSheet(retVal.IDispatch(), false, true)
 }
 

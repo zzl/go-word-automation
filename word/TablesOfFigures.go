@@ -17,6 +17,9 @@ type TablesOfFigures struct {
 }
 
 func NewTablesOfFigures(pDisp *win32.IDispatch, addRef bool, scoped bool) *TablesOfFigures {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &TablesOfFigures{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -28,7 +31,7 @@ func NewTablesOfFigures(pDisp *win32.IDispatch, addRef bool, scoped bool) *Table
 }
 
 func TablesOfFiguresFromVar(v ole.Variant) *TablesOfFigures {
-	return NewTablesOfFigures(v.PdispValVal(), false, false)
+	return NewTablesOfFigures(v.IDispatch(), false, false)
 }
 
 func (this *TablesOfFigures) IID() *syscall.GUID {
@@ -43,22 +46,22 @@ func (this *TablesOfFigures) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *TablesOfFigures) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *TablesOfFigures) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfFigures) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *TablesOfFigures) NewEnum_() *com.UnknownClass {
-	retVal := this.PropGet(-4, nil)
+	retVal, _ := this.PropGet(-4, nil)
 	return com.NewUnknownClass(retVal.PunkValVal(), true)
 }
 
@@ -84,23 +87,22 @@ func (this *TablesOfFigures) ForEach(action func(item *TableOfFigures) bool) {
 }
 
 func (this *TablesOfFigures) Count() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfFigures) Format() int32 {
-	retVal := this.PropGet(0x00000002, nil)
+	retVal, _ := this.PropGet(0x00000002, nil)
 	return retVal.LValVal()
 }
 
 func (this *TablesOfFigures) SetFormat(rhs int32)  {
-	retVal := this.PropPut(0x00000002, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000002, []interface{}{rhs})
 }
 
 func (this *TablesOfFigures) Item(index int32) *TableOfFigures {
-	retVal := this.Call(0x00000000, []interface{}{index})
-	return NewTableOfFigures(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000000, []interface{}{index})
+	return NewTableOfFigures(retVal.IDispatch(), false, true)
 }
 
 var TablesOfFigures_AddOld_OptArgs= []string{
@@ -111,8 +113,8 @@ var TablesOfFigures_AddOld_OptArgs= []string{
 
 func (this *TablesOfFigures) AddOld(range_ *Range, optArgs ...interface{}) *TableOfFigures {
 	optArgs = ole.ProcessOptArgs(TablesOfFigures_AddOld_OptArgs, optArgs)
-	retVal := this.Call(0x00000064, []interface{}{range_}, optArgs...)
-	return NewTableOfFigures(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000064, []interface{}{range_}, optArgs...)
+	return NewTableOfFigures(retVal.IDispatch(), false, true)
 }
 
 var TablesOfFigures_MarkEntry_OptArgs= []string{
@@ -121,8 +123,8 @@ var TablesOfFigures_MarkEntry_OptArgs= []string{
 
 func (this *TablesOfFigures) MarkEntry(range_ *Range, optArgs ...interface{}) *Field {
 	optArgs = ole.ProcessOptArgs(TablesOfFigures_MarkEntry_OptArgs, optArgs)
-	retVal := this.Call(0x00000065, []interface{}{range_}, optArgs...)
-	return NewField(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x00000065, []interface{}{range_}, optArgs...)
+	return NewField(retVal.IDispatch(), false, true)
 }
 
 var TablesOfFigures_Add_OptArgs= []string{
@@ -133,7 +135,7 @@ var TablesOfFigures_Add_OptArgs= []string{
 
 func (this *TablesOfFigures) Add(range_ *Range, optArgs ...interface{}) *TableOfFigures {
 	optArgs = ole.ProcessOptArgs(TablesOfFigures_Add_OptArgs, optArgs)
-	retVal := this.Call(0x000001bc, []interface{}{range_}, optArgs...)
-	return NewTableOfFigures(retVal.PdispValVal(), false, true)
+	retVal, _ := this.Call(0x000001bc, []interface{}{range_}, optArgs...)
+	return NewTableOfFigures(retVal.IDispatch(), false, true)
 }
 

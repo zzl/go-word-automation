@@ -16,6 +16,9 @@ type Browser struct {
 }
 
 func NewBrowser(pDisp *win32.IDispatch, addRef bool, scoped bool) *Browser {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &Browser{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewBrowser(pDisp *win32.IDispatch, addRef bool, scoped bool) *Browser {
 }
 
 func BrowserFromVar(v ole.Variant) *Browser {
-	return NewBrowser(v.PdispValVal(), false, false)
+	return NewBrowser(v.IDispatch(), false, false)
 }
 
 func (this *Browser) IID() *syscall.GUID {
@@ -42,37 +45,36 @@ func (this *Browser) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *Browser) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *Browser) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *Browser) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *Browser) Target() int32 {
-	retVal := this.PropGet(0x00000001, nil)
+	retVal, _ := this.PropGet(0x00000001, nil)
 	return retVal.LValVal()
 }
 
 func (this *Browser) SetTarget(rhs int32)  {
-	retVal := this.PropPut(0x00000001, []interface{}{rhs})
-	_= retVal
+	_ = this.PropPut(0x00000001, []interface{}{rhs})
 }
 
 func (this *Browser) Next()  {
-	retVal := this.Call(0x00000065, nil)
+	retVal, _ := this.Call(0x00000065, nil)
 	_= retVal
 }
 
 func (this *Browser) Previous()  {
-	retVal := this.Call(0x00000066, nil)
+	retVal, _ := this.Call(0x00000066, nil)
 	_= retVal
 }
 

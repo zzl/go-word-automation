@@ -16,6 +16,9 @@ type XMLMapping struct {
 }
 
 func NewXMLMapping(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLMapping {
+	 if pDisp == nil {
+		return nil;
+	}
 	p := &XMLMapping{ole.OleClient{pDisp}}
 	if addRef {
 		pDisp.AddRef()
@@ -27,7 +30,7 @@ func NewXMLMapping(pDisp *win32.IDispatch, addRef bool, scoped bool) *XMLMapping
 }
 
 func XMLMappingFromVar(v ole.Variant) *XMLMapping {
-	return NewXMLMapping(v.PdispValVal(), false, false)
+	return NewXMLMapping(v.IDispatch(), false, false)
 }
 
 func (this *XMLMapping) IID() *syscall.GUID {
@@ -42,57 +45,62 @@ func (this *XMLMapping) GetIDispatch(addRef bool) *win32.IDispatch {
 }
 
 func (this *XMLMapping) Application() *Application {
-	retVal := this.PropGet(0x000003e8, nil)
-	return NewApplication(retVal.PdispValVal(), false, true)
+	retVal, _ := this.PropGet(0x000003e8, nil)
+	return NewApplication(retVal.IDispatch(), false, true)
 }
 
 func (this *XMLMapping) Creator() int32 {
-	retVal := this.PropGet(0x000003e9, nil)
+	retVal, _ := this.PropGet(0x000003e9, nil)
 	return retVal.LValVal()
 }
 
 func (this *XMLMapping) Parent() *ole.DispatchClass {
-	retVal := this.PropGet(0x000003ea, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x000003ea, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLMapping) IsMapped() bool {
-	retVal := this.PropGet(0x00000000, nil)
+	retVal, _ := this.PropGet(0x00000000, nil)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLMapping) CustomXMLPart() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000001, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000001, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
 func (this *XMLMapping) CustomXMLNode() *ole.DispatchClass {
-	retVal := this.PropGet(0x00000002, nil)
-	return ole.NewDispatchClass(retVal.PdispValVal(), true)
+	retVal, _ := this.PropGet(0x00000002, nil)
+	return ole.NewDispatchClass(retVal.IDispatch(), true)
 }
 
-func (this *XMLMapping) SetMapping(xpath string, prefixMapping string, source *ole.DispatchClass) bool {
-	retVal := this.Call(0x00000003, []interface{}{xpath, prefixMapping, source})
+var XMLMapping_SetMapping_OptArgs= []string{
+	"PrefixMapping", "Source", 
+}
+
+func (this *XMLMapping) SetMapping(xpath string, optArgs ...interface{}) bool {
+	optArgs = ole.ProcessOptArgs(XMLMapping_SetMapping_OptArgs, optArgs)
+	retVal, _ := this.Call(0x00000003, []interface{}{xpath}, optArgs...)
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLMapping) Delete()  {
-	retVal := this.Call(0x00000004, nil)
+	retVal, _ := this.Call(0x00000004, nil)
 	_= retVal
 }
 
-func (this *XMLMapping) SetMappingByNode(node *ole.DispatchClass) bool {
-	retVal := this.Call(0x00000005, []interface{}{node})
+func (this *XMLMapping) SetMappingByNode(node *win32.IDispatch) bool {
+	retVal, _ := this.Call(0x00000005, []interface{}{node})
 	return retVal.BoolValVal() != win32.VARIANT_FALSE
 }
 
 func (this *XMLMapping) XPath() string {
-	retVal := this.PropGet(0x00000006, nil)
+	retVal, _ := this.PropGet(0x00000006, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
 func (this *XMLMapping) PrefixMappings() string {
-	retVal := this.PropGet(0x00000007, nil)
+	retVal, _ := this.PropGet(0x00000007, nil)
 	return win32.BstrToStrAndFree(retVal.BstrValVal())
 }
 
